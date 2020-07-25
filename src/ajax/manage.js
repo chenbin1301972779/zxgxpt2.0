@@ -57,6 +57,11 @@ async function directSearchList (param) {
     let directSearchList = await ajax.post(`/api/company/direct/searchList`, param)
     return directSearchList
 }
+//获取企业关注信息
+async function getCareStatus (param) {
+    let getCareStatus = await ajax.post(`/api/user/getCareStatus`, param)
+    return getCareStatus
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -67,7 +72,8 @@ const manage = {
     getCareList: getCareList,
     careOrNot: careOrNot,
     zhongxinbao: zhongxinbao,
-    directSearchList: directSearchList
+    directSearchList: directSearchList,
+    getCareStatus: getCareStatus
 }
 
 export default manage

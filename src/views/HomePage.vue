@@ -145,365 +145,393 @@
 </template>
 
 <script>
-export default {
-    data () {
-        return {
-            searchVal: '',
-            latestSearchList: [],
-            activeAlarmTab: "1",
-            activeUserTab: '1',
-            qichachaData: [
-                {
-                    'company': 'ABC有限公司',
-                    'level': '2级别',
-                    'reason': '鉴于国内猪肉价格上涨',
-                    'person': '张三',
-                    'time': '2020-7-24'
+    export default {
+        data() {
+            return {
+                searchVal: '',
+                latestSearchList: [],
+                activeAlarmTab: "1",
+                activeUserTab: '1',
+                qichachaData: [
+                    {
+                        'company': 'ABC有限公司',
+                        'level': '2级别',
+                        'reason': '鉴于国内猪肉价格上涨',
+                        'person': '张三',
+                        'time': '2020-7-24'
 
-                },
-                {
-                    'company': 'ABC有限公司',
-                    'level': '2级别',
-                    'reason': '鉴于国内猪肉价格上涨',
-                    'person': '张三',
-                    'time': '2020-7-24'
-                }
-            ],//企查查
-            useList: [
-                { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
-                { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
-                { img: require('../../public/img/images/use_icon03.png'), name: '站内信' },
-                { img: require('../../public/img/images/use_icon04.png'), name: '关注清单' },
-                { img: require('../../public/img/images/use_icon05.png'), name: '用户管理' },
-            ],
-            searchList: [],
-            sourceType: '',
-            showBox: 1,
-            careList: []
-        }
-    },
-    mounted () {
-        if (this.$Cookies.get(this.$getCookieKey())) {
-            this.getLatestSearchList();
-            this.getCareList();//关注清单
-        }
-    },
-    methods: {
-        seachContent () {
-            if (this.searchVal === '') {
-                this.showBox = 1
-            } else {
-                if (this.$Cookies.get(this.$getCookieKey())) {
-                    //已登录=>搜索
-                    let param = {
-                        "keyword": this.searchVal,
-                        "page": 1,
-                        "userId": parseInt(this.$Cookies.get('userId'))
+                    },
+                    {
+                        'company': 'ABC有限公司',
+                        'level': '2级别',
+                        'reason': '鉴于国内猪肉价格上涨',
+                        'person': '张三',
+                        'time': '2020-7-24'
                     }
-                    this.$ajax.manage.getSearchList(param).then(res => {
-                        console.log(res);
-                        if (res.status == 200) {
-                            //console.log(res.data);
-                            this.searchList = res.data.searchList
-                            this.sourceType = res.data.sourceType;
-                            this.showBox = 2;
+                ],//企查查
+                useList: [
+                    { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
+                    { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
+                    { img: require('../../public/img/images/use_icon03.png'), name: '站内信' },
+                    { img: require('../../public/img/images/use_icon04.png'), name: '关注清单' },
+                    { img: require('../../public/img/images/use_icon05.png'), name: '用户管理' },
+                ],
+                searchList: [],
+                sourceType: '',
+                showBox: 1,
+                careList: []
+            }
+        },
+        mounted() {
+            if (this.$Cookies.get(this.$getCookieKey())) {
+                this.getLatestSearchList();
+                this.getCareList();//关注清单
+            }
+        },
+        methods: {
+            seachContent() {
+                if (this.searchVal === '') {
+                    this.showBox = 1
+                } else {
+                    if (this.$Cookies.get(this.$getCookieKey())) {
+                        //已登录=>搜索
+                        let param = {
+                            "keyword": this.searchVal,
+                            "page": 1,
+                            "userId": parseInt(this.$Cookies.get('userId'))
                         }
-                    })
-                } else {
-                    //未登录=>去登陆
-                    this.dialogVisible = true;
-                    this.$Bus.$emit('showDialog')
-                }
+                        this.$ajax.manage.getSearchList(param).then(res => {
+                            console.log(res);
+                            if (res.status == 200) {
+                                //console.log(res.data);
+                                this.searchList = res.data.searchList
+                                this.sourceType = res.data.sourceType;
+                                this.showBox = 2;
+                            }
+                        })
+                    } else {
+                        //未登录=>去登陆
+                        this.dialogVisible = true;
+                        this.$Bus.$emit('showDialog')
+                    }
 
+                }
+            },
+            getLatestSearchList() {
+                let param = {
+                    userId: this.$Cookies.get('userId')
+                }
+                console.log(param);
+                this.$ajax.manage.latestWords(param).then(res => {
+                    if (res.status == 200) {
+                        this.latestSearchList = res.data.latestWords
+                    }
+                })
+            },
+            goToApp(index) {
+                //常用应用
+                console.log(index)
+                if (index == 0) {
+                    //黑名单申报
+                } else if (index == 1) {
+                    //黑名单审批
+                } else if (index == 2) {
+                    //站内信
+                } else if (index == 3) {
+                    //关注清单
+                } else if (index == 4) {
+                    //用户管理
+                    if (this.$Cookies.get('username') != 'admin') {
+                        this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
+                    } else {
+                        //55109783
+                        this.$router.push({ path: '/userManage' })
+                    }
+                }
+            },
+            moreNews(item, index) {
+                console.log(item)
+                if (index === 0) {
+                    //基本信息
+                } else if (index === 1) {
+                    //企查查
+                } else if (index === 2) {
+                    //中信保
+                } else if (index === 3) {
+                    //中诚信
+                } else if (index === 4) {
+                    //更多详情
+                }
+                this.$router.push({
+                    path: '/essInfo',
+                    query: {
+                        companyName: item.companyName,
+                        companyId: item.companyId,
+                        creditCode: item.creditCode,
+                        index: index
+                    }
+                })
+            },
+            getCareList() {
+                //关注清单列表
+                let param = {
+                    userId: this.$Cookies.get('userId')
+                }
+                this.$ajax.manage.getCareList(param).then(res => {
+                    console.log(JSON.parse(res.data.careList))
+                    if (res.data.code == 0) {
+                        this.careList = JSON.parse(res.data.careList)
+                    }
+                })
+            },
+            cancleFocus(item) {
+                console.log(item)
+                //取消关注
+                let param = {
+                    "userId": this.$Cookies.get('userId'),
+                    "companyId": item.companyId,
+                    "zhongchengxin": 0,
+                    "zhongxinbao": 0
+                }
+                this.$ajax.manage.careOrNot(param).then(res => {
+                    console.log(res);
+                    if (res.data.code == 0) {
+                        this.$message.success(res.data.msg);
+                        this.getCareList()
+                    } else {
+                        this.$message.error(res.data.msg);
+                    }
+                })
+            },
+            blarSearch() {
+                //模糊接口查询
+                let param = {
+                    keyword: this.searchVal,
+                    page: 1
+                }
+                this.$ajax.manage.directSearchList(param).then(res => {
+                    if (res.status == 200) {
+                        this.searchList = res.data.searchList
+                        this.sourceType = res.data.sourceType;
+                        this.showBox = 2;
+                    }
+                })
             }
         },
-        getLatestSearchList () {
-            let param = {
-                userId: this.$Cookies.get('userId')
-            }
-            console.log(param);
-            this.$ajax.manage.latestWords(param).then(res => {
-                if (res.status == 200) {
-                    this.latestSearchList = res.data.latestWords
-                }
-            })
-        },
-        goToApp (index) {
-            //常用应用
-            console.log(index)
-            if (index == 0) {
-                //黑名单申报
-            } else if (index == 1) {
-                //黑名单审批
-            } else if (index == 2) {
-                //站内信
-            } else if (index == 3) {
-                //关注清单
-            } else if (index == 4) {
-                //用户管理
-                if (this.$Cookies.get('username') != 'admin') {
-                    this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
-                } else {
-                    //55109783
-                    this.$router.push({ path: '/userManage' })
-                }
-            }
-        },
-        moreNews (item, index) {
-            console.log(item)
-            if (index === 0) {
-                //基本信息
-            } else if (index === 1) {
-                //企查查
-            } else if (index === 2) {
-                //中信保
-            } else if (index === 3) {
-                //中诚信
-            } else if (index === 4) {
-                //更多详情
-            }
-            this.$router.push({
-                path: '/essInfo',
-                query: {
-                    companyName: item.companyName,
-                    index: index
-                }
-            })
-        },
-        getCareList () {
-            //关注清单列表
-            let param = {
-                userId: this.$Cookies.get('userId')
-            }
-            this.$ajax.manage.getCareList(param).then(res => {
-                console.log(JSON.parse(res.data.careList))
-                if (res.data.code == 0) {
-                    this.careList = JSON.parse(res.data.careList)
-                }
-            })
-        },
-        cancleFocus (item) {
-            console.log(item)
-            //取消关注
-            let param = {
-                "userId": this.$Cookies.get('userId'),
-                "companyId": item.companyId,
-                "zhongchengxin": 0,
-                "zhongxinbao": 0
-            }
-            this.$ajax.manage.careOrNot(param).then(res => {
-                console.log(res);
-                if (res.data.code == 0) {
-                    this.$message.success(res.data.msg);
-                    this.getCareList()
-                } else {
-                    this.$message.error(res.data.msg);
-                }
-            })
-        },
-        blarSearch () {
-            //模糊接口查询
-            let param = {
-                keyword: this.searchVal,
-                page: 1
-            }
-            this.$ajax.manage.directSearchList(param).then(res => {
-                if (res.status == 200) {
-                    this.searchList = res.data.searchList
-                    this.sourceType = res.data.sourceType;
-                    this.showBox = 2;
-                }
-            })
-        }
-    },
 
-}
+    }
 </script>
-<style >
-.el-card {
-    border: none;
-    background: #f8f8f8;
-}
+<style>
+    .el-card {
+        border: none;
+        background: #f8f8f8;
+    }
 </style>
 <style lang="less" scoped>
-.main-wrapper {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+    .main-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
 
-    .search-content {
-        height: 250px;
-        width: 700px;
-        text-align: center;
-        padding-top: 30px;
-        box-sizing: border-box;
-        margin: auto;
-        img {
-            height: 100px;
-            margin-bottom: 30px;
-        }
-        .latest-search {
-            font-size: 14px;
-            color: #333333;
-            margin-top: 10px;
-            text-align: left;
-            padding-left: 110px;
-            span {
-                margin-right: 10px;
-                cursor: pointer;
-                &:hover {
-                    color: #1b7fbd;
-                    text-decoration-line: underline;
-                }
+        .search-content {
+            height: 250px;
+            width: 700px;
+            text-align: center;
+            padding-top: 30px;
+            box-sizing: border-box;
+            margin: auto;
+
+            img {
+                height: 100px;
+                margin-bottom: 30px;
             }
-        }
-    }
-    .main-content {
-        width: 1300px;
-        margin: auto;
-        display: flex;
-        .content-item {
-            padding: 20px 20px 10px;
-            background: #f8f8f8;
-            box-shadow: 0 0 5px 5px #e3e3e3;
-        }
-        .leftBox {
-            flex: 1;
-            margin-right: 20px;
-        }
-        .rightBox {
-            width: 450px;
-        }
-        .title {
-            margin-bottom: 10px;
-            font-size: 14px;
-            .icon {
-                display: inline-block;
-                width: 5px;
-                height: 20px;
-                background: #1b7fbd;
-                vertical-align: middle;
-                margin-right: 5px;
-            }
-            .text {
-                font-size: 12px;
-                color: #999;
-                float: right;
-                .postLink {
-                    color: #1b7fbd;
-                    text-decoration-line: underline;
-                    margin-left: 10px;
+
+            .latest-search {
+                font-size: 14px;
+                color: #333333;
+                margin-top: 10px;
+                text-align: left;
+                padding-left: 110px;
+
+                span {
+                    margin-right: 10px;
                     cursor: pointer;
-                }
-            }
-        }
-        .main {
-            .tab-content-wrapper {
-                min-height: 240px;
-                overflow: auto;
-                .tab-content {
-                    border: 1px solid #e3e3e3;
-                    border-top: 2px solid #1b7fbd;
-                    padding: 10px 20px;
-                    margin-bottom: 10px;
-                    p {
-                        display: flex;
-                        justify-content: space-between;
-                        line-height: 28px;
+
+                    &:hover {
+                        color: #1b7fbd;
+                        text-decoration-line: underline;
                     }
                 }
-                .care-list {
-                    height: 36px;
-                    line-height: 36px;
-                    font-size: 14px;
-                    &:hover {
-                        background: #efefef;
+            }
+        }
+
+        .main-content {
+            width: 1300px;
+            margin: auto;
+            display: flex;
+
+            .content-item {
+                padding: 20px 20px 10px;
+                background: #f8f8f8;
+                box-shadow: 0 0 5px 5px #e3e3e3;
+            }
+
+            .leftBox {
+                flex: 1;
+                margin-right: 20px;
+            }
+
+            .rightBox {
+                width: 450px;
+            }
+
+            .title {
+                margin-bottom: 10px;
+                font-size: 14px;
+
+                .icon {
+                    display: inline-block;
+                    width: 5px;
+                    height: 20px;
+                    background: #1b7fbd;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+
+                .text {
+                    font-size: 12px;
+                    color: #999;
+                    float: right;
+
+                    .postLink {
+                        color: #1b7fbd;
+                        text-decoration-line: underline;
+                        margin-left: 10px;
                         cursor: pointer;
                     }
-                    span {
-                        margin: 0 5px;
-                    }
-                    img {
-                        width: 24px;
-                        height: 24px;
-                        vertical-align: middle;
-                        position: relative;
-                        bottom: 2px;
-                    }
-                    .care {
-                        width: 20px;
-                        height: 20px;
-                        margin: 0 5px;
-                    }
                 }
             }
 
-            .proList_li {
-                li {
-                    padding: 10px;
-                    border-bottom: 1px solid #d3d3d3;
-                }
-                .clear {
-                    font-size: 12px;
-                    color: #666;
-                    display: flex;
-                    justify-content: space-between;
-                    border-bottom: 1px solid #e3e3e3;
+            .main {
+                .tab-content-wrapper {
+                    min-height: 240px;
+                    overflow: auto;
 
-                    .pro_content_right {
+                    .tab-content {
+                        border: 1px solid #e3e3e3;
+                        border-top: 2px solid #1b7fbd;
+                        padding: 10px 20px;
+                        margin-bottom: 10px;
+
+                        p {
+                            display: flex;
+                            justify-content: space-between;
+                            line-height: 28px;
+                        }
+                    }
+
+                    .care-list {
+                        height: 36px;
+                        line-height: 36px;
+                        font-size: 14px;
+
+                        &:hover {
+                            background: #efefef;
+                            cursor: pointer;
+                        }
+
+                        span {
+                            margin: 0 5px;
+                        }
+
+                        img {
+                            width: 24px;
+                            height: 24px;
+                            vertical-align: middle;
+                            position: relative;
+                            bottom: 2px;
+                        }
+
+                        .care {
+                            width: 20px;
+                            height: 20px;
+                            margin: 0 5px;
+                        }
+                    }
+                }
+
+                .proList_li {
+                    li {
+                        padding: 10px;
+                        border-bottom: 1px solid #d3d3d3;
+                    }
+
+                    .clear {
+                        font-size: 12px;
+                        color: #666;
+                        display: flex;
+                        justify-content: space-between;
+                        border-bottom: 1px solid #e3e3e3;
+
+                        .pro_content_right {
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+
+                    .proList_txt {
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                        color: #000;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+
+                    .proList_btn {
                         display: flex;
                         align-items: center;
+                        // width: 40%;
+                        // text-align: right;
+                        // position: relative;
+                        // top: 25px;
                     }
                 }
-
-                .proList_txt {
-                    font-weight: 600;
-                    margin-bottom: 5px;
-                    color: #000;
-                    font-size: 14px;
-                    cursor: pointer;
-                }
-
-                .proList_btn {
-                    display: flex;
-                    align-items: center;
-                    // width: 40%;
-                    // text-align: right;
-                    // position: relative;
-                    // top: 25px;
-                }
             }
         }
-    }
-    .usually-box {
-        width: 1300px;
-        padding: 20px;
-        background: #f8f8f8;
-        box-shadow: 0 0 5px 5px #e3e3e3;
-        margin: 15px auto;
-        box-sizing: border-box;
-        .title {
-            margin-bottom: 10px;
-            .icon {
-                display: inline-block;
-                width: 5px;
-                height: 20px;
-                background: #1b7fbd;
-                vertical-align: middle;
-                margin-right: 5px;
-            }
-        }
-        .img-box {
-            display: inline-block;
-            text-align: center;
-            width: 120px;
-            font-size: 14px;
-            img {
-                width: 30px;
-                height: 30px;
+
+        .usually-box {
+            width: 1300px;
+            padding: 20px;
+            background: #f8f8f8;
+            box-shadow: 0 0 5px 5px #e3e3e3;
+            margin: 15px auto;
+            box-sizing: border-box;
+
+            .title {
                 margin-bottom: 10px;
+
+                .icon {
+                    display: inline-block;
+                    width: 5px;
+                    height: 20px;
+                    background: #1b7fbd;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+            }
+
+            .img-box {
+                display: inline-block;
+                text-align: center;
+                width: 120px;
+                font-size: 14px;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    margin-bottom: 10px;
+                }
             }
         }
     }
-}
 </style>
