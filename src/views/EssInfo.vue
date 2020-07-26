@@ -81,7 +81,7 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancle">取 消</el-button>
                 <el-button type="primary" @click="confirmZXB('form')" v-if="type==1">确 定</el-button>
-                <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定2</el-button>
+                <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定</el-button>
             </div>
         </el-dialog>
     </div>

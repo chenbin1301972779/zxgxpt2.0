@@ -222,6 +222,7 @@
     </div>
 </template>
 <script>
+    import axios from 'axios';
     export default {
         data() {
             return {
@@ -260,6 +261,7 @@
                     "clientNo": "20000340"
                 }
                 this.$ajax.manage.getPDF(param).then(res => {
+                    console.log(res)
                     const content = res.data
                     const blob = new Blob([content])
                     const fileName = '中国企业资信评估准报告.pdf'
@@ -276,6 +278,42 @@
                         navigator.msSaveBlob(blob, fileName)
                     }
                 })
+
+                console.log(this.$ajax.manage.getPdf)
+                // axios({
+                //     method: 'post',
+                //     headers: {
+                //         "token": this.$Cookies.get('token') || '',
+                //     },
+                //     url: 'api/company/getPDF',
+                //     data: {
+                //         "userId": parseInt(this.$cookies.get('userId')),
+                //         "username": "admin",
+                //         "password": "123456",
+                //         "clientNo": "20000340"
+                //     },
+                //     responseType: 'blob',
+                // }).then(res => {
+                //     const content = res.data
+                //     const blob = new Blob([content])
+                //     const fileName = '中国企业资信评估准报告.pdf'
+                //     if ('download' in document.createElement('a')) { // 非IE下载
+                //         const elink = document.createElement('a')
+                //         elink.download = fileName
+                //         elink.style.display = 'none'
+                //         elink.href = URL.createObjectURL(blob)
+                //         document.body.appendChild(elink)
+                //         elink.click()
+                //         URL.revokeObjectURL(elink.href) // 释放URL 对象
+                //         document.body.removeChild(elink)
+                //     } else { // IE10+下载
+                //         navigator.msSaveBlob(blob, fileName)
+                //     }
+                //     // var url = res.data.msg
+                //     // window.open(url);
+                // }).catch(err => {
+                //     console.log(err);
+                // });
             },
             applyReport() {
                 //打开报告申请弹框

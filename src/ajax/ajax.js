@@ -72,11 +72,11 @@ let fileAjax = new axios.create({
 //请求拦截器
 fileAjax.interceptors.request.use(
     function (config) {
-        let loginSession = window.sessionStorage.loginSession
-        if (loginSession) {
+        if (Cookies.get(getCookieKey())) {
             // 在发送请求之前做些什么，例如加入token
-            ajax.defaults.headers.common['X-CSRF-TOKEN'] = Cookies.get(getCookieKey())
-            config.headers['X-CSRF-TOKEN'] = Cookies.get(getCookieKey())
+            ajax.defaults.headers.common['token'] = Cookies.get(getCookieKey())
+            config.headers['token'] = Cookies.get(getCookieKey())
+            console.log(config)
             return config
         } else {
             return config
