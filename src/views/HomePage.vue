@@ -5,14 +5,14 @@
             <div><img src="../../public/img/bannerLogo.png" alt=""> </div>
             <div>
                 <el-input placeholder="请输入内容" v-model="searchVal" class="input-with-select" style="width: 500px;"
-                    clearable="">
+                    clearable="" @keyup.enter.native="seachContent">
                     <el-button slot="append" icon="el-icon-search" style="background-color: #1b7fbd;color: #FFFFFF;"
                         @click="seachContent"></el-button>
                 </el-input>
                 <div class="latest-search">
                     最近搜索：
                     <span v-for="item in latestSearchList" :key="item.id"
-                        @click="searchVal=item.keyWord">{{item.keyWord}}</span>
+                        @click="searchContent(item)">{{item.keyWord}}</span>
                 </div>
             </div>
         </div>
@@ -318,6 +318,10 @@
                     }
                 })
             },
+            searchContent(item) {
+                this.searchVal = item.keyWord;
+                this.seachContent()
+            }
         },
 
     }

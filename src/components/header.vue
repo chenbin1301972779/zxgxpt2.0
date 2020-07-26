@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <span class="title">
-            <img src="../../public/img/logo.png" alt="" @click="$router.push({path:'/'});">
+            <img src="../../public/img/logo.png" alt="" @click="goHome">
         </span>
         <span class="info" v-if="$Cookies.get(this.$getCookieKey())">
             <span style="margin-right: 20px;" @click="showUserInfo">
@@ -85,7 +85,6 @@
             if (this.$route.query.username) {
                 this.skipLogin();
             }
-            this.getUserInfo()
             //this.reload()
         },
         methods: {
@@ -151,6 +150,7 @@
             showUserInfo() {
                 //维护用户基本信息弹框
                 this.userSettingDialog = true;
+                this.getUserInfo()
             },
             getUserInfo() {
                 //获取用户信息
@@ -190,6 +190,15 @@
                     password: '',
                     email: '',
                     mobile: ''
+                }
+            },
+            goHome() {
+                // 
+                console.log(this.$route);
+                if (this.$route.path == '/') {
+                    this.reload();
+                } else {
+                    this.$router.push({ path: '/' });
                 }
             }
         }
