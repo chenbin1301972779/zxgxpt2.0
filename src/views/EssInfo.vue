@@ -9,63 +9,414 @@
                 <TYCPage></TYCPage>
             </el-tab-pane>
             <el-tab-pane label="中信保">
+                <div class="title">
+                    <span @click="cancleFoucus" v-if="zhongxinbaoCare">
+                        <img src="../../public/img/images/notice.png" alt="">
+                        取消关注
+                    </span>
+                    <span @click="goZXBFocus" v-else>
+                        <img src="../../public/img/images/noticeDel.png" alt="">
+                        点击关注
+                    </span>
+                </div>
                 <ZXBPage></ZXBPage>
             </el-tab-pane>
             <el-tab-pane label="中诚信">
+                <div class="title">
+                    <span @click="cancleFoucus" v-if="zhongchengxinCare">
+                        <img src="../../public/img/images/notice.png" alt="">
+                        取消关注
+                    </span>
+                    <span @click="goZCXFocus" v-else>
+                        <img src="../../public/img/images/noticeDel.png" alt="">
+                        点击关注
+                    </span>
+                </div>
                 <ZCXPage></ZCXPage>
             </el-tab-pane>
         </el-tabs>
+
+        <el-dialog title="关注" :visible.sync="dialogFormVisible" width="500px" @close="cancle">
+            <el-form :model="form" label-width="150px" :rules="rules" ref="form">
+                <el-form-item label="统一社会信用代码：" prop="code">
+                    <el-input v-model="form.code" disabled style="width:220px"></el-input>
+                </el-form-item>
+                <el-form-item label="企业名称：" prop="entName">
+                    <el-input v-model="form.entName" disabled style="width:220px"></el-input>
+                </el-form-item>
+                <el-form-item label="企业类型：" prop="entType">
+                    <el-select v-model="form.entType" placeholder="请选择企业类型" style="width:220px" clearable>
+                        <el-option :label="item.value" :value="item.code" v-for="item in entTypeOptions"
+                            :key="item.code"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="行政级别：" prop="areaLevel">
+                    <el-select v-model="form.areaLevel" placeholder="请选择行政级别" style="width:220px" clearable>
+                        <el-option :label="item.value" :value="item.code" v-for="item in areaLevelOptions"
+                            :key="item.code"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="省：" prop="provinceCode">
+                    <el-select v-model="form.provinceCode" placeholder="请选择省级名称" style="width:220px" clearable
+                        @change="changeProvince">
+                        <el-option :label="item.areaName" :value="item.areaCode" v-for="item in provinceOptions"
+                            :key="item.areaCode"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="市：" prop="cityCode">
+                    <el-select v-model="form.cityCode" placeholder="请选择地市级名称" style="width:220px" clearable
+                        @change="changeCity">
+                        <el-option :label="item.areaName" :value="item.areaCode" v-for="item in cityOptions"
+                            :key="item.areaCode">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="区：" prop="countyCode">
+                    <el-select v-model="form.countyCode" placeholder="请选择区县级名称" style="width:220px" clearable>
+                        <el-option :label="item.areaName" :value="item.areaCode" v-for="item in countyOptions"
+                            :key="item.areaCode"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancle">取 消</el-button>
+                <el-button type="primary" @click="confirmZXB('form')" v-if="type==1">确 定</el-button>
+                <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定2</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
-    import CompanyBasicInfo from './components/CompanyBasicInfo'
-    import ZXBPage from './components/ZXBPage'//中信保
-    import TYCPage from './components/TYCPage' //企查查
-    import ZCXPage from './components/ZCXPage' //中诚信
-    export default {
-        components: {
-            CompanyBasicInfo,
-            ZXBPage,
-            TYCPage,
-            ZCXPage
-        },
-        data() {
-            return {
-                companyName: this.$route.query.companyName,
-                activeTab: this.$route.query.index
-            }
-        },
-        created() {
-            console.log(this.$route.query.companyId);
-            this.getCareStatus()
-            //this.companyInfo = this.$route.query
-        },
-        methods: {
-            getCareStatus() {
-                let param = {
-                    companyId: parseInt(this.$route.query.companyId),
-                    userId: parseInt(this.$Cookies.get('userId'))
+import CompanyBasicInfo from './components/CompanyBasicInfo'
+import ZXBPage from './components/ZXBPage'//中信保
+import TYCPage from './components/TYCPage' //企查查
+import ZCXPage from './components/ZCXPage' //中诚信
+export default {
+    components: {
+        CompanyBasicInfo,
+        ZXBPage,
+        TYCPage,
+        ZCXPage
+    },
+    data () {
+        let validateAreaLevel = (rule, value, callback) => {
+            if (this.form.entType == '1') {
+                if (value === '') {
+                    callback(new Error('请选择行政级别'));
+                } else {
+                    callback()
                 }
-                this.$ajax.manage.getCareStatus(param).then(res => {
-                    console.log(res)
-                })
+            } else {
+                callback()
             }
+        };
+        let validateProvince = (rule, value, callback) => {
+            if (this.form.entType == '1' && this.form.areaLevel != '') {
+                if (value === '') {
+                    callback(new Error('请选择省级名称'));
+                } else {
+                    callback()
+                }
+            } else {
+                callback()
+            }
+        };
+        let validateCity = (rule, value, callback) => {
+            if (this.form.entType == '1' && (this.form.areaLevel == '2' || this.form.areaLevel == '3')) {
+                if (value === '') {
+                    callback(new Error('请选择地市级名称'));
+                } else {
+                    callback()
+                }
+            } else {
+                callback()
+            }
+        };
+        let validateCounty = (rule, value, callback) => {
+            if (this.form.entType == '1' && this.form.areaLevel == '3') {
+                if (value === '') {
+                    callback(new Error('请选择区县级名称'));
+                } else {
+                    callback()
+                }
+            } else {
+                callback()
+            }
+        };
+        return {
+            companyName: '',
+            activeTab: this.$route.query.index,
+            careStatus: {},
+            isCare: '',
+            zhongxinbaoCare: false,
+            zhongchengxinCare: false,
+            dialogFormVisible: false,
+            form: {
+                code: this.$route.query.creditCode,
+                entName: '',
+                entType: '',
+                areaLevel: '',
+                provinceCode: '',
+                provinceName: '',
+                cityCode: '',
+                cityName: '',
+                countyCode: '',
+                countyName: ''
+            },
+            provinceOptions: [],
+            cityOptions: [],
+            countyOptions: [],
+            entTypeOptions: [
+                {
+                    code: '0',
+                    value: '非城投企业'
+                },
+                {
+                    code: '1',
+                    value: '城投企业'
+                }
+            ],
+            areaLevelOptions: [
+                {
+                    code: '1',
+                    value: '省级'
+                },
+                {
+                    code: '2',
+                    value: '地市级'
+                },
+                {
+                    code: '3',
+                    value: '区县级'
+                }
+            ],
+            type: null,
+            rules: {
+                code: [
+                    { required: true, message: '请输入统一社会信用代码', trigger: 'blur' }
+                ],
+                entName: [
+                    { required: true, message: '请输入企业名称', trigger: 'blur' }
+                ],
+                entType: [
+                    { required: true, message: '请选择企业类型', trigger: 'change' }
+                ],
+                areaLevel: [
+                    { validator: validateAreaLevel, trigger: 'change' }
+                ],
+                provinceCode: [
+                    { validator: validateProvince, trigger: 'change' }
+                ],
+                cityCode: [
+                    { validator: validateCity, trigger: 'change' }
+                ],
+                countyCode: [
+                    { validator: validateCounty, trigger: 'change' }
+                ]
+            }
+
+        }
+    },
+    created () {
+        this.getCareStatus();
+        this.getArea()
+    },
+    methods: {
+        getCareStatus () {
+            let param = {
+                companyId: parseInt(this.$route.query.companyId),
+                userId: parseInt(this.$Cookies.get('userId'))
+            }
+            this.$ajax.manage.getCareStatus(param).then(res => {
+                console.log(res)
+                if (res.data.code == '0') {
+                    this.careStatus = JSON.parse(res.data.careStatus);
+                    this.companyName = this.careStatus.companyName;
+                    this.form.entName = this.careStatus.companyName;
+                    if (this.careStatus.zhongchengxin == '1') {
+                        this.zhongchengxinCare = true
+                    } else {
+                        this.zhongchengxinCare = false
+                    };
+                    if (this.careStatus.zhongxinbao == '1') {
+                        this.zhongxinbaoCare = true
+                    } else {
+                        this.zhongxinbaoCare = false
+                    }
+                }
+            })
+        },
+        getArea () {
+            //获取省市区县信息
+            this.$ajax.manage.getArea({}).then(res => {
+                console.log(res);
+                if (res.status == 200) {
+                    this.provinceOptions = res.data.areaList
+                }
+            })
+        },
+        changeProvince (val) {
+            //省份下拉框改变时
+            this.form.cityCode = '';
+            this.form.countyCode = '';
+            this.cityOptions = this.provinceOptions.find(item => item.areaCode === val).children;
+        },
+        changeCity (val) {
+            //市级下拉框改变时
+            this.form.countyCode = ''
+            this.countyOptions = this.cityOptions.find(item => item.areaCode === val).children;
+        },
+        cancle () {
+            this.dialogFormVisible = false;
+            this.resetForm();
+            this.$refs.form.resetFields();
+        },
+        resetForm () {
+            this.form = {
+                code: this.$route.query.creditCode,
+                entName: this.companyName,
+                entType: '',
+                areaLevel: '',
+                provinceCode: '',
+                provinceName: '',
+                cityCode: '',
+                cityName: '',
+                countyCode: '',
+                countyName: ''
+            };
+        },
+        confirmZCX (formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    let param = {
+                        userId: this.$Cookies.get('userId'),
+                        companyId: this.$route.query.companyId,
+                        code: this.$route.query.creditCode,
+                        entName: this.companyName,
+                        entType: this.form.entType,
+                        areaLevel: this.form.areaLevel,
+                        provinceCode: this.form.provinceCode,
+                        provinceName: this.form.provinceCode !== '' ? this.provinceOptions.find(item => item.areaCode == this.form.provinceCode).areaName : '',
+                        cityCode: this.form.cityCode,
+                        cityName: this.form.cityCode !== '' ? this.cityOptions.find(item => item.areaCode == this.form.cityCode).areaName : '',
+                        countyCode: this.form.countyCode,
+                        countyName: this.form.countyCode !== '' ? this.countyOptions.find(item => item.areaCode == this.form.countyCode).areaName : '',
+                        zhongchengxin: '1'
+                    }
+                    console.log(param);
+                    this.$ajax.manage.careOrNot(param).then(res => {
+                        console.log(res);
+                        if (res.data.code == 0) {
+                            this.$message.success(res.data.msg);
+                            this.dialogFormVisible = false;
+                            this.getCareStatus()
+                        } else {
+                            this.$message.error(res.data.msg);
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
+        },
+        confirmZXB (formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    let param = {
+                        userId: this.$Cookies.get('userId'),
+                        companyId: this.$route.query.companyId,
+                        code: this.$route.query.creditCode,
+                        entName: this.companyName,
+                        entType: this.form.entType,
+                        areaLevel: this.form.areaLevel,
+                        provinceCode: this.form.provinceCode,
+                        provinceName: this.form.provinceCode !== '' ? this.provinceOptions.find(item => item.areaCode == this.form.provinceCode).areaName : '',
+                        cityCode: this.form.cityCode,
+                        cityName: this.form.cityCode !== '' ? this.cityOptions.find(item => item.areaCode == this.form.cityCode).areaName : '',
+                        countyCode: this.form.countyCode,
+                        countyName: this.form.countyCode !== '' ? this.countyOptions.find(item => item.areaCode == this.form.countyCode).areaName : '',
+                        zhongxinbao: '1'
+                    }
+                    console.log(param);
+                    this.$ajax.manage.careOrNot(param).then(res => {
+                        console.log(res);
+                        if (res.data.code == 0) {
+                            this.$message.success(res.data.msg);
+                            this.dialogFormVisible = false;
+                            this.getCareStatus()
+                        } else {
+                            this.$message.error(res.data.msg);
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            });
+        },
+        cancleFoucus () {
+            //取消关注
+            let param = {
+                userId: this.$Cookies.get('userId'),
+                companyId: this.$route.query.companyId,
+                zhongchengxin: '0'
+            }
+            this.$ajax.manage.careOrNot(param).then(res => {
+                console.log(res);
+                if (res.data.code == 0) {
+                    this.$message.success(res.data.msg);
+                    this.getCareStatus()
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            })
+        },
+        goZXBFocus () {
+            //zxb关注
+            // this.resetForm();
+            this.dialogFormVisible = true;
+            this.type = 1;
+        },
+        goZCXFocus () {
+            //zcx关注
+            // this.resetForm();
+            this.dialogFormVisible = true;
+            this.type = 2;
         }
     }
+}
 </script>
 <style lang="less" scoped>
-    .essInfo {
-        width: 100%;
-        min-width: 1300px;
-        height: 100%;
-        margin: auto;
-        padding: 20px 5%;
-        box-sizing: border-box;
-        overflow: auto;
+.essInfo {
+    width: 100%;
+    min-width: 1300px;
+    height: 100%;
+    margin: auto;
+    padding: 20px 5%;
+    box-sizing: border-box;
+    overflow: auto;
 
-        .name {
-            margin-bottom: 22px;
-            font-size: 18px;
+    .title {
+        text-align: right;
+        color: #ffa931;
+        height: 35px;
+        line-height: 35px;
+
+        span {
+            cursor: pointer;
+
+            img {
+                width: 24px;
+                height: 24px;
+                vertical-align: middle;
+                position: relative;
+                bottom: 3px;
+            }
         }
     }
+
+    .name {
+        margin-bottom: 22px;
+        font-size: 18px;
+    }
+}
 </style>

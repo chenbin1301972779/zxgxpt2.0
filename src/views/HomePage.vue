@@ -265,9 +265,10 @@
                 this.$router.push({
                     path: '/essInfo',
                     query: {
-                        companyName: item.companyName,
+                        // companyName: item.companyName,
                         companyId: item.companyId,
                         creditCode: item.creditCode,
+                        buildDate: item.buildDate,
                         index: index
                     }
                 })
@@ -316,7 +317,7 @@
                         this.showBox = 2;
                     }
                 })
-            }
+            },
         },
 
     }

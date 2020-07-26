@@ -62,6 +62,16 @@ async function getCareStatus (param) {
     let getCareStatus = await ajax.post(`/api/user/getCareStatus`, param)
     return getCareStatus
 }
+//获取省市区县信息 
+async function getArea (param) {
+    let getArea = await ajax.post(`/api/common/getArea`, param)
+    return getArea
+}
+//获取用户信息
+async function getUserInfo (param) {
+    let getUserInfo = await ajax.post(`/api/user/getUserInfo`, param)
+    return getUserInfo
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -73,7 +83,9 @@ const manage = {
     careOrNot: careOrNot,
     zhongxinbao: zhongxinbao,
     directSearchList: directSearchList,
-    getCareStatus: getCareStatus
+    getCareStatus: getCareStatus,
+    getArea: getArea,
+    getUserInfo: getUserInfo
 }
 
 export default manage

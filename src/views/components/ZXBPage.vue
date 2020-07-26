@@ -1,7 +1,7 @@
 <!-- 中信保 -->
 <template>
     <div class="zxbPage">
-        <div style="margin-bottom:15px;text-align:right">
+        <div style="margin-bottom:15px;">
             <el-button type="primary" @click="applyReport">报告申请</el-button>
         </div>
         <div class="main-box">
@@ -222,149 +222,158 @@
     </div>
 </template>
 <script>
-export default {
-    data () {
-        return {
-            dialogVisible: false,
-            haveCreditCode: {
-                reportbuyerNo: 'CHN001941411',
-                reportCorpCountryCode: '',
-                reportCorpChnName: '',
-                reportCorpEngName: '',
-                reportCorpaddress: '',
-                creditno: '',
-                istranslation: '0'
-            },
-            noCreditCode: {
-                userId: parseInt(this.$Cookies.get('userId')),
-                reportbuyerNo: '',
-                reportCorpCountryCode: '',
-                reportCorpChnName: '',
-                reportCorpEngName: '',
-                reportCorpaddress: '',
-                creditno: '',
-                noIstranslation: '0',
-            },
-            istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
-            noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }]
+    export default {
+        data() {
+            return {
+                dialogVisible: false,
+                haveCreditCode: {
+                    reportbuyerNo: 'CHN001941411',
+                    reportCorpCountryCode: '',
+                    reportCorpChnName: '',
+                    reportCorpEngName: '',
+                    reportCorpaddress: '',
+                    creditno: '',
+                    istranslation: '0'
+                },
+                noCreditCode: {
+                    userId: parseInt(this.$Cookies.get('userId')),
+                    reportbuyerNo: '',
+                    reportCorpCountryCode: '',
+                    reportCorpChnName: '',
+                    reportCorpEngName: '',
+                    reportCorpaddress: '',
+                    creditno: '',
+                    noIstranslation: '0',
+                },
+                istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
+                noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }]
 
+            }
+        },
+        methods: {
+            downPdf() {
+                //pdf下载
+                let param = {
+                    "userId": parseInt(this.$Cookies.get('userId')),
+                    "username": "admin",
+                    "password": "123456",
+                    "clientNo": "20000340"
+                }
+                this.$ajax.manage.getPDF(param).then(res => {
+                    const content = res.data
+                    const blob = new Blob([content])
+                    const fileName = '中国企业资信评估准报告.pdf'
+                    if ('download' in document.createElement('a')) { // 非IE下载
+                        const elink = document.createElement('a')
+                        elink.download = fileName
+                        elink.style.display = 'none'
+                        elink.href = URL.createObjectURL(blob)
+                        document.body.appendChild(elink)
+                        elink.click()
+                        URL.revokeObjectURL(elink.href) // 释放URL 对象
+                        document.body.removeChild(elink)
+                    } else { // IE10+下载
+                        navigator.msSaveBlob(blob, fileName)
+                    }
+                })
+            },
+            applyReport() {
+                //打开报告申请弹框
+                this.dialogVisible = true
+            },
+            applyNoCode() {
+                if (this.noCreditCode.reportCorpCountryCode === '') {
+                    this.$message.warning('请输入待调查企业国别');
+                    return;
+                } else if (this.noCreditCode.reportCorpChnName === '' && this.noCreditCode.reportCorpEngName === '') {
+                    this.$message.warning('请输入待调查企业中文名称或英文名称');
+                    return;
+                } else if (this.noCreditCode.reportCorpaddress === '') {
+                    this.$message.warning('请输入待调查企业地址');
+                    return;
+                } else if (this.noCreditCode.creditno === '') {
+                    this.$message.warning('请输入待调查企业统一社会信用代码');
+                    return;
+                }
+                console.log(this.noCreditCode);
+                this.$ajax.manage.zhongxinbao(this.noCreditCode).then(res => {
+                    console.log(res);
+                    if (res.status == 200) {
+                        this.$message.success(res.data.returnMsg);
+                        this.dialogVisible = false
+                    }
+                })
+            },
+            applyHaveCode() {
+                this.$ajax.manage.zhongxinbao(this.haveCreditCode).then(res => {
+                    console.log(res);
+                    if (res.status == 200) {
+                        this.$message.success(res.data.returnMsg);
+                        this.dialogVisible = false
+                    }
+                })
+            },
         }
-    },
-    methods: {
-        downPdf () {
-            //pdf下载
-            let param = {
-                "userId": parseInt(this.$Cookies.get('userId')),
-                "username": "admin",
-                "password": "123456",
-                "clientNo": "20000340"
-            }
-            this.$ajax.manage.getPDF(param).then(res => {
-                const content = res.data
-                const blob = new Blob([content])
-                const fileName = '中国企业资信评估准报告.pdf'
-                if ('download' in document.createElement('a')) { // 非IE下载
-                    const elink = document.createElement('a')
-                    elink.download = fileName
-                    elink.style.display = 'none'
-                    elink.href = URL.createObjectURL(blob)
-                    document.body.appendChild(elink)
-                    elink.click()
-                    URL.revokeObjectURL(elink.href) // 释放URL 对象
-                    document.body.removeChild(elink)
-                } else { // IE10+下载
-                    navigator.msSaveBlob(blob, fileName)
-                }
-            })
-        },
-        applyReport () {
-            //打开报告申请弹框
-            this.dialogVisible = true
-        },
-        applyNoCode () {
-            if (this.noCreditCode.reportCorpCountryCode === '') {
-                this.$message.warning('请输入待调查企业国别');
-                return;
-            } else if (this.noCreditCode.reportCorpChnName === '' && this.noCreditCode.reportCorpEngName === '') {
-                this.$message.warning('请输入待调查企业中文名称或英文名称');
-                return;
-            } else if (this.noCreditCode.reportCorpaddress === '') {
-                this.$message.warning('请输入待调查企业地址');
-                return;
-            } else if (this.noCreditCode.creditno === '') {
-                this.$message.warning('请输入待调查企业统一社会信用代码');
-                return;
-            }
-            console.log(this.noCreditCode);
-            this.$ajax.manage.zhongxinbao(this.noCreditCode).then(res => {
-                console.log(res);
-                if (res.status == 200) {
-                    this.$message.success(res.data.returnMsg);
-                    this.dialogVisible = false
-                }
-            })
-        },
-        applyHaveCode () {
-            this.$ajax.manage.zhongxinbao(this.haveCreditCode).then(res => {
-                console.log(res);
-                if (res.status == 200) {
-                    this.$message.success(res.data.returnMsg);
-                    this.dialogVisible = false
-                }
-            })
-        },
     }
-}
 </script>
 <style lang="less" scoped>
-.zxbPage {
-    /deep/.el-input__inner {
-        border: none;
-    }
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    box-sizing: border-box;
-    .main-box {
-        .titile {
-            font-weight: bold;
-            font-size: 14px;
+    .zxbPage {
+        /deep/.el-input__inner {
+            border: none;
         }
-    }
-    table {
+
         width: 100%;
-        text-align: center;
-        border-collapse: collapse;
-        border-spacing: 0;
-        border: 1px solid #e3e3e3;
-        margin: 15px auto;
+        height: 100%;
+        margin: auto;
+        box-sizing: border-box;
 
-        td {
-            word-break: break-all; /*允许在字内换行,即单词可分*/
-            word-wrap: break-word; /*允许长单词或URL地址换行*/
-            border-right: 1px solid #e3e3e3;
-            border-bottom: 1px solid #e3e3e3;
-            font-size: 14px;
-            height: 36px;
+        .main-box {
+            .titile {
+                font-weight: bold;
+                font-size: 14px;
+            }
         }
-        .gbGray {
-            background: #f1f3f4;
-        }
-    }
-    .report-box {
+
         table {
-            table-layout: auto;
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #e3e3e3;
+            margin: 15px auto;
 
-            th {
+            td {
+                word-break: break-all;
+                /*允许在字内换行,即单词可分*/
+                word-wrap: break-word;
+                /*允许长单词或URL地址换行*/
                 border-right: 1px solid #e3e3e3;
                 border-bottom: 1px solid #e3e3e3;
+                font-size: 14px;
                 height: 36px;
             }
-            border: none;
-            td {
-                // border: none;
+
+            .gbGray {
+                background: #f1f3f4;
+            }
+        }
+
+        .report-box {
+            table {
+                table-layout: auto;
+
+                th {
+                    border-right: 1px solid #e3e3e3;
+                    border-bottom: 1px solid #e3e3e3;
+                    height: 36px;
+                }
+
+                border: none;
+
+                td {
+                    // border: none;
+                }
             }
         }
     }
-}
 </style>

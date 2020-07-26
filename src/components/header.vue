@@ -47,7 +47,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="userSettingDialog = false">取 消</el-button>
-                <el-button type="primary" @click="userSettingDialog = false">保 存</el-button>
+                <el-button type="primary" @click="saveUserInfo">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -55,143 +55,188 @@
 </template>
 
 <script>
-export default {
-    inject: ['reload'],
-    data () {
-        return {
-            dialogVisible: false,
-            form: {
-                username: '',
-                password: ''
+    export default {
+        inject: ['reload'],
+        data() {
+            return {
+                dialogVisible: false,
+                form: {
+                    username: '',
+                    password: ''
+                },
+                loginUserName: '',
+                userSettingDialog: false,
+                userSettingForm: {
+                    username: this.$Cookies.get('username'),
+                    name: '',
+                    password: '',
+                    email: '',
+                    mobile: ''
+                }
+            }
+        },
+        created() {
+            this.$Bus.$on('showDialog', () => {
+                this.dialogVisible = true;
+            })
+        },
+        mounted() {
+            console.log(this.$route.query.username);
+            if (this.$route.query.username) {
+                this.skipLogin();
+            }
+            this.getUserInfo()
+            //this.reload()
+        },
+        methods: {
+            openLoginDialog() {
+                //打开登录弹框
+                this.dialogVisible = true;
             },
-            loginUserName: '',
-            userSettingDialog: false,
-            userSettingForm: {
-                username: this.$Cookies.get('username'),
-                name: '',
-                password: '',
-                email: '',
-                mobile: ''
-            }
-        }
-    },
-    created () {
-        this.$Bus.$on('showDialog', () => {
-            this.dialogVisible = true;
-        })
-    },
-    mounted () {
-        console.log(this.$route.query.username);
-        if (this.$route.query.username) {
-            this.skipLogin();
-        }
-        //this.reload()
-    },
-    methods: {
-        openLoginDialog () {
-            //打开登录弹框
-            this.dialogVisible = true;
-        },
-        login () {
-            //登录
-            if (this.form.username === '') {
-                this.$message.warning('请输入用户名');
-                return;
-            } else if (this.form.password === '') {
-                this.$message.warning('请输入密码');
-                return;
-            }
-            let param = {
-                username: this.form.username,
-                password: this.form.password,
-            }
-            this.$ajax.manage.login(param).then(res => {
-                console.log(res);
-                if (res.data.code === '0') {
-                    this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
-                    this.$Cookies.set('username', res.data.name, { expires: 30 });
-                    this.$Cookies.set('userId', res.data.userId, { expires: 30 });
-                    this.dialogVisible = false;
-                    this.loginUserName = res.data.name;
-                    this.reload()
-                } else {
-                    this.$message.error(res.data.msg)
+            login() {
+                //登录
+                if (this.form.username === '') {
+                    this.$message.warning('请输入用户名');
+                    return;
+                } else if (this.form.password === '') {
+                    this.$message.warning('请输入密码');
+                    return;
                 }
-            })
-        },
-        logOut () {
-            //退出
-            this.$Cookies.remove(this.$getCookieKey());
-            this.$Cookies.remove('username');
-            this.$Cookies.remove('userId');
-            this.$router.push({ path: '/' });
-            this.reload()
-            this.$router.go(0);
-        },
-        skipLogin () {
-            let param = {
-                username: this.$route.query.username,
-                loginType: 'skip',
-            }
-            this.$ajax.manage.login(param).then(res => {
-                console.log(res);
-                if (res.data.code === '0') {
-                    this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
-                    this.$Cookies.set('username', res.data.name, { expires: 30 });
-                    this.$Cookies.set('userId', res.data.userId, { expires: 30 });
-                    this.loginUserName = res.data.name;
-                    this.$router.push({ path: '/' });
-                    this.reload()
-                } else {
-                    this.$message.error(res.data.msg)
+                let param = {
+                    username: this.form.username,
+                    password: this.form.password,
                 }
-            })
-        },
-        showUserInfo () {
-            //维护用户基本信息弹框
-            this.userSettingDialog = true
+                this.$ajax.manage.login(param).then(res => {
+                    console.log(res);
+                    if (res.data.code === '0') {
+                        this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
+                        this.$Cookies.set('username', res.data.name, { expires: 30 });
+                        this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+                        this.dialogVisible = false;
+                        this.loginUserName = res.data.name;
+                        this.reload()
+                    } else {
+                        this.$message.error(res.data.msg)
+                    }
+                })
+            },
+            logOut() {
+                //退出
+                this.$Cookies.remove(this.$getCookieKey());
+                this.$Cookies.remove('username');
+                this.$Cookies.remove('userId');
+                this.$router.push({ path: '/' });
+                this.reload()
+                this.$router.go(0);
+            },
+            skipLogin() {
+                let param = {
+                    username: this.$route.query.username,
+                    loginType: 'skip',
+                }
+                this.$ajax.manage.login(param).then(res => {
+                    console.log(res);
+                    if (res.data.code === '0') {
+                        this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
+                        this.$Cookies.set('username', res.data.name, { expires: 30 });
+                        this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+                        this.loginUserName = res.data.name;
+                        this.$router.push({ path: '/' });
+                        this.reload()
+                    } else {
+                        this.$message.error(res.data.msg)
+                    }
+                })
+            },
+            showUserInfo() {
+                //维护用户基本信息弹框
+                this.userSettingDialog = true;
+            },
+            getUserInfo() {
+                //获取用户信息
+                let param = {
+                    userId: this.$Cookies.get("userId")
+                };
+                this.$ajax.manage.getUserInfo(param).then(res => {
+                    console.log(res);
+                    if (res.status == 200) {
+                        this.userSettingForm.name = res.data.user.name;
+                        this.userSettingForm.password = res.data.user.password;
+                        this.userSettingForm.email = res.data.user.email;
+                        this.userSettingForm.mobile = res.data.user.mobile;
+                    }
+                })
+            },
+            saveUserInfo() {
+                let param = {
+                    userId: this.$Cookies.get("userId"),
+                    name: this.userSettingForm.name,
+                    password: this.userSettingForm.password,
+                    email: this.userSettingForm.email,
+                    mobile: this.userSettingForm.mobile
+                }
+                this.$ajax.manage.updateUser(param).then(res => {
+                    console.log(res);
+                    if (res.data.code == 0) {
+                        this.$message.success(res.data.msg);
+                        this.userSettingDialog = false
+                    }
+                })
+            },
+            clearUserForm() {
+                this.userSettingForm = {
+                    username: this.$Cookies.get('username'),
+                    name: '',
+                    password: '',
+                    email: '',
+                    mobile: ''
+                }
+            }
         }
     }
-}
 </script>
 
 <style lang="less" scoped>
-.header {
-    line-height: 58px;
-    white-space: nowrap;
-    overflow: hidden;
-    margin-bottom: 10px;
-    background: #1b7fbd;
-    padding: 0 60px;
-    img {
-        height: 40px;
-        cursor: pointer;
-    }
-    .title {
-        font-size: 16px;
-        font-weight: bold;
-        color: rgba(71, 140, 209, 1);
-        margin-left: 16px;
-        color: #fff;
-        img {
-            vertical-align: middle;
-        }
-    }
+    .header {
+        line-height: 58px;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background: #1b7fbd;
+        padding: 0 60px;
 
-    .info {
-        float: right;
-        margin-right: 38px;
-        font-size: 14px;
-        color: #333333;
-        cursor: pointer;
-        color: #fff;
-        .infoImg {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 6px;
+        img {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(71, 140, 209, 1);
+            margin-left: 16px;
+            color: #fff;
+
+            img {
+                vertical-align: middle;
+            }
+        }
+
+        .info {
+            float: right;
+            margin-right: 38px;
+            font-size: 14px;
+            color: #333333;
+            cursor: pointer;
+            color: #fff;
+
+            .infoImg {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                vertical-align: middle;
+                margin-right: 6px;
+            }
         }
     }
-}
 </style>

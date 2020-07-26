@@ -7,7 +7,7 @@ module.exports = {
             errors: true
         },
         // 设置代理
-        port: 9092,
+        port: 9001,
         proxy: {
             '/api': {
                 target: 'http://10.0.130.28:9292/',
