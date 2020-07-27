@@ -6,6 +6,29 @@
         </div>
         <div class="content">
             <router-view />
+			<span class="button-wrapper" v-if="$Cookies.get(this.$getCookieKey())">
+				<el-badge :is-dot="newMsg" class="item">
+				<el-popover
+				  placement="left-end"
+				  width="300"
+				  trigger="click"
+				  title="消息提醒">
+					<div class="message-wrapper">
+						<div class="message-box" v-for="(item,index) in messageData">
+							<div class="message-content">
+								<i class="el-icon-s-promotion" style="margin-right: 5px;color:#617be3"></i>
+								<div class="content-right">{{item.content}}</div>
+							</div>
+							<!-- <div class="message-bottom">
+								<span>{{item.name}}</span>
+								<span>{{item.date}}</span>
+							</div> -->
+						</div>
+					</div>
+					  <el-button type="success" icon="el-icon-message" circle slot="reference" @click="checkMsg"></el-button>
+				</el-popover>
+					</el-badge>
+			</span>
         </div>
         <div class="footer">
             <p>COPYRIGHT &copy; ICP许可证：苏B2-20190525</p>
@@ -23,10 +46,59 @@ export default {
     },
     data () {
         return {
-
+			messageData:[],
+			websock: null,
+			newMsg:false
         }
     },
+	created() {
+		//this.messageData = JSON.parse(sessionStorage.getItem('msgData'))
+		if(this.$Cookies.get(this.$getCookieKey())){
+			 this.initWebSocket();
+		}else{
+			this.websock.close()
+		}
+	},
+	destroyed() {
+	  //this.websock.close() //离开路由之后断开websocket连接
+	},
     methods: {
+		initWebSocket(){ //初始化weosocket
+			const wsuri = `ws://10.0.130.28:9292/webSocket/${this.$Cookies.get('userId')}`;
+			this.websock = new WebSocket(wsuri);
+			this.websock.onmessage = this.websocketonmessage;
+			this.websock.onopen = this.websocketonopen;
+			this.websock.onerror = this.websocketonerror;
+			this.websock.onclose = this.websocketclose;
+			console.log(wsuri)
+		  },
+		  websocketonopen(){ //连接建立之后执行send方法发送数据
+			// let actions = {"test":"12345"};
+			// this.websocketsend(JSON.stringify(actions));
+		  },
+		  websocketonerror(){//连接建立失败重连
+			this.initWebSocket();
+		  },
+		  websocketonmessage(e){ //数据接收
+			//console.log(e);
+			let obj = {
+				content:e.data
+			}
+			this.messageData.push(obj);
+			//sessionStorage.setItem('msgData', JSON.stringify(this.messageData))
+			this.newMsg = true;
+			//const redata = JSON.parse(e.data);
+			//console.log(sessionStorage.getItem('msgData'))
+		  },
+		  websocketsend(Data){//数据发送
+			this.websock.send(Data);
+		  },
+		  websocketclose(e){  //关闭
+			console.log('断开连接',e);
+		  },
+		  checkMsg(){
+			  this.newMsg = false;
+		  }
     }
 }
 </script>
@@ -46,6 +118,12 @@ export default {
         flex: 1;
         background-color: #efefef;
         overflow: auto;
+		position: relative;
+		.button-wrapper{
+			position: fixed;
+			bottom:75px;
+			right: 20px;
+		}
     }
     .footer {
         padding: 7px;
@@ -55,5 +133,34 @@ export default {
         text-align: center;
         background: #263859;
     }
+}
+.message-wrapper{
+	.message-box{
+		padding: 5px;
+		.message-content{
+			display: flex;
+			margin-bottom: 10px;
+			.content-left{
+				width:46px;
+				height: 46px;
+				background-color: #409EFF;
+				border-radius: 50%;
+				text-align: center;
+				line-height: 46px;
+				color: #fff;
+				margin-right: 10px;
+			}
+			.content-right{
+				flex:1;
+				font-size: 14px;
+			}
+		}
+		.message-bottom{
+			display: flex;
+			justify-content:space-between;
+			color: darkgray;
+			margin-top: 10px;
+		}
+	}
 }
 </style>

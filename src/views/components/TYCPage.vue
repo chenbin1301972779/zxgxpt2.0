@@ -1,4 +1,4 @@
-<!-- 企查查 -->
+<!-- 天眼查 -->
 <template>
     <div class="TYCPage">
 

@@ -25,7 +25,7 @@
                     </div>
                     <div class="main">
                         <el-tabs v-model="activeAlarmTab" stretch>
-                            <el-tab-pane label="企查查" name="1">
+                            <el-tab-pane label="天眼查" name="1">
                                 <div class="tab-content-wrapper">
                                     <div class="tab-content" v-for="(item,index) in qichachaData" :key="index">
                                         <p style="font-weight:bold;font-size:14px">
@@ -44,7 +44,9 @@
 
                             </el-tab-pane>
                             <el-tab-pane label="中诚信" name="2">
-                                <div class="tab-content-wrapper">中诚信</div>
+                                <div class="tab-content-wrapper">
+									<div style="text-align: right;font-size: 14px;color:#617be3">查看更多>></div>
+								</div>
                             </el-tab-pane>
                             <el-tab-pane label="站内信" name="3">
                                 <div class="tab-content-wrapper">站内信</div>
@@ -66,11 +68,11 @@
                                 <div class="tab-content-wrapper">
                                     <div v-for="(item,index) in careList" :key="index" class="care-list">
                                         <img src="../../public/img/images/notice.png" alt="" @click="cancleFocus(item)">
-                                        <span>{{item.companyName}}</span>
+                                        <span @click="moreNews(item,'0')">{{item.companyName}}</span>
                                         <img src="../../public/img/images/index_icon01.png" alt=""
                                             v-if="item.zhongchengxin===1" class="care">
                                         <img src="../../public/img/images/index_icon02.png" alt=""
-                                            v-if="item.zhongxinbao===1" class="care">
+                                            v-if="item.tianyancha===1" class="care">
                                     </div>
                                 </div>
                             </el-tab-pane>
@@ -113,14 +115,14 @@
                         <ul class="proList_li" v-if="searchList.length>0">
                             <li class="clear" v-for="(item,index) in searchList" :key="index">
                                 <div class="fl-left proList_content">
-                                    <p class="proList_txt" @click="moreNews(item,'0')">{{item.companyName}}
+                                    <p class="proList_txt" @click="moreNews(item,'0')" v-html="brightenKeyword(item.companyName,searchVal)">
                                     </p>
                                     <p>社会统一信用代码：{{item.creditCode}}</p>
                                     <p>法人代表：{{item.operName}}</p>
                                     <p>成立时间：{{item.buildDate}}</p>
                                 </div>
                                 <dl class="fl-right proList_btn">
-                                    <el-button plain type="primary" size="medium" @click="moreNews(item,'1')">企查查
+                                    <el-button plain type="primary" size="medium" @click="moreNews(item,'1')">天眼查
                                     </el-button>
                                     <el-button plain type="primary" size="medium" @click="moreNews(item,'2')">中信保
                                     </el-button>
@@ -138,6 +140,16 @@
                         <span class="icon"></span>
                         <span>我的关注</span>
                     </div>
+					<div class="tab-content-wrapper">
+					    <div v-for="(item,index) in careList" :key="index" class="care-list">
+					        <img src="../../public/img/images/notice.png" alt="" @click="cancleFocus(item)">
+					        <span @click="moreNews(item,'0')">{{item.companyName}}</span>
+					        <img src="../../public/img/images/index_icon01.png" alt=""
+					            v-if="item.zhongchengxin===1" class="care">
+					        <img src="../../public/img/images/index_icon02.png" alt=""
+					            v-if="item.tianyancha===1" class="care">
+					    </div>
+					</div>
                 </div>
             </div>
         </div>
@@ -168,7 +180,7 @@
                         'person': '张三',
                         'time': '2020-7-24'
                     }
-                ],//企查查
+                ],//天眼查
                 useList: [
                     { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
                     { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
@@ -221,7 +233,6 @@
                 let param = {
                     userId: this.$Cookies.get('userId')
                 }
-                console.log(param);
                 this.$ajax.manage.latestWords(param).then(res => {
                     if (res.status == 200) {
                         this.latestSearchList = res.data.latestWords
@@ -254,7 +265,7 @@
                 if (index === 0) {
                     //基本信息
                 } else if (index === 1) {
-                    //企查查
+                    //天眼查
                 } else if (index === 2) {
                     //中信保
                 } else if (index === 3) {
@@ -279,7 +290,6 @@
                     userId: this.$Cookies.get('userId')
                 }
                 this.$ajax.manage.getCareList(param).then(res => {
-                    console.log(JSON.parse(res.data.careList))
                     if (res.data.code == 0) {
                         this.careList = JSON.parse(res.data.careList)
                     }
@@ -321,7 +331,25 @@
             searchContent(item) {
                 this.searchVal = item.keyWord;
                 this.seachContent()
-            }
+            },
+			 //搜索高亮
+			brightenKeyword(val, keyword) {
+			    if (keyword.length > 0) {
+			        let keywordArr = keyword.split("");
+			        val = val + "";
+			        keywordArr.forEach(item => {
+			          if (val.indexOf(item) !== -1 && item !== "") {
+			                val = val.replace(
+								new RegExp(item,'g'),
+								'<font color="#f75353">' + item + "</font>");
+							}
+						});
+			        return val;
+			      } else {
+			        return val;
+			      }
+			    }
+			 
         },
 
     }
@@ -418,52 +446,7 @@
             }
 
             .main {
-                .tab-content-wrapper {
-                    min-height: 240px;
-                    overflow: auto;
-
-                    .tab-content {
-                        border: 1px solid #e3e3e3;
-                        border-top: 2px solid #1b7fbd;
-                        padding: 10px 20px;
-                        margin-bottom: 10px;
-
-                        p {
-                            display: flex;
-                            justify-content: space-between;
-                            line-height: 28px;
-                        }
-                    }
-
-                    .care-list {
-                        height: 36px;
-                        line-height: 36px;
-                        font-size: 14px;
-
-                        &:hover {
-                            background: #efefef;
-                            cursor: pointer;
-                        }
-
-                        span {
-                            margin: 0 5px;
-                        }
-
-                        img {
-                            width: 24px;
-                            height: 24px;
-                            vertical-align: middle;
-                            position: relative;
-                            bottom: 2px;
-                        }
-
-                        .care {
-                            width: 20px;
-                            height: 20px;
-                            margin: 0 5px;
-                        }
-                    }
-                }
+                
 
                 .proList_li {
                     li {
@@ -538,5 +521,51 @@
                 }
             }
         }
+		.tab-content-wrapper {
+		    min-height: 240px;
+		    overflow: auto;
+		
+		    .tab-content {
+		        border: 1px solid #e3e3e3;
+		        border-top: 2px solid #1b7fbd;
+		        padding: 10px 20px;
+		        margin-bottom: 10px;
+		
+		        p {
+		            display: flex;
+		            justify-content: space-between;
+		            line-height: 28px;
+		        }
+		    }
+		
+		    .care-list {
+		        height: 36px;
+		        line-height: 36px;
+		        font-size: 14px;
+		
+		        &:hover {
+		            background: #efefef;
+		            cursor: pointer;
+		        }
+		
+		        span {
+		            margin: 0 5px;
+		        }
+		
+		        img {
+		            width: 24px;
+		            height: 24px;
+		            vertical-align: middle;
+		            position: relative;
+		            bottom: 2px;
+		        }
+		
+		        .care {
+		            width: 20px;
+		            height: 20px;
+		            margin: 0 5px;
+		        }
+		    }
+		}
     }
 </style>

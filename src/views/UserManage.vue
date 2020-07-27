@@ -1,6 +1,12 @@
 <!-- 用户管理 -->
 <template>
     <div class="userManage">
+		<div style="margin-bottom: 15px;">
+			<el-breadcrumb separator-class="el-icon-arrow-right">
+			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+			  <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+			</el-breadcrumb>
+		</div>
         <div class="searchbox">
             <el-input class="fl-left manageTableInput" v-model="search.userName" placeholder="请输入用户名" clearable
                 style="width: 200px;margin-right: 10px;">

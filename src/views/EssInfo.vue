@@ -1,29 +1,35 @@
 <template>
     <div class="essInfo">
+		<div style="margin-bottom: 15px;">
+			<el-breadcrumb separator-class="el-icon-arrow-right">
+			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+			  <el-breadcrumb-item>查看</el-breadcrumb-item>
+			</el-breadcrumb>
+		</div>
         <div class="name">{{companyName}}</div>
         <el-tabs type="border-card" v-model="activeTab">
             <el-tab-pane label="企业基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
             </el-tab-pane>
-            <el-tab-pane label="企查查">
+            <el-tab-pane label="天眼查">
+				<div class="title">
+				    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
+				        <img src="../../public/img/images/notice.png" alt="">
+				        取消关注
+				    </span>
+				    <span @click="goTYCFocus" v-else>
+				        <img src="../../public/img/images/noticeDel.png" alt="">
+				        点击关注
+				    </span>
+				</div>
                 <TYCPage></TYCPage>
             </el-tab-pane>
             <el-tab-pane label="中信保">
-                <div class="title">
-                    <span @click="cancleFoucus" v-if="zhongxinbaoCare">
-                        <img src="../../public/img/images/notice.png" alt="">
-                        取消关注
-                    </span>
-                    <span @click="goZXBFocus" v-else>
-                        <img src="../../public/img/images/noticeDel.png" alt="">
-                        点击关注
-                    </span>
-                </div>
                 <ZXBPage></ZXBPage>
             </el-tab-pane>
             <el-tab-pane label="中诚信">
                 <div class="title">
-                    <span @click="cancleFoucus" v-if="zhongchengxinCare">
+                    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
                         <img src="../../public/img/images/notice.png" alt="">
                         取消关注
                     </span>
@@ -80,7 +86,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancle">取 消</el-button>
-                <el-button type="primary" @click="confirmZXB('form')" v-if="type==1">确 定</el-button>
+                <el-button type="primary" @click="confirmTYC('form')" v-if="type==1">确 定</el-button>
                 <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定</el-button>
             </div>
         </el-dialog>
@@ -89,7 +95,7 @@
 <script>
 import CompanyBasicInfo from './components/CompanyBasicInfo'
 import ZXBPage from './components/ZXBPage'//中信保
-import TYCPage from './components/TYCPage' //企查查
+import TYCPage from './components/TYCPage' //天眼查
 import ZCXPage from './components/ZCXPage' //中诚信
 export default {
     components: {
@@ -148,7 +154,7 @@ export default {
             activeTab: this.$route.query.index,
             careStatus: {},
             isCare: '',
-            zhongxinbaoCare: false,
+            tianyanchaCare: false,
             zhongchengxinCare: false,
             dialogFormVisible: false,
             form: {
@@ -238,10 +244,10 @@ export default {
                     } else {
                         this.zhongchengxinCare = false
                     };
-                    if (this.careStatus.zhongxinbao == '1') {
-                        this.zhongxinbaoCare = true
+                    if (this.careStatus.tianyancha == '1') {
+                        this.tianyanchaCare = true
                     } else {
-                        this.zhongxinbaoCare = false
+                        this.tianyanchaCare = false
                     }
                 }
             })
@@ -319,7 +325,7 @@ export default {
                 }
             });
         },
-        confirmZXB (formName) {
+        confirmTYC (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     let param = {
@@ -335,7 +341,7 @@ export default {
                         cityName: this.form.cityCode !== '' ? this.cityOptions.find(item => item.areaCode == this.form.cityCode).areaName : '',
                         countyCode: this.form.countyCode,
                         countyName: this.form.countyCode !== '' ? this.countyOptions.find(item => item.areaCode == this.form.countyCode).areaName : '',
-                        zhongxinbao: '1'
+                        tianyancha: '1'
                     }
                     console.log(param);
                     this.$ajax.manage.careOrNot(param).then(res => {
@@ -353,7 +359,7 @@ export default {
                 }
             });
         },
-        cancleFoucus () {
+        cancleZCXFoucus () {
             //取消关注
             let param = {
                 userId: this.$Cookies.get('userId'),
@@ -370,7 +376,24 @@ export default {
                 }
             })
         },
-        goZXBFocus () {
+		cancleTYCFoucus () {
+		    //取消关注
+		    let param = {
+		        userId: this.$Cookies.get('userId'),
+		        companyId: this.$route.query.companyId,
+		        tianyancha: '0'
+		    }
+		    this.$ajax.manage.careOrNot(param).then(res => {
+		        console.log(res);
+		        if (res.data.code == 0) {
+		            this.$message.success(res.data.msg);
+		            this.getCareStatus()
+		        } else {
+		            this.$message.error(res.data.msg);
+		        }
+		    })
+		},
+        goTYCFocus () {
             //zxb关注
             // this.resetForm();
             this.dialogFormVisible = true;

@@ -72,6 +72,11 @@ async function getUserInfo (param) {
     let getUserInfo = await ajax.post(`/api/user/getUserInfo`, param)
     return getUserInfo
 }
+//查询clientNo  
+async function getCodeInfo (param) {
+    let getCodeInfo = await ajax.post(`/api/company/getCodeInfo`, param)
+    return getCodeInfo
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -85,7 +90,8 @@ const manage = {
     directSearchList: directSearchList,
     getCareStatus: getCareStatus,
     getArea: getArea,
-    getUserInfo: getUserInfo
+    getUserInfo: getUserInfo,
+	getCodeInfo:getCodeInfo
 }
 
 export default manage
