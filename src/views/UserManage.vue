@@ -78,7 +78,7 @@
                     <el-input v-model="userInfo.userId" disabled style="width:250px"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名：" label-width="100px">
-                    <el-input v-model="userInfo.username" style="width:250px"></el-input>
+                    <el-input v-model="userInfo.username" :disabled="!isNew" style="width:250px"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名：" label-width="100px">
                     <el-input v-model="userInfo.name" style="width:250px"></el-input>
