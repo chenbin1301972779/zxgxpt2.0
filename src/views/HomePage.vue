@@ -45,7 +45,19 @@
                             </el-tab-pane>
                             <el-tab-pane label="中诚信" name="2">
                                 <div class="tab-content-wrapper">
-									<div style="text-align: right;font-size: 14px;color:#617be3" @click="gobi">查看更多>></div>
+									<div style="text-align: right;font-size: 14px;color:#617be3;margin-bottom: 10px;cursor: pointer;" @click="gobi">查看更多>></div>
+									<div class="tab-content" v-for="(item,index) in zhongchengxinData" :key="index">
+									    <p style="font-size:14px;margin-bottom: 10px;">
+									        <span>{{item.companyName}}
+												<span style="background-color:#617be3;" class="status-style" v-if="item.status==1">一般</span>
+												<span style="background-color:#E6A23C;" class="status-style" v-else-if="item.status==2">重大</span>
+											</span>
+									    </p>
+									    <p style="font-size:14px">
+									        <span>风险事件类型：{{item.type}}</span>
+									        <span>最新推送时间：{{item.time}}</span>
+									    </p>
+									</div>
 								</div>
                             </el-tab-pane>
                             <el-tab-pane label="站内信" name="3">
@@ -179,8 +191,22 @@
                         'reason': '鉴于国内猪肉价格上涨',
                         'person': '张三',
                         'time': '2020-7-24'
-                    }
+                    },
                 ],//天眼查
+				zhongchengxinData:[
+					{
+						companyName:'顾家家股份有限公司',
+						type:'开庭公告',
+						status:'1',
+						time:'2020-07-29'
+					},
+					{
+						companyName:'顾家家股份有限公司',
+						type:'注册资本',
+						status:'2',
+						time:'2020-07-29'
+					}
+				],
                 useList: [
                     { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
                     { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
@@ -554,6 +580,14 @@
 		            justify-content: space-between;
 		            line-height: 28px;
 		        }
+				.status-style{
+					border-radius: 20%;
+					padding: 3px;
+					color: #fff;
+					margin-left: 5px;
+					text-align: center;
+					font-size: 12px;
+				}
 		    }
 		
 		    .care-list {

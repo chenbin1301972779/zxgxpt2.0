@@ -29,7 +29,12 @@ const routes = [
                 path: '/iframePage',
                 name: 'IframePage',
                 component: () => import('../views/components/IframePage.vue')
-            }
+            },
+			{
+			    path: '/creditEvaluate',
+			    name: 'IframePage',
+			    component: () => import('../views/CreditEvaluate.vue')
+			}
         ]
     },
 
