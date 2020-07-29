@@ -24,6 +24,11 @@ const routes = [
                 path: '/essInfo',
                 name: 'EssInfo',
                 component: () => import('../views/EssInfo.vue')
+            },
+            {
+                path: '/iframePage',
+                name: 'IframePage',
+                component: () => import('../views/components/IframePage.vue')
             }
         ]
     },

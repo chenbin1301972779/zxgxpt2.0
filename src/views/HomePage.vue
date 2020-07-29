@@ -351,7 +351,12 @@
 			      }
 			    },
             gobi(){
-                window.open(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('username')}`);
+                this.$router.push({
+                    path: '/iframePage',
+                    query: {
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('username')}`)
+                    }
+                })
             }
         },
     }

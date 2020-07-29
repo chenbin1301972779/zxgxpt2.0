@@ -98,7 +98,7 @@
                 </el-form-item>
                 <el-form-item label="公司：" label-width="100px">
                     <el-select v-model="userInfo.companyName" placeholder="请选择公司" @change="selectChange" style="width:250px">
-                        <el-option v-for="item in newCompany" :disabled="!isNew" :key="item.sname" :label="item.sname" :value="item.sname"/>
+                        <el-option v-for="item in newCompany" :disabled="!isNew" :key="item.name" :label="item.name" :value="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="部门：" label-width="100px">
@@ -220,7 +220,7 @@ export default {
         },
         selectChange(selectValue){
             console.log(selectValue);
-            this.userInfo.companyCode = this.newCompany.find(item=>item.sname === selectValue).scode;
+            this.userInfo.companyCode = this.newCompany.find(item=>item.name === selectValue).code;
         },
         saveUserInfo(userInfo){
             console.log(userInfo);
