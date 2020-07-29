@@ -45,7 +45,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="中诚信" name="2">
                                 <div class="tab-content-wrapper">
-									<div style="text-align: right;font-size: 14px;color:#617be3">查看更多>></div>
+									<div style="text-align: right;font-size: 14px;color:#617be3" @click="gobi">查看更多>></div>
 								</div>
                             </el-tab-pane>
                             <el-tab-pane label="站内信" name="3">
@@ -318,6 +318,7 @@
                 //模糊接口查询
                 let param = {
                     keyword: this.searchVal,
+                    userId:this.$Cookies.get('userId'),
                     page: 1
                 }
                 this.$ajax.manage.directSearchList(param).then(res => {
@@ -348,10 +349,11 @@
 			      } else {
 			        return val;
 			      }
-			    }
-			 
+			    },
+            gobi(){
+                window.open(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('username')}`);
+            }
         },
-
     }
 </script>
 <style>

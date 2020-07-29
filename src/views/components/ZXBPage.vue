@@ -127,6 +127,7 @@
                     <tr>
                         <td style="color:#1b7fbd;cursor:pointer" @click="downPdf">
                             中国企业资信评估准报告.pdf
+                            <el-button size="mini" type="primary" v-on:click.stop="viewPdf">预览</el-button>
                         </td>
                         <td>461964000461964 </td>
                         <td>"/home/ftpuser/461964000461964.pdf"</td>
@@ -229,16 +230,28 @@
                 </table>
             </div>
         </el-dialog>
+        <el-dialog title="预览" :visible.sync="dialogPDFVisible" width="80%">
+            <div style="height: 500px; overflow: auto;">
+                <pdfView :url="pdfUrl"></pdfView>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
     import axios from 'axios';
+    import pdfView from '../../components/pdfView';
     export default {
+        components: {
+            pdfView
+        },
         data() {
             return {
+                pdfUrl:'',
                 dialogVisible: false,
+                dialogPDFVisible:false,
                 haveCreditCode: {
 					clientNo:'',
+                    userId: parseInt(this.$Cookies.get('userId')),
                     reportbuyerNo: '',
                     reportCorpCountryCode: '',
                     reportCorpChnName: '',
@@ -282,6 +295,7 @@
                         elink.download = fileName
                         elink.style.display = 'none'
                         elink.href = URL.createObjectURL(blob)
+                        console.log(elink.href);
                         document.body.appendChild(elink)
                         elink.click()
                         URL.revokeObjectURL(elink.href) // 释放URL 对象
@@ -290,42 +304,40 @@
                         navigator.msSaveBlob(blob, fileName)
                     }
                 })
+            },
+            viewPdf(){
+                let fileUrl = '';
+                let param = {
+                    "userId": parseInt(this.$Cookies.get('userId')),
+                    "username": "admin",
+                    "password": "123456",
+                    "clientNo": "20000340"
+                }
+                this.$ajax.manage.getPDF(param).then(res => {
+                    console.log(res.data);
+                    const content = res.data
+                    const blob = new Blob([content])
+                    if (window.createObjectURL != undefined) { // basic
+                        fileUrl = window.createObjectURL(blob);
+                    } else if (window.webkitURL != undefined) { // webkit or chrome
+                        try {
+                            fileUrl = window.webkitURL.createObjectURL(blob);
+                        } catch (error) {
 
-                console.log(this.$ajax.manage.getPdf)
-                // axios({
-                //     method: 'post',
-                //     headers: {
-                //         "token": this.$Cookies.get('token') || '',
-                //     },
-                //     url: 'api/company/getPDF',
-                //     data: {
-                //         "userId": parseInt(this.$cookies.get('userId')),
-                //         "username": "admin",
-                //         "password": "123456",
-                //         "clientNo": "20000340"
-                //     },
-                //     responseType: 'blob',
-                // }).then(res => {
-                //     const content = res.data
-                //     const blob = new Blob([content])
-                //     const fileName = '中国企业资信评估准报告.pdf'
-                //     if ('download' in document.createElement('a')) { // 非IE下载
-                //         const elink = document.createElement('a')
-                //         elink.download = fileName
-                //         elink.style.display = 'none'
-                //         elink.href = URL.createObjectURL(blob)
-                //         document.body.appendChild(elink)
-                //         elink.click()
-                //         URL.revokeObjectURL(elink.href) // 释放URL 对象
-                //         document.body.removeChild(elink)
-                //     } else { // IE10+下载
-                //         navigator.msSaveBlob(blob, fileName)
-                //     }
-                //     // var url = res.data.msg
-                //     // window.open(url);
-                // }).catch(err => {
-                //     console.log(err);
-                // });
+                        }
+                    } else if (window.URL != undefined) { // mozilla(firefox)
+                        try {
+                            fileUrl = window.URL.createObjectURL(blob);
+                        } catch (error) {
+
+                        }
+                    }
+                    console.log(fileUrl);
+                    this.pdfUrl = '/static/pdf/web/viewer.html?file='+encodeURIComponent(fileUrl);
+                    window.open(this.pdfUrl);
+                    this.dialogPDFVisible = true;
+                });
+
             },
             applyReport() {
                 //打开报告申请弹框

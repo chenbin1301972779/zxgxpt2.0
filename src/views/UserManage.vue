@@ -18,7 +18,8 @@
                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
-            <el-button type="primary" @click="searchData">查询</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="searchData">查询</el-button>
+            <el-button type="success" icon="el-icon-plus" v-on:click="newUser">新增</el-button>
         </div>
         <div class="table-box">
             <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" stripe
@@ -31,9 +32,13 @@
                 </el-table-column>
                 <el-table-column prop="permissionLevel" label="权限级别">
                 </el-table-column>
-                <el-table-column prop="email" label="邮箱">
+                <el-table-column prop="email" show-overflow-tooltip label="邮箱">
                 </el-table-column>
                 <el-table-column prop="mobile" label="手机号">
+                </el-table-column>
+                <el-table-column prop="companyName" show-overflow-tooltip label="所属公司名称">
+                </el-table-column>
+                <el-table-column prop="deptName" show-overflow-tooltip label="所属部门名称">
                 </el-table-column>
                 <el-table-column prop="status" label="状态" width="100" sortable>
                     <template slot-scope="scope">
@@ -47,6 +52,8 @@
                         <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">点击停用
 
                         </el-button> -->
+                        <el-button size="mini" type="primary" @click="editUser(scope.row)" plain>
+                            编辑</el-button>
                         <el-button size="mini" type="danger" @click="updateStatus(scope.row,'0')" plain
                             v-if="scope.row.status==1">
                             点击停用</el-button>
@@ -64,6 +71,46 @@
                 </el-pagination>
             </div>
         </div>
+
+        <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px">
+            <el-form :model="userInfo">
+                <el-form-item label="用户ID：" label-width="100px" v-show="!isNew">
+                    <el-input v-model="userInfo.userId" disabled style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名：" label-width="100px">
+                    <el-input v-model="userInfo.username" style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名：" label-width="100px">
+                    <el-input v-model="userInfo.name" style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="密码：" label-width="100px">
+                    <el-input v-model="userInfo.password" style="width:250px" type="password">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="手机：" label-width="100px">
+                    <el-input v-model="userInfo.mobile" style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱：" label-width="100px">
+                    <el-input v-model="userInfo.email" style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="公司代码：" label-width="100px">
+                    <el-input v-model="userInfo.companyCode" disabled style="width:250px"></el-input>
+                </el-form-item>
+                <el-form-item label="公司：" label-width="100px">
+                    <el-select v-model="userInfo.companyName" placeholder="请选择公司" @change="selectChange" style="width:250px">
+                        <el-option v-for="item in newCompany" :disabled="!isNew" :key="item.sname" :label="item.sname" :value="item.sname"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="部门：" label-width="100px">
+                    <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="editUserDialog = false">取 消</el-button>
+                <el-button type="primary" @click="saveUserInfo(userInfo)">保 存</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 <script>
@@ -91,8 +138,17 @@ export default {
                 pageSize: 10
             },
             tableData: [],
-            loading: false
+            loading: false,
+            editUserDialog:false,//用户编辑对话框
+            isNew:false, //是否是新增用户
+            editType:'',
+            userInfo:{},
+            newCompany: [],
+            newCompanyFlag:0
         }
+    },
+    created() {
+        this.getNewCompany();
     },
     mounted () {
         this.getData();
@@ -134,6 +190,46 @@ export default {
             this.$ajax.manage.updateUser(param).then(res => {
                 if (res.status == 200) {
                     this.getData(this.page.currentPage)
+                    this.editUserDialog = false
+                }
+            })
+        },
+        newUser(){
+            this.isNew = true;
+            this.editType = '新增用户';
+            this.userInfo = {newCompanyFlag:1};
+            this.editUserDialog = true;
+        },
+        editUser(row){
+            this.isNew = false;
+            this.editType = '编辑用户';
+            row.newCompanyFlag=0;
+            this.userInfo = row;
+            this.editUserDialog = true;
+        },
+        getNewCompany(){
+            let param = {
+
+            }
+            this.$ajax.manage.getNewCompany(param).then(res => {
+                console.log(res);
+                if (res.data.code == 0) {
+                    this.newCompany = res.data.newCompany;
+                }
+            })
+        },
+        selectChange(selectValue){
+            console.log(selectValue);
+            this.userInfo.companyCode = this.newCompany.find(item=>item.sname === selectValue).scode;
+        },
+        saveUserInfo(userInfo){
+            console.log(userInfo);
+            console.log(JSON.stringify(userInfo))
+            this.$ajax.manage.updateUser(userInfo).then(res => {
+                console.log(res.data);
+                if (res.data.code == 0) {
+                    this.$message.success(res.data.msg);
+                    this.editUserDialog = false;
                 }
             })
         }

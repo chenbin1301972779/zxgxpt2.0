@@ -50,7 +50,7 @@ export default {
         }
     },
     created () {
-        this.data = JSON.stringify(json)
+        this.data = JSON.stringify(json, null, '\t')
     },
     methods: {
         showJSON () {

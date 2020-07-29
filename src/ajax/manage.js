@@ -77,6 +77,11 @@ async function getCodeInfo (param) {
     let getCodeInfo = await ajax.post(`/api/company/getCodeInfo`, param)
     return getCodeInfo
 }
+//公司下拉框查询
+async function getNewCompany (param) {
+    let getNewCompany = await ajax.post(`/api/company/getNewCompany`, param)
+    return getNewCompany
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -91,7 +96,8 @@ const manage = {
     getCareStatus: getCareStatus,
     getArea: getArea,
     getUserInfo: getUserInfo,
-	getCodeInfo:getCodeInfo
+	getCodeInfo:getCodeInfo,
+    getNewCompany:getNewCompany
 }
 
 export default manage
