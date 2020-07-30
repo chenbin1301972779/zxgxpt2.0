@@ -88,7 +88,7 @@ async function getHtml (param) {
     return getHtml
 }
 async function getData (param) {
-    let getData = await newAjax.get(`/api2/open/${param}`)
+    let getData = await newAjax.get(`/tycApi/services/open/search/2.0?word=`+param)
     return getData
 }
 const manage = {

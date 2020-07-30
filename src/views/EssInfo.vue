@@ -22,7 +22,8 @@
 				        点击关注
 				    </span>
 				</div>
-                <TYCPage></TYCPage>
+<!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
+                <iframe width="100%" height="620px" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
             <el-tab-pane label="中信保">
                 <ZXBPage></ZXBPage>
@@ -219,13 +220,16 @@ export default {
                 countyCode: [
                     { validator: validateCounty, trigger: 'change' }
                 ]
-            }
-
+            },
+            tycUrl:''
         }
     },
     created () {
         this.getCareStatus();
-        this.getArea()
+        this.getArea();
+    },
+    mounted() {
+        this.getTYCUrl()
     },
     methods: {
         getCareStatus () {
@@ -404,6 +408,14 @@ export default {
             // this.resetForm();
             this.dialogFormVisible = true;
             this.type = 2;
+        },
+        getTYCUrl(){
+            //TODO 组装天眼查URL
+            console.log("1111"+this.$route.query.companyName);
+            this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
+                let tycid = res.data.result.items[0].id
+                this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
+            })
         }
     }
 }
@@ -441,5 +453,6 @@ export default {
         margin-bottom: 22px;
         font-size: 18px;
     }
+
 }
 </style>

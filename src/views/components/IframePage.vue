@@ -2,7 +2,7 @@
     <div class="iframePage">
         <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>中诚信</el-breadcrumb-item>
+            <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
         </el-breadcrumb>
         <iframe :src="srcUrl" width="100%" height="80%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
     </div>
@@ -10,9 +10,16 @@
 <script>
     export default {
         name: "IframePage",
+        props: {
+            url: {
+                type: String,
+                required: false
+            }
+        },
         data(){
             return{
-                srcUrl:decodeURIComponent(this.$route.query.url)
+                title:decodeURIComponent(this.$route.query.title),
+                srcUrl:this.url||decodeURIComponent(this.$route.query.url)
             }
         },
         created() {

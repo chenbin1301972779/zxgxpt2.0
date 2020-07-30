@@ -225,17 +225,8 @@
                 this.getLatestSearchList();
                 this.getCareList();//关注清单
             }
-			this.testTYC()
         },
         methods: {
-			testTYC(){
-				let param = {
-					id:'816'
-				}
-				this.$ajax.manage.getData(param.id).then(res=>{
-					console.log(res)
-				})
-			},
             seachContent() {
                 if (this.searchVal === '') {
                     this.showBox = 1
@@ -311,7 +302,7 @@
                 this.$router.push({
                     path: '/essInfo',
                     query: {
-                        // companyName: item.companyName,
+                        companyName: item.companyName,
                         companyId: item.companyId,
                         creditCode: item.creditCode,
                         buildDate: item.buildDate,
@@ -389,18 +380,8 @@
                 this.$router.push({
                     path: '/iframePage',
                     query: {
+                        title:encodeURIComponent('中诚信'),
                         url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('username')}`)
-                    }
-                })
-            },
-            goTYC(){
-                let tycUrl = '';
-                //TODO 组装天眼查URL
-
-                this.$router.push({
-                    path: '/iframePage',
-                    query: {
-                        url:encodeURIComponent(tycUrl)
                     }
                 })
             }

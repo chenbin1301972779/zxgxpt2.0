@@ -13,19 +13,19 @@ module.exports = {
                 target: 'http://10.0.130.28:9292/',
                 //target: 'http://192.168.1.54:80/',
                 ws: true,
-                changeOrigin: true,
                 pathRewrite: {
                     '^/api': '/'
-                }
+                },
+                logLevel: 'debug'
             },
-			'/api2': {
-			    target: 'http://open.tianyancha.com/',
+			'/tycApi': {
+			    target: 'http://open.api.tianyancha.com',
 			    //target: 'http://192.168.1.54:80/',
-			    ws: true,
-			    changeOrigin: true,
+                ws: true,
 			    pathRewrite: {
-			        '^/api2': '/'
-			    }
+			        '^/tycApi': '/'
+			    },
+                logLevel: 'debug'
 			}
         }
     },

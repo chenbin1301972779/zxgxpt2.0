@@ -120,7 +120,7 @@ let newAjax = new axios.create({
 newAjax.interceptors.request.use(
     function (config) {
 		// 在发送请求之前做些什么，例如加入token
-		ajax.defaults.headers.common['Authorization'] = 'a092a8e2-12d7-4ad2-8d07-e9d4a07525cb'
+        newAjax.defaults.headers.common['Authorization'] = 'a092a8e2-12d7-4ad2-8d07-e9d4a07525cb'
 		config.headers['Authorization'] = 'a092a8e2-12d7-4ad2-8d07-e9d4a07525cb'
 		return config
     },
