@@ -17,7 +17,16 @@ module.exports = {
                 pathRewrite: {
                     '^/api': '/'
                 }
-            }
+            },
+			'/api2': {
+			    target: 'http://open.tianyancha.com/',
+			    //target: 'http://192.168.1.54:80/',
+			    ws: true,
+			    changeOrigin: true,
+			    pathRewrite: {
+			        '^/api2': '/'
+			    }
+			}
         }
     },
     transpileDependencies: [
