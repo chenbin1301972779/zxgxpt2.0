@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div class="header-box">
         <span class="title">
             <img src="../../public/img/logo.png" alt="" @click="goHome">
         </span>
@@ -205,8 +205,8 @@
     }
 </script>
 
-<style lang="less" scoped>
-    .header {
+<style lang="less">
+    .header-box{
         line-height: 58px;
         white-space: nowrap;
         overflow: hidden;

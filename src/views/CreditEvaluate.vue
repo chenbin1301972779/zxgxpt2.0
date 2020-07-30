@@ -120,14 +120,21 @@
 					    prop="uploadTime"
 					    label="上传事件">
 					  </el-table-column>
-					  <el-table-column
+					  <!-- <el-table-column
 					    label="操作" width="200px">
 						<template>		
 							<el-button type="primary" plain size="medium">查看</el-button>
 							<el-button type="danger" plain size="medium">删除</el-button>
 						</template>
-					  </el-table-column>
+					  </el-table-column> -->
 				    </el-table>
+			</div>
+			
+			<div class="main" v-if="active===2" >
+				<el-card class="box-card">
+				  <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
+				</el-card>
+				
 			</div>
 			<div class="btn-box">
 				<el-button type="primary" size="medium" @click="lastStep" :disabled="lastDisabled">上一步</el-button>
@@ -169,23 +176,9 @@
 						uploaderName:'系统',
 						uploadTime:'2019/12/30'
 					},
-					{
-						year:'2019',
-						month:'12',
-						time:'年报',
-						from:'系统内置',
-						uploaderName:'系统',
-						uploadTime:'2019/12/30'
-					},
-					{
-						year:'2019',
-						month:'12',
-						time:'年报',
-						from:'系统内置',
-						uploaderName:'系统',
-						uploadTime:'2019/12/30'
-					}
-				]
+				],
+				htmlContent:'',
+				//htmlPage: () => import('../../static/zhongchengxin.html')
 			}
 		},
 		watch:{
@@ -202,6 +195,9 @@
 				}
 			}
 		},
+		created(){
+			this.getHtml()
+		},
 		methods:{
 			nextStep(){
 				this.active++
@@ -213,12 +209,34 @@
 				}else{
 					this.lastDisabled=true
 				}
+			},
+			getHtml(){
+				let param = {
+					userId:this.$Cookies.get("userId"),
+					companyId:this.$route.query.companyId.toString()
+				}
+				this.$ajax.manage.getHtml(param).then(res=>{
+					console.log(res);
+					if(res.status==200){
+						this.htmlContent = res.data;
+						//document.getElementById("html").innerHTML=res.data
+					}
+				})
 			}
 		}
 	}
 </script>
-
+<style>
+	.header {
+		margin-bottom: 0!important;
+		margin-top: 0!important;
+	}
+	p{
+		margin: 0!important;
+	}
+</style>
 <style lang="less" scoped>
+	
 	.credit-evaluate{
 		width: 100%;
 		min-width: 1300px;

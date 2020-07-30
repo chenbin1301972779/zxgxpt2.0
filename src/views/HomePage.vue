@@ -225,8 +225,17 @@
                 this.getLatestSearchList();
                 this.getCareList();//关注清单
             }
+			this.testTYC()
         },
         methods: {
+			testTYC(){
+				let param = {
+					id:'816'
+				}
+				this.$ajax.manage.getData(param.id).then(res=>{
+					console.log(res)
+				})
+			},
             seachContent() {
                 if (this.searchVal === '') {
                     this.showBox = 1

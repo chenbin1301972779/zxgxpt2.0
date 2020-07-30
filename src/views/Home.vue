@@ -30,7 +30,7 @@
 					</el-badge>
 			</span>
         </div>
-        <div class="footer">
+        <div class="footer-box">
             <p>COPYRIGHT &copy; ICP许可证：苏B2-20190525</p>
             <p>备案号：苏ICP备16066248号</p>
         </div>
@@ -125,7 +125,7 @@ export default {
 			right: 20px;
 		}
     }
-    .footer {
+    .footer-box {
         padding: 7px;
         font-size: 14px;
         color: #fff;

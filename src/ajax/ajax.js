@@ -105,5 +105,46 @@ fileAjax.interceptors.response.use(
     }
 )
 
+/**
+ * 获取一个新的自定义的axios实例
+ */
+let newAjax = new axios.create({
+    // timeout: 600000,
+    //设置Content-Type
+    headers: {
+        'content-type': 'application/json',
+    }
+})
 
-export { ajax, redirectAjax, fileAjax }
+//请求拦截器
+newAjax.interceptors.request.use(
+    function (config) {
+		// 在发送请求之前做些什么，例如加入token
+		ajax.defaults.headers.common['Authorization'] = 'a092a8e2-12d7-4ad2-8d07-e9d4a07525cb'
+		config.headers['Authorization'] = 'a092a8e2-12d7-4ad2-8d07-e9d4a07525cb'
+		return config
+    },
+    function (error) {
+        // 对请求错误做些什么
+        return Promise.reject(error)
+    }
+)
+
+//相应拦截器
+newAjax.interceptors.response.use(
+    function (response) {
+        // 在接收响应做些什么，例如跳转到登录页
+        if (response && response.data && response.data.code == 401) {
+            router.push({
+                path: '/'
+            })
+        }
+        return response
+    },
+    function (error) {
+        // 对响应错误做点什么
+        return Promise.reject(error)
+    }
+)
+
+export { ajax, redirectAjax, fileAjax ,newAjax}

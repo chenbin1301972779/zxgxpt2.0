@@ -1,7 +1,7 @@
 /**
  * 本模块主要用于监控管理
  */
-import { ajax, redirectAjax, fileAjax } from './ajax.js'
+import { ajax, redirectAjax, fileAjax ,newAjax} from './ajax.js'
 
 //登录
 async function login (param) {
@@ -82,6 +82,15 @@ async function getNewCompany (param) {
     let getNewCompany = await ajax.post(`/api/company/getNewCompany`, param)
     return getNewCompany
 }
+//获取html
+async function getHtml (param) {
+    let getHtml = await ajax.post(`/api/company/zhongChengXin/getHtml`, param)
+    return getHtml
+}
+async function getData (param) {
+    let getData = await newAjax.get(`/api2/open/${param}`)
+    return getData
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -97,7 +106,9 @@ const manage = {
     getArea: getArea,
     getUserInfo: getUserInfo,
 	getCodeInfo:getCodeInfo,
-    getNewCompany:getNewCompany
+    getNewCompany:getNewCompany,
+	getHtml:getHtml,
+	getData:getData
 }
 
 export default manage

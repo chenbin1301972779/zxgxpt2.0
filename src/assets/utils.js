@@ -6,7 +6,7 @@ function getCookie () {
     cookie = document.cookie
     arr = cookie.split(';')
     for (let i = 0, len = arr.length; i < len; i++) {
-        if (arr[i].match(/EMPI3Token/g)) {
+        if (arr[i].match(/token/g)) {
             token = arr[i].split('=')[1]
             break
         } else {
