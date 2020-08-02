@@ -11,7 +11,8 @@
             <el-tab-pane label="企业基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
             </el-tab-pane>
-            <el-tab-pane label="天眼查">
+			<!-- 天眼查 -->
+            <el-tab-pane label="工商舆情"> 
 				<div class="title">
 				    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
 				        <img src="../../public/img/images/notice.png" alt="">
@@ -25,10 +26,12 @@
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
                 <iframe width="100%" height="620px" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
-            <el-tab-pane label="中信保">
+			<!-- 中信保 -->
+            <el-tab-pane label="信保报告">
                 <ZXBPage></ZXBPage>
             </el-tab-pane>
-            <el-tab-pane label="中诚信">
+			<!-- 中诚信 -->
+            <el-tab-pane label="企业评级报告">
                 <div class="title">
                     <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
                         <img src="../../public/img/images/notice.png" alt="">

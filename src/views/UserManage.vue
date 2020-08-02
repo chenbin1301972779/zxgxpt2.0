@@ -8,7 +8,7 @@
 			</el-breadcrumb>
 		</div>
         <div class="searchbox">
-            <el-input class="fl-left manageTableInput" v-model="search.userName" placeholder="请输入用户名" clearable
+            <el-input class="fl-left manageTableInput" v-model="search.userName" placeholder="请输入姓名" clearable
                 style="width: 200px;margin-right: 10px;">
             </el-input>
             <el-input class="fl-left manageTableInput" v-model="search.userCode" placeholder="请输入工号" clearable
@@ -28,7 +28,7 @@
                 </el-table-column>
                 <el-table-column prop="username" label="工号">
                 </el-table-column>
-                <el-table-column prop="name" label="人员">
+                <el-table-column prop="name" label="姓名">
                 </el-table-column>
                 <el-table-column prop="permissionLevel" label="权限级别">
                 </el-table-column>
@@ -72,41 +72,41 @@
             </div>
         </div>
 
-        <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px">
-            <el-form :model="userInfo">
-                <el-form-item label="用户ID：" label-width="100px" v-show="!isNew">
+        <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px" @close="closeDialog">
+            <el-form :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
+                <el-form-item label="用户ID："  v-show="!isNew">
                     <el-input v-model="userInfo.userId" disabled style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="用户名：" label-width="100px">
+                <el-form-item label="工号：" >
                     <el-input v-model="userInfo.username" :disabled="!isNew" style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名：" label-width="100px">
+                <el-form-item label="姓名：" >
                     <el-input v-model="userInfo.name" style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="密码：" label-width="100px">
+                <el-form-item label="密码：" >
                     <el-input v-model="userInfo.password" style="width:250px" type="password">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="手机：" label-width="100px">
-                    <el-input v-model="userInfo.mobile" style="width:250px"></el-input>
+                <el-form-item label="手机："  prop="mobile">
+                    <el-input v-model.number="userInfo.mobile" style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱：" label-width="100px">
+                <el-form-item label="邮箱：" >
                     <el-input v-model="userInfo.email" style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="公司代码：" label-width="100px">
+                <el-form-item label="公司代码：" >
                     <el-input v-model="userInfo.companyCode" disabled style="width:250px"></el-input>
                 </el-form-item>
-                <el-form-item label="公司：" label-width="100px">
+                <el-form-item label="公司：" >
                     <el-select v-model="userInfo.companyName" placeholder="请选择公司" @change="selectChange" style="width:250px">
                         <el-option v-for="item in newCompany" :disabled="!isNew" :key="item.name" :label="item.name" :value="item.name"/>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="部门：" label-width="100px">
+                <el-form-item label="部门：">
                     <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="editUserDialog = false">取 消</el-button>
+                <el-button @click="closeDialog">取 消</el-button>
                 <el-button type="primary" @click="saveUserInfo(userInfo)">保 存</el-button>
             </div>
         </el-dialog>
@@ -116,6 +116,16 @@
 <script>
 export default {
     data () {
+		 var validateMobile = (rule, value, callback) => {
+			 let TEL_REGEXP = /^[1][3,4,5,7,8][0-9]{9}$/;
+			if (value == "") {
+				callback(new Error("请输入手机号"));
+			  } else if (!TEL_REGEXP.test(value)) {
+				callback(new Error("请输入正确的手机号!"));
+			  } else {
+				callback();
+			  }
+		  };
         return {
             search: {
                 userName: '',
@@ -142,9 +152,24 @@ export default {
             editUserDialog:false,//用户编辑对话框
             isNew:false, //是否是新增用户
             editType:'',
-            userInfo:{},
+            userInfo:{
+				userId:'',
+				username:'',
+				name:'',
+				password:'',
+				mobile:'',
+				email:'',
+				companyCode:'',
+				companyName:'',
+				deptName:''
+			},
             newCompany: [],
-            newCompanyFlag:0
+            newCompanyFlag:0,
+			rules:{
+			   mobile: [
+				  { validator: validateMobile, trigger: 'blur' }
+			   ],
+			}
         }
     },
     created() {
@@ -164,7 +189,7 @@ export default {
             }
             this.loading = true;
             this.$ajax.manage.getUserList(param).then(res => {
-                console.log(res);
+                //console.log(res);
                 if (res.data.code == 0) {
                     this.loading = false;
                     this.tableData = res.data.userList;
@@ -181,7 +206,7 @@ export default {
             this.getData(val)
         },
         updateStatus (row, status) {
-            console.log(status)
+           // console.log(status)
             //点击启用或停用
             let param = {
                 userId: row.userId,
@@ -212,27 +237,46 @@ export default {
 
             }
             this.$ajax.manage.getNewCompany(param).then(res => {
-                console.log(res);
+               // console.log(res);
                 if (res.data.code == 0) {
                     this.newCompany = res.data.newCompany;
                 }
             })
         },
         selectChange(selectValue){
-            console.log(selectValue);
+           // console.log(selectValue);
             this.userInfo.companyCode = this.newCompany.find(item=>item.name === selectValue).code;
         },
         saveUserInfo(userInfo){
-            console.log(userInfo);
-            console.log(JSON.stringify(userInfo))
+           // console.log(userInfo);
+           // console.log(JSON.stringify(userInfo))
             this.$ajax.manage.updateUser(userInfo).then(res => {
                 console.log(res.data);
                 if (res.data.code == 0) {
                     this.$message.success(res.data.msg);
                     this.editUserDialog = false;
+					this.clearUserInfo();
+					this.$refs.userInfo.resetFields();
                 }
             })
-        }
+        },
+		clearUserInfo(){
+			this.userInfo={
+				userId:'',
+				username:'',
+				name:'',
+				password:'',
+				mobile:'',
+				email:'',
+				companyCode:'',
+				companyName:'',
+				deptName:''
+			};
+		},
+		closeDialog(){
+			this.clearUserInfo();
+			this.$refs.userInfo.resetFields();
+		}
     }
 }
 </script>
