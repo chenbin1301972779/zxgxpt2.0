@@ -28,7 +28,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: right;">
-							<el-button type="primary" size="small">恢复默认</el-button>
+							<el-button type="primary" size="small" @click="reset">恢复默认</el-button>
 						</td>
 					</tr>
 					<tr>
@@ -37,20 +37,20 @@
 							所属行业：
 						</td>
 						<td>
-							<el-select v-model="profession" placeholder="请选择" size="medium">
+							<el-select v-model="profession" placeholder="请选择" size="medium" @change="changeProfession">
 							    <el-option
 							      v-for="item in professionOptions"
-							      :key="item.value"
-							      :label="item.label"
-							      :value="item.value">
+							      :key="item"
+							      :label="item"
+							      :value="item">
 							    </el-option>
 							  </el-select>
 							  <el-select v-model="professionDetail" placeholder="请选择" size="medium" style="margin-left: 15px;">
 							      <el-option
 							        v-for="item in professionDetailOptions"
-							        :key="item.value"
-							        :label="item.label"
-							        :value="item.value">
+							        :key="item"
+							        :label="item"
+							        :value="item">
 							      </el-option>
 							  </el-select>
 						</td>
@@ -91,7 +91,7 @@
 				</table>
 				<el-table
 				      :data="tableData"
-				      style="width: 100%;margin-top: 80px;">
+				      style="width: 100%;margin-top: 80px;" @selection-change="handleSelectionChange" ref="multipleTable">
 					   <el-table-column
 						type="selection"
 						width="55">
@@ -149,10 +149,10 @@
 		data(){
 			return{
 				active: 0,
-				companyName:'浙江英特集团股份有限公司',
-				creditNo:'32525636345347454',
-				profession:'批发零售业',
-				professionDetail:'批发业',
+				companyName:this.$route.query.companyName,
+				creditNo:this.$route.query.creditCode,
+				profession:'',
+				professionDetail:'',
 				companyType:'',
 				professionOptions:[],
 				professionDetailOptions:[],
@@ -178,6 +178,8 @@
 					},
 				],
 				htmlContent:'',
+				backData:{},
+				multipleSelection:[]
 				//htmlPage: () => import('../../static/zhongchengxin.html')
 			}
 		},
@@ -196,10 +198,19 @@
 			}
 		},
 		created(){
-			this.getHtml()
+			this.getHtml();
+			this.getIndustry();
+		},
+		mounted(){
 		},
 		methods:{
 			nextStep(){
+				if(this.active==1){
+					if(this.multipleSelection.length==0){
+						this.$message.warning('请选择数据');
+						return;
+					}
+				}
 				this.active++
 			},
 			lastStep(){
@@ -209,6 +220,7 @@
 				}else{
 					this.lastDisabled=true
 				}
+				this.multipleSelection=[]
 			},
 			getHtml(){
 				let param = {
@@ -222,6 +234,41 @@
 						//document.getElementById("html").innerHTML=res.data
 					}
 				})
+			},
+			getIndustry(){
+				console.log(123)
+				this.$ajax.manage.getIndustry({}).then(res=>{
+					console.log(res)
+					if(res.status==200){
+						let list = [];
+						for(let i in res.data.areaList){
+							list.push(i)
+						}
+						this.professionOptions =list;
+						this.backData=res.data.areaList
+					}
+				})
+			},
+			changeProfession(val){
+				console.log(this.backData)
+				for(let i in this.backData){
+					if(i==val){
+						this.professionDetailOptions = this.backData[i]
+					}
+				}
+			},
+			handleSelectionChange(val){
+				this.multipleSelection = val;
+				console.log(this.multipleSelection)
+			},
+			reset(){
+				this.profession=this.professionOptions[0];
+				for(let i in this.backData){
+					if(i==this.profession){
+						this.professionDetailOptions = this.backData[i]
+					}
+				}
+				this.professionDetail=this.professionDetailOptions[0];
 			}
 		}
 	}

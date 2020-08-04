@@ -91,6 +91,11 @@ async function getData (param) {
     let getData = await newAjax.get(`/tycApi/services/open/search/2.0?word=`+param)
     return getData
 }
+//获取行业数据
+async function getIndustry (param) {
+    let getIndustry = await ajax.post(`/api/common/getIndustry`,param)
+    return getIndustry
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -108,7 +113,8 @@ const manage = {
 	getCodeInfo:getCodeInfo,
     getNewCompany:getNewCompany,
 	getHtml:getHtml,
-	getData:getData
+	getData:getData,
+	getIndustry:getIndustry
 }
 
 export default manage

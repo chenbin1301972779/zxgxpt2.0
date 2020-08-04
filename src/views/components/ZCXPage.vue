@@ -63,7 +63,9 @@ export default {
 			this.$router.push({
 			    path: '/creditEvaluate',
 			    query: {
-			        companyId:this.$route.query.companyId
+			        companyId:this.$route.query.companyId,
+					companyName:this.$route.query.companyName,
+					creditCode:this.$route.query.creditCode
 			    }
 			})
 		}
