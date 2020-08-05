@@ -84,7 +84,7 @@ async function getNewCompany (param) {
 }
 //获取html
 async function getHtml (param) {
-    let getHtml = await ajax.post(`/api/company/zhongChengXin/getHtml`, param)
+    let getHtml = await ajax.post(`/api/company/zhongChengXin/getLiteRatingHtml`, param)
     return getHtml
 }
 async function getData (param) {
@@ -96,6 +96,11 @@ async function getIndustry (param) {
     let getIndustry = await ajax.post(`/api/common/getIndustry`,param)
     return getIndustry
 }
+ //产业信用评价下载
+ async function getLiteRatingPDF (param) {
+     let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
+     return getLiteRatingPDF
+ }
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -114,7 +119,8 @@ const manage = {
     getNewCompany:getNewCompany,
 	getHtml:getHtml,
 	getData:getData,
-	getIndustry:getIndustry
+	getIndustry:getIndustry,
+	getLiteRatingPDF:getLiteRatingPDF
 }
 
 export default manage

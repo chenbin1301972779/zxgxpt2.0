@@ -7,9 +7,9 @@
         </div>
         <el-button type="primary" @click="toCreditEvaluate">风险初筛</el-button>
         <el-button type="primary" @click="toCreditEvaluate">财务排雷</el-button>
-		<el-button type="primary" @click="toCreditEvaluate">产业企业信用评价</el-button>
-		<el-button type="primary" @click="toCreditEvaluate">区域信用评价</el-button>
-		<el-button type="primary" @click="toCreditEvaluate">城投企业信用评价</el-button>
+		<el-button type="primary" @click="getLiteRatingPDF" class="el-icon-download"> 产业企业信用评价</el-button>
+		<el-button type="primary">区域信用评价</el-button>
+		<el-button type="primary">城投企业信用评价</el-button>
         <el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>
        <!-- <el-select v-model="credit" placeholder="请选择" style="margin-left:10px">
             <el-option v-for="item in options" :key="item.code" :label="item.value" :value="item.code">
@@ -49,13 +49,28 @@ export default {
                     code: '3',
                     value: '城投企业信用评价'
                 }
-            ]
+            ],
+			fileName:''
         }
     },
     created () {
-        this.data = JSON.stringify(json, null, '\t')
+        this.data = JSON.stringify(json, null, '\t');
+		this.getHtml()
     },
     methods: {
+		getHtml(){
+			let param = {
+				userId:this.$Cookies.get("userId"),
+				companyId:this.$route.query.companyId.toString()
+			}
+			this.$ajax.manage.getHtml(param).then(res=>{
+				if(res.status==200){
+					let temp = 'content-disposition'
+					let data = res.headers[temp];
+					this.fileName=data.split('=')[1]
+				}
+			})
+		},
         showJSON () {
             this.dialogVisible = true;
         },
@@ -66,6 +81,32 @@ export default {
 			        companyId:this.$route.query.companyId,
 					companyName:this.$route.query.companyName,
 					creditCode:this.$route.query.creditCode
+			    }
+			})
+		},
+		getLiteRatingPDF(){
+			//产业信用评价下载
+			let param={
+				fileName:this.fileName
+			}
+			console.log(param)
+			this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+			   // console.log(res)
+			    const content = res.data
+			    const blob = new Blob([content])
+			    const fileName = `产业信用评价-${this.$route.query.companyName}.pdf`
+			    if ('download' in document.createElement('a')) { // 非IE下载
+			        const elink = document.createElement('a')
+			        elink.download = fileName
+			        elink.style.display = 'none'
+			        elink.href = URL.createObjectURL(blob)
+			        console.log(elink.href);
+			        document.body.appendChild(elink)
+			        elink.click()
+			        URL.revokeObjectURL(elink.href) // 释放URL 对象
+			        document.body.removeChild(elink)
+			    } else { // IE10+下载
+			        navigator.msSaveBlob(blob, fileName)
 			    }
 			})
 		}
