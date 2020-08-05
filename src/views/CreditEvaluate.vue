@@ -64,9 +64,9 @@
 							<el-select v-model="companyType" placeholder="请选择" size="medium">
 							    <el-option
 							      v-for="item in companyTypeOptions"
-							      :key="item.value"
-							      :label="item.label"
-							      :value="item.value">
+							      :key="item"
+							      :label="item"
+							      :value="item">
 							    </el-option>
 							  </el-select>
 						</td>
@@ -156,7 +156,7 @@
 				companyType:'',
 				professionOptions:[],
 				professionDetailOptions:[],
-				companyTypeOptions:[],
+				companyTypeOptions:['中央国有企业','国企非上市公司','国企上市公司','民企非上市公司','民企上市公司'],
 				lastDisabled:true,
 				nextDisabled:false,
 				tableData:[

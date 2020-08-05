@@ -403,8 +403,22 @@ export default {
         goTYCFocus () {
             //zxb关注
             // this.resetForm();
-            this.dialogFormVisible = true;
-            this.type = 1;
+            //this.dialogFormVisible = true;
+            //this.type = 1;
+            let param = {
+                userId: this.$Cookies.get('userId'),
+                companyId: this.$route.query.companyId,
+                tianyancha: '1'
+            }
+            this.$ajax.manage.careOrNot(param).then(res => {
+                console.log(res);
+                if (res.data.code == 0) {
+                    this.$message.success(res.data.msg);
+                    this.getCareStatus()
+                } else {
+                    this.$message.error(res.data.msg);
+                }
+            })
         },
         goZCXFocus () {
             //zcx关注
