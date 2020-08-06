@@ -101,6 +101,15 @@ async function getIndustry (param) {
      let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
      return getLiteRatingPDF
  }
+ //企业基本信息
+ async function getBaseInfo (param) {
+     let getBaseInfo = await ajax.post(`/api/company/getBaseInfo`, param)
+     return getBaseInfo
+ }
+ async function getLiteRatingList (param) {
+     let getLiteRatingList = await ajax.post(`/api/company/zhongChengXin/getLiteRatingList`, param)
+     return getLiteRatingList
+ }
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -120,7 +129,9 @@ const manage = {
 	getHtml:getHtml,
 	getData:getData,
 	getIndustry:getIndustry,
-	getLiteRatingPDF:getLiteRatingPDF
+	getLiteRatingPDF:getLiteRatingPDF,
+	getBaseInfo:getBaseInfo,
+	getLiteRatingList:getLiteRatingList
 }
 
 export default manage

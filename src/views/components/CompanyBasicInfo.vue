@@ -8,43 +8,45 @@
                     <div class="table-wrapper">
                         <table border="1">
                             <tr>
-                                <td class="gbGray">法定代表人</td>
-                                <td>{{basicInfo.operName}}</td>
-                                <td class="gbGray">经营状态</td>
-                                <td></td>
-                                <td class="gbGray">成立日期</td>
-                                <td>{{basicInfo.buildDate}}</td>
+                                <td class="gbGray">公司名称</td>
+                                <td colspan="2">&nbsp;{{basicInfo.name}}</td>
+                                <td class="gbGray">公司类型</td>
+                                <td colspan="2">&nbsp;{{basicInfo.companyorgtype}}</td>
                             </tr>
                             <tr>
+								<td class="gbGray">成立日期</td>
+								<td colspan="2">&nbsp;{{$formatDate(basicInfo.estiblishtime)}}</td>
                                 <td class="gbGray">注册资本</td>
-                                <td>&nbsp;</td>
-                                <td class="gbGray">实缴资本</td>
-                                <td></td>
-                                <td class="gbGray">缴费日期</td>
-                                <td></td>
+                                <td colspan="2">&nbsp;{{basicInfo.regcapital}}</td>
+                            </tr>
+							<tr>
+								<td class="gbGray">注册地址</td>
+								<td colspan="2">&nbsp;{{basicInfo.reglocation}}</td>
+								<td class="gbGray">注册登记类型</td>
+								<td colspan="2">&nbsp;{{basicInfo.regtCredidtcode}}</td>
+							</tr>
+                            <tr>
+                                <td class="gbGray">注册登记号</td>
+                                <td colspan="2">&nbsp;{{basicInfo.regCredidtcode}}</td>
+                                <td class="gbGray">地税登记号</td>
+                                <td colspan="2">&nbsp;{{basicInfo.dsCreditcode}}</td>
                             </tr>
                             <tr>
-                                <td class="gbGray">统一社会信用代码</td>
-                                <td>{{basicInfo.creditCode}}</td>
-                                <td class="gbGray">组织机构代码</td>
-                                <td></td>
-                                <td class="gbGray">所属行业</td>
-                                <td></td>
+								<td class="gbGray">国税登记号</td>
+								<td colspan="2">&nbsp;{{basicInfo.gsCreditcode}}</td>
+                                <td class="gbGray">行业分类</td>
+                                <td colspan="2">&nbsp;{{basicInfo.industry}}</td>
                             </tr>
-                            <tr>
-                                <td class="gbGray">曾用名</td>
-                                <td></td>
-                                <td class="gbGray">英文名</td>
-                                <td colspan="3"></td>
-                            </tr>
-                            <tr>
-                                <td class="gbGray">SinoRating说明</td>
-                                <td colspan="5">{{basicInfo.sinoRating}}</td>
-                            </tr>
+							<tr>
+								<td class="gbGray">登记开始时间</td>
+								<td colspan="2">&nbsp;{{basicInfo.fromTime}}</td>
+								<td class="gbGray">登记结束时间</td>
+								<td colspan="2">&nbsp;{{basicInfo.toTime}}</td>
+							</tr>
                         </table>
                     </div>
                 </div>
-                <div style="margin-top:80px;">
+                <div style="margin-top:40px;">
                     <div class="titile">预警推送</div>
                     <div class="table-wrapper">
                         <table border="1">
@@ -56,7 +58,7 @@
                                 <td class="gbGray">风险提示起止时间</td>
                             </tr>
                             <tr>
-                                <td>{{basicInfo.companyName}}</td>
+                                <td>{{basicInfo.name}}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -110,8 +112,22 @@ export default {
     },
     created () {
         console.log(this.$route.query)
-        this.basicInfo = this.$route.query
-    }
+       // this.basicInfo = this.$route.query
+	   this.getBaseInfo()
+    },
+	methods:{
+		getBaseInfo(){
+			let param = {
+				companyId:this.$route.query.companyId
+			}
+			this.$ajax.manage.getBaseInfo(param).then(res=>{
+				console.log(res);
+				if(res.status==200){
+					this.basicInfo = res.data.baseInfo
+				}
+			})
+		}
+	}
 }
 </script>
 <style lang="less" scoped>
@@ -142,6 +158,7 @@ export default {
                 border-bottom: 1px solid #e3e3e3;
                 font-size: 14px;
                 height: 36px;
+				padding:0 5px
             }
             .gbGray {
                 background: #f1f3f4;

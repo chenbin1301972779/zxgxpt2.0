@@ -17,11 +17,11 @@ Vue.use(ElementUI)
 import ajax from '@/ajax/index.js'
 Vue.prototype.$ajax = ajax
 import Cookies from 'js-cookie'
-import { getCookieKey, getCookie } from '@/assets/utils.js'
+import { getCookieKey, getCookie,formatDate } from '@/assets/utils.js'
 Vue.prototype.$getCookieKey = getCookieKey
 Vue.prototype.$getCookie = getCookie
 Vue.prototype.$Cookies = Cookies
-
+Vue.prototype.$formatDate = formatDate
 const sysTitle = '资信共享门户系统'
 Vue.prototype.$sysTitle = sysTitle
 
