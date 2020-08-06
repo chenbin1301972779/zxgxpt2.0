@@ -13,7 +13,7 @@
 				产业企业信用评价</el-button>
 			<el-button type="primary">区域信用评价</el-button>
 			<el-button type="primary">城投企业信用评价</el-button>
-			<el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>
+<!--			<el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>-->
        </div>
 	   <div class="table-box" style="margin-top: 30px;">
 		   <div>历史报告列表：</div>
