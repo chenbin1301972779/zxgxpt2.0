@@ -13,7 +13,7 @@
 				  <el-step title="主体信息"></el-step>
 				  <el-step title="财务信息"></el-step>
 				  <el-step title="风险评价"></el-step>
-				  <el-step title="评价结果"></el-step>
+				  <el-step title="评价结果下载"></el-step>
 				</el-steps>
 			</div>
 			<div class="main" v-if="active===0">
@@ -88,7 +88,12 @@
 						<td style="text-align: right;">所属行业：</td>
 						<td>{{profession}}-{{professionDetail}}</td>
 					</tr>
+					<tr>
+						<td style="text-align: right;">财报信息：</td>
+						<td>数据取自近两年财报</td>
+					</tr>
 				</table>
+				<!--
 				<el-table
 				      :data="tableData"
 				      style="width: 100%;margin-top: 80px;" @selection-change="handleSelectionChange" ref="multipleTable">
@@ -120,14 +125,15 @@
 					    prop="uploadTime"
 					    label="上传事件">
 					  </el-table-column>
-					  <!-- <el-table-column
+					   <el-table-column
 					    label="操作" width="200px">
 						<template>		
 							<el-button type="primary" plain size="medium">查看</el-button>
 							<el-button type="danger" plain size="medium">删除</el-button>
 						</template>
-					  </el-table-column> -->
+					  </el-table-column>
 				    </el-table>
+				-->
 			</div>
 			
 			<div class="main" v-if="active===2" >
@@ -205,12 +211,12 @@
 		},
 		methods:{
 			nextStep(){
-				if(this.active==1){
-					if(this.multipleSelection.length==0){
-						this.$message.warning('请选择数据');
-						return;
-					}
-				}
+				// if(this.active==1){
+				// 	if(this.multipleSelection.length==0){
+				// 		this.$message.warning('请选择数据');
+				// 		return;
+				// 	}
+				// }
 				this.active++
 			},
 			lastStep(){
