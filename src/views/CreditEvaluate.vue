@@ -71,6 +71,16 @@
 							  </el-select>
 						</td>
 					</tr>
+					<tr>
+						<td style="text-align: right;">
+							<span style="color:red">*</span>
+							是否行业头部企业：
+						</td>
+						<td>
+							<el-radio v-model="isIndustryLeader" label=true>是</el-radio>
+							<el-radio v-model="isIndustryLeader" label=false>否</el-radio>
+						</td>
+					</tr>
 				</table>
 			</div>
 			
@@ -93,47 +103,6 @@
 						<td>数据取自近两年财报</td>
 					</tr>
 				</table>
-				<!--
-				<el-table
-				      :data="tableData"
-				      style="width: 100%;margin-top: 80px;" @selection-change="handleSelectionChange" ref="multipleTable">
-					   <el-table-column
-						type="selection"
-						width="55">
-					   </el-table-column>
-				      <el-table-column
-				        prop="year"
-				        label="报表年份">
-				      </el-table-column>
-				      <el-table-column
-				        prop="month"
-				        label="报表月份">
-				      </el-table-column>
-				      <el-table-column
-				        prop="time"
-				        label="报表周期">
-				      </el-table-column>
-					  <el-table-column
-					    prop="from"
-					    label="来源">
-					  </el-table-column>
-					  <el-table-column
-					    prop="uploaderName"
-					    label="上传者">
-					  </el-table-column>
-					  <el-table-column
-					    prop="uploadTime"
-					    label="上传事件">
-					  </el-table-column>
-					   <el-table-column
-					    label="操作" width="200px">
-						<template>		
-							<el-button type="primary" plain size="medium">查看</el-button>
-							<el-button type="danger" plain size="medium">删除</el-button>
-						</template>
-					  </el-table-column>
-				    </el-table>
-				-->
 			</div>
 			
 			<div class="main" v-if="active===2" >
@@ -141,6 +110,13 @@
 				  <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
 				</el-card>
 				
+			</div>
+			<div class="main" v-if="active===3" >
+				<div class="btn-box">
+					<el-button type="primary" @click="getLiteRatingPDF" style="align:center">
+						<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
+						报告下载</el-button>
+				</div>
 			</div>
 			<div class="btn-box">
 				<el-button type="primary" size="medium" @click="lastStep" :disabled="lastDisabled">上一步</el-button>
@@ -185,8 +161,11 @@
 				],
 				htmlContent:'',
 				backData:{},
-				multipleSelection:[]
+				multipleSelection:[],
 				//htmlPage: () => import('../../static/zhongchengxin.html')
+				loading:false,
+				fileName:'',
+				isIndustryLeader:false
 			}
 		},
 		watch:{
@@ -237,7 +216,10 @@
 					console.log(res);
 					if(res.status==200){
 						this.htmlContent = res.data;
-						//document.getElementById("html").innerHTML=res.data
+						//document.getElementById("html").innerHTML=res.data\
+						let temp = 'content-disposition'
+						let data = res.headers[temp];
+						this.fileName=data.split('=')[1];
 					}
 				})
 			},
@@ -275,6 +257,34 @@
 					}
 				}
 				this.professionDetail=this.professionDetailOptions[0];
+			},
+			getLiteRatingPDF(){
+				//产业信用评价下载
+				let param={
+					fileName:this.fileName
+				}
+				console.log(param)
+				this.loading = true;
+				this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+					// console.log(res)
+					this.loading=false
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `产业信用评价-${this.$route.query.companyName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				})
 			}
 		}
 	}

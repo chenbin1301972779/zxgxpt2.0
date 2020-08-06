@@ -128,6 +128,7 @@ export default {
 				userId:this.$Cookies.get("userId"),
 				companyId:this.$route.query.companyId.toString()
 			}
+			console.log(param);
 			this.$ajax.manage.getHtml(param).then(res=>{
 				if(res.status==200){
 					let temp = 'content-disposition'
