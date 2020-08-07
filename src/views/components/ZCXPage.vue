@@ -6,13 +6,14 @@
             <p style="font-size: 14px;line-height: 30px;">成立时间：{{buildDate}}</p>
         </div>
 		<div>
-			<el-button type="primary" @click="toCreditEvaluate">风险初筛</el-button>
-			<el-button type="primary" @click="toCreditEvaluate">财务排雷</el-button>
-			<el-button type="primary" @click="getLiteRatingPDF">
+			<el-button type="primary" >风险初筛</el-button>
+			<el-button type="primary">财务排雷</el-button>
+			<el-button type="primary" @click="toCreditEvaluate">产业企业信用评价</el-button>
+			<!-- <el-button type="primary" @click="getLiteRatingPDF">
 				<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
-				产业企业信用评价</el-button>
+				产业企业信用评价</el-button> -->
 			<el-button type="primary">区域信用评价</el-button>
-			<el-button type="primary">城投企业信用评价</el-button>
+			<el-button type="primary" >城投企业信用评价</el-button>
 <!--			<el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>-->
        </div>
 	   <div class="table-box" style="margin-top: 30px;">

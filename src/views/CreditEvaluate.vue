@@ -77,8 +77,8 @@
 							是否行业头部企业：
 						</td>
 						<td>
-							<el-radio v-model="isIndustryLeader" label=true>是</el-radio>
-							<el-radio v-model="isIndustryLeader" label=false>否</el-radio>
+							<el-radio v-model="isIndustryLeader" label='1'>是</el-radio>
+							<el-radio v-model="isIndustryLeader" label='0'>否</el-radio>
 						</td>
 					</tr>
 				</table>
@@ -165,7 +165,7 @@
 				//htmlPage: () => import('../../static/zhongchengxin.html')
 				loading:false,
 				fileName:'',
-				isIndustryLeader:false
+				isIndustryLeader:'1'
 			}
 		},
 		watch:{
@@ -183,7 +183,6 @@
 			}
 		},
 		created(){
-			this.getHtml();
 			this.getIndustry();
 		},
 		mounted(){
@@ -196,6 +195,24 @@
 				// 		return;
 				// 	}
 				// }
+				if(this.active==0){
+					console.log()
+					if(this.profession==''){
+						this.$message.warning('请选择所属行业');
+						return;
+					}else if(this.professionDetail==''){
+						this.$message.warning('请选择所属行业');
+						return;
+					}else if(this.companyType==''){
+						this.$message.warning('请选择企业性质');
+						return;
+					}else if(this.isIndustryLeader==''){
+						this.$message.warning('请选择是否是头部企业');
+						return;
+					}
+				}else if(this.active==1){
+					this.getHtml();
+				}
 				this.active++
 			},
 			lastStep(){
@@ -210,8 +227,13 @@
 			getHtml(){
 				let param = {
 					userId:this.$Cookies.get("userId"),
-					companyId:this.$route.query.companyId.toString()
+					companyId:this.$route.query.companyId.toString(),
+					industryCategory:this.profession,
+					industry:this.professionDetail,
+					isIndustryLeader:this.isIndustryLeader=='1'?true:false,
+					nature:this.companyType
 				}
+				console.log(param)
 				this.$ajax.manage.getHtml(param).then(res=>{
 					console.log(res);
 					if(res.status==200){
@@ -224,7 +246,6 @@
 				})
 			},
 			getIndustry(){
-				console.log(123)
 				this.$ajax.manage.getIndustry({}).then(res=>{
 					console.log(res)
 					if(res.status==200){
@@ -261,7 +282,11 @@
 			getLiteRatingPDF(){
 				//产业信用评价下载
 				let param={
-					fileName:this.fileName
+					fileName:this.fileName,
+					industryCategory:this.profession,
+					industry:this.professionDetail,
+					isIndustryLeader:this.isIndustryLeader=='1'?true:false,
+					nature:this.companyType
 				}
 				console.log(param)
 				this.loading = true;
