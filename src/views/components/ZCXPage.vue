@@ -30,8 +30,10 @@
 		           label="报告">
 				   <template slot-scope="scope">
 				   		<span class="text" style="color: #409EFF;cursor: pointer;" @click="downloadFile(scope.row)">
-						<i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
-						{{scope.row.fileName}}</span>
+							<i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
+							{{scope.row.fileName}}
+						</span>
+						<el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览</el-button>
 				   </template>
 		         </el-table-column>
 		         <el-table-column
@@ -58,6 +60,14 @@
                 <JsonView :value="data"></JsonView>
             </div>
         </el-dialog>
+		<el-dialog
+		  title="预览"
+		  :visible.sync="pdfDialogVisible"
+		  width="70%">
+		  <div v-loading="pdfLoading">	
+		   <iframe :src="src" frameborder="0" width="100%" height="600px"></iframe>	
+		  </div>
+		</el-dialog>
     </div>
 </template>
 <script>
@@ -65,7 +75,7 @@ import JsonView from '../../components/jsonView'
 import json from '../../assets/json/产业企业信用评价data.json'
 export default {
     components: {
-        JsonView
+        JsonView,
     },
     data () {
         return {
@@ -97,7 +107,10 @@ export default {
 			    pageSize: 10
 			},
 			tableLoading:false,
-			fileLoading:false
+			fileLoading:false,
+			src:'',
+			pdfDialogVisible:false,
+			pdfLoading:false
         }
     },
     created () {
@@ -183,10 +196,9 @@ export default {
 			let param={
 				fileName:row.fileName
 			}
-			console.log(row)
 			row.fileLoading = true;
 			this.$ajax.manage.getLiteRatingPDF(param).then(res => {
-			   // console.log(res)
+			   console.log(res)
 			   row.fileLoading=false
 			    const content = res.data
 			    const blob = new Blob([content])
@@ -204,6 +216,26 @@ export default {
 			    } else { // IE10+下载
 			        navigator.msSaveBlob(blob, fileName)
 			    }
+			})
+		},
+		checkPdf(row){
+			this.src='';
+			let param={
+				fileName:row.fileName
+			}
+			this.pdfDialogVisible = true
+			this.pdfLoading = true;
+			this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+				console.log(res)
+				this.pdfLoading = false;
+			    const content = res.data
+			    const fileName = `${row.fileName}.pdf`
+				const blob = new Blob([content], {
+				  type: 'application/pdf;chartset=UTF-8'
+				})
+				let fileURL= URL.createObjectURL(blob);
+				//window.open(fileURL);
+				 this.src  = fileURL
 			})
 		},
 		handleCurrentChange(val){
