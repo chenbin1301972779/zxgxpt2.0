@@ -26,12 +26,12 @@
 				   label="报告单号" width="100px" align="center">
 				 </el-table-column>
 		         <el-table-column
-		           prop="fileName"
+		           prop="pdfName"
 		           label="报告">
 				   <template slot-scope="scope">
 				   		<span class="text" style="color: #409EFF;cursor: pointer;" @click="downloadFile(scope.row)">
 							<i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
-							{{scope.row.fileName}}
+							{{scope.row.pdfName}}
 						</span>
 						<el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览</el-button>
 				   </template>
@@ -115,7 +115,7 @@ export default {
     },
     created () {
         this.data = JSON.stringify(json, null, '\t');
-		this.getHtml();
+		//this.getHtml();
 		this.getLiteRatingList()
     },
     methods: {
@@ -164,34 +164,34 @@ export default {
 			    }
 			})
 		},
-		getLiteRatingPDF(){
-			//产业信用评价下载
-			let param={
-				fileName:this.fileName
-			}
-			console.log(param)
-			this.loading = true;
-			this.$ajax.manage.getLiteRatingPDF(param).then(res => {
-			   // console.log(res)
-			   this.loading=false
-			    const content = res.data
-			    const blob = new Blob([content])
-			    const fileName = `产业信用评价-${this.$route.query.companyName}.pdf`
-			    if ('download' in document.createElement('a')) { // 非IE下载
-			        const elink = document.createElement('a')
-			        elink.download = fileName
-			        elink.style.display = 'none'
-			        elink.href = URL.createObjectURL(blob)
-			        console.log(elink.href);
-			        document.body.appendChild(elink)
-			        elink.click()
-			        URL.revokeObjectURL(elink.href) // 释放URL 对象
-			        document.body.removeChild(elink)
-			    } else { // IE10+下载
-			        navigator.msSaveBlob(blob, fileName)
-			    }
-			})
-		},
+		// getLiteRatingPDF(){
+		// 	//产业信用评价下载
+		// 	let param={
+		// 		fileName:this.fileName
+		// 	}
+		// 	console.log(param)
+		// 	this.loading = true;
+		// 	this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+		// 	   // console.log(res)
+		// 	   this.loading=false
+		// 	    const content = res.data
+		// 	    const blob = new Blob([content])
+		// 	    const fileName = `产业信用评价-${this.$route.query.companyName}.pdf`
+		// 	    if ('download' in document.createElement('a')) { // 非IE下载
+		// 	        const elink = document.createElement('a')
+		// 	        elink.download = fileName
+		// 	        elink.style.display = 'none'
+		// 	        elink.href = URL.createObjectURL(blob)
+		// 	        console.log(elink.href);
+		// 	        document.body.appendChild(elink)
+		// 	        elink.click()
+		// 	        URL.revokeObjectURL(elink.href) // 释放URL 对象
+		// 	        document.body.removeChild(elink)
+		// 	    } else { // IE10+下载
+		// 	        navigator.msSaveBlob(blob, fileName)
+		// 	    }
+		// 	})
+		//},
 		downloadFile(row){
 			let param={
 				fileName:row.fileName
