@@ -1,28 +1,39 @@
 <template>
     <div class="essInfo">
 		<div style="margin-bottom: 15px;">
-			<el-breadcrumb separator-class="el-icon-arrow-right">
+			<el-breadcrumb separator-class="el-icon-arrow-right" style="display: inline-block;">
 			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
 			  <el-breadcrumb-item>查看</el-breadcrumb-item>
 			</el-breadcrumb>
+			<span class="name" style="margin-left: 30px;">{{companyName}}</span>
+			<div class="title" style="display:inline-block;float:right" v-if="activeTab=='1'">
+			    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
+			        <img src="../../public/img/images/notice.png" alt="">
+			        取消关注
+			    </span>
+			    <span @click="goTYCFocus" v-else>
+			        <img src="../../public/img/images/noticeDel.png" alt="">
+			        天眼查
+			    </span>
+			</div>
+			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='3'">
+			    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
+			        <img src="../../public/img/images/notice.png" alt="">
+			        取消关注
+			    </span>
+			    <span @click="goZCXFocus" v-else>
+			        <img src="../../public/img/images/noticeDel.png" alt="">
+			        中诚信
+			    </span>
+			</div>
 		</div>
-        <div class="name">{{companyName}}</div>
+       <!-- <div class="name">{{companyName}}</div> -->
         <el-tabs type="border-card" v-model="activeTab">
             <el-tab-pane label="企业基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
             </el-tab-pane>
 			<!-- 天眼查 -->
             <el-tab-pane label="工商舆情"> 
-				<div class="title">
-				    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
-				        <img src="../../public/img/images/notice.png" alt="">
-				        取消关注
-				    </span>
-				    <span @click="goTYCFocus" v-else>
-				        <img src="../../public/img/images/noticeDel.png" alt="">
-				        点击关注
-				    </span>
-				</div>
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
                 <iframe width="100%" height="620px" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
@@ -32,16 +43,6 @@
             </el-tab-pane>
 			<!-- 中诚信 -->
             <el-tab-pane label="企业评级报告">
-                <div class="title">
-                    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
-                        <img src="../../public/img/images/notice.png" alt="">
-                        取消关注
-                    </span>
-                    <span @click="goZCXFocus" v-else>
-                        <img src="../../public/img/images/noticeDel.png" alt="">
-                        点击关注
-                    </span>
-                </div>
                 <ZCXPage></ZCXPage>
             </el-tab-pane>
         </el-tabs>

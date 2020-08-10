@@ -140,7 +140,7 @@
                                     </el-button>
                                     <el-button plain type="primary" size="medium" @click="moreNews(item,'3')">中诚信
                                     </el-button>
-                                    <el-button plain type="primary" size="medium" @click="moreNews(item,'4')">更多详情
+                                    <el-button plain type="primary" size="medium" @click="moreNews(item,'0')">更多详情
                                     </el-button>
                                 </dl>
                             </li>

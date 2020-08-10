@@ -127,7 +127,7 @@
                     <tr>
                         <td style="color:#1b7fbd;cursor:pointer" @click="downPdf">
                             中国企业资信评估准报告.pdf
-                            <el-button size="mini" type="primary" v-on:click.stop="viewPdf">预览</el-button>
+                            <el-button size="mini" type="primary" plain v-on:click.stop="viewPdf" style="margin-left: 10px;">预览</el-button>
                         </td>
                         <td>461964000461964 </td>
                         <td>"/home/ftpuser/461964000461964.pdf"</td>
@@ -230,11 +230,19 @@
                 </table>
             </div>
         </el-dialog>
-        <el-dialog title="预览" :visible.sync="dialogPDFVisible" width="80%">
+        <!-- <el-dialog title="预览" :visible.sync="dialogPDFVisible" width="80%">
             <div style="height: 500px; overflow: auto;">
                 <pdfView :url="pdfUrl"></pdfView>
             </div>
-        </el-dialog>
+        </el-dialog> -->
+		<el-dialog
+		  title="预览"
+		  :visible.sync="pdfDialogVisible"
+		  width="70%">
+		  <div v-loading="pdfLoading">	
+		   <iframe :src="src" frameborder="0" width="100%" height="600px"></iframe>	
+		  </div>
+		</el-dialog>
     </div>
 </template>
 <script>
@@ -272,8 +280,10 @@
                     noIstranslation: '0',
                 },
                 istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
-                noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }]
-
+                noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
+				pdfDialogVisible:false,
+				pdfLoading:false,
+				src:''
             }
         },
         methods: {
@@ -305,40 +315,62 @@
                     }
                 })
             },
-            viewPdf(){
-                let fileUrl = '';
-                let param = {
-                    "userId": parseInt(this.$Cookies.get('userId')),
-                    "username": "admin",
-                    "password": "123456",
-                    "clientNo": "20000340"
-                }
-                this.$ajax.manage.getPDF(param).then(res => {
-                    console.log(res.data);
-                    const content = res.data
-                    const blob = new Blob([content])
-                    if (window.createObjectURL != undefined) { // basic
-                        fileUrl = window.createObjectURL(blob);
-                    } else if (window.webkitURL != undefined) { // webkit or chrome
-                        try {
-                            fileUrl = window.webkitURL.createObjectURL(blob);
-                        } catch (error) {
+            // viewPdf(){
+            //     let fileUrl = '';
+            //     let param = {
+            //         "userId": parseInt(this.$Cookies.get('userId')),
+            //         "username": "admin",
+            //         "password": "123456",
+            //         "clientNo": "20000340"
+            //     }
+            //     this.$ajax.manage.getPDF(param).then(res => {
+            //         console.log(res.data);
+            //         const content = res.data
+            //         const blob = new Blob([content])
+            //         if (window.createObjectURL != undefined) { // basic
+            //             fileUrl = window.createObjectURL(blob);
+            //         } else if (window.webkitURL != undefined) { // webkit or chrome
+            //             try {
+            //                 fileUrl = window.webkitURL.createObjectURL(blob);
+            //             } catch (error) {
 
-                        }
-                    } else if (window.URL != undefined) { // mozilla(firefox)
-                        try {
-                            fileUrl = window.URL.createObjectURL(blob);
-                        } catch (error) {
+            //             }
+            //         } else if (window.URL != undefined) { // mozilla(firefox)
+            //             try {
+            //                 fileUrl = window.URL.createObjectURL(blob);
+            //             } catch (error) {
 
-                        }
-                    }
-                    console.log(fileUrl);
-                    this.pdfUrl = '/static/pdf/web/viewer.html?file='+encodeURIComponent(fileUrl);
-                    window.open(this.pdfUrl);
-                    this.dialogPDFVisible = true;
-                });
+            //             }
+            //         }
+            //         console.log(fileUrl);
+            //         this.pdfUrl = '/static/pdf/web/viewer.html?file='+encodeURIComponent(fileUrl);
+            //         window.open(this.pdfUrl);
+            //         this.dialogPDFVisible = true;
+            //     });
 
-            },
+            // },
+			viewPdf(){
+			    let src = '';
+			    let param = {
+			        "userId": parseInt(this.$Cookies.get('userId')),
+			        "username": "admin",
+			        "password": "123456",
+			        "clientNo": "20000340"
+			    }
+				this.pdfDialogVisible = true
+				this.pdfLoading = true;
+			    this.$ajax.manage.getPDF(param).then(res => {
+					this.pdfLoading = false;
+			        console.log(res.data);
+			        const content = res.data
+			       const blob = new Blob([content], {
+			         type: 'application/pdf;chartset=UTF-8'
+			       })
+			       let fileURL= URL.createObjectURL(blob);
+			       //window.open(fileURL);
+			        this.src  = fileURL
+			    });
+			},
             applyReport() {
                 //打开报告申请弹框
                 this.dialogVisible = true;

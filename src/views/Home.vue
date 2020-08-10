@@ -30,7 +30,7 @@
 					</el-badge>
 			</span>
         </div>
-        <div class="footer-box">
+        <div class="footer-box" v-if="this.$route.path!='/essInfo'">
             <p>COPYRIGHT &copy; ICP许可证：苏B2-20190525</p>
             <p>备案号：苏ICP备16066248号</p>
         </div>
