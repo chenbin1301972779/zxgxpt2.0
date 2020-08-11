@@ -270,8 +270,10 @@
                 console.log(index)
                 if (index == 0) {
                     //黑名单申报
+                    this.goHmdsb()
                 } else if (index == 1) {
                     //黑名单审批
+                    this.goHmdsp()
                 } else if (index == 2) {
                     //站内信
                 } else if (index == 3) {
@@ -381,7 +383,25 @@
                     path: '/iframePage',
                     query: {
                         title:encodeURIComponent('中诚信'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('username')}`)
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
+                    }
+                })
+            },
+            goHmdsb(){
+                this.$router.push({
+                    path: '/iframePage',
+                    query: {
+                        title:encodeURIComponent('黑名单申报'),
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
+                    }
+                })
+            },
+            goHmdsp(){
+                this.$router.push({
+                    path: '/iframePage',
+                    query: {
+                        title:encodeURIComponent('黑名单审批'),
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
                     }
                 })
             }

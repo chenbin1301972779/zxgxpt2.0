@@ -110,6 +110,7 @@
                     if (res.data.code === '0') {
                         this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
                         this.$Cookies.set('username', res.data.name, { expires: 30 });
+                        this.$Cookies.set('userCode',res.data.username,{ expires: 30 });
                         this.$Cookies.set('userId', res.data.userId, { expires: 30 });
                         this.dialogVisible = false;
                         this.loginUserName = res.data.name;
@@ -138,6 +139,7 @@
                     if (res.data.code === '0') {
                         this.$Cookies.set(this.$getCookieKey(), res.data.token, { expires: 30 });
                         this.$Cookies.set('username', res.data.name, { expires: 30 });
+                        this.$Cookies.set('userCode',res.data.username,{ expires: 30 });
                         this.$Cookies.set('userId', res.data.userId, { expires: 30 });
                         this.loginUserName = res.data.name;
                         this.$router.push({ path: '/' });
