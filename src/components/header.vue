@@ -67,7 +67,8 @@
                 loginUserName: '',
                 userSettingDialog: false,
                 userSettingForm: {
-                    username: this.$Cookies.get('username'),
+                    // username: this.$Cookies.get('username'),
+                    username: this.$Cookies.get('userCode'),
                     name: '',
                     password: '',
                     email: '',
@@ -124,6 +125,7 @@
                 //退出
                 this.$Cookies.remove(this.$getCookieKey());
                 this.$Cookies.remove('username');
+                this.$Cookies.remove('userCode');
                 this.$Cookies.remove('userId');
                 this.$router.push({ path: '/' });
                 this.reload()
@@ -187,7 +189,8 @@
             },
             clearUserForm() {
                 this.userSettingForm = {
-                    username: this.$Cookies.get('username'),
+                    // username: this.$Cookies.get('username'),
+                    username: this.$Cookies.get('userCode'),
                     name: '',
                     password: '',
                     email: '',

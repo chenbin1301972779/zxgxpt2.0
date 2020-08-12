@@ -401,7 +401,7 @@
                     path: '/iframePage',
                     query: {
                         title:encodeURIComponent('黑名单审批'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
                     }
                 })
             }
