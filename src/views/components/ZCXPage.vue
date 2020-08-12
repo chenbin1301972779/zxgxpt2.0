@@ -6,14 +6,14 @@
             <p style="font-size: 14px;line-height: 30px;">成立时间：{{buildDate}}</p>
         </div>
 		<div>
-			<el-button type="primary" >风险初筛</el-button>
-			<el-button type="primary">财务排雷</el-button>
-			<el-button type="primary" @click="toCreditEvaluate">产业企业信用评价</el-button>
+			<el-button type="primary" @click="toReportPage(1)">风险初筛</el-button>
+			<el-button type="primary" @click="toReportPage(2)">财务排雷</el-button>
+			<el-button type="primary" @click="toReportPage(3)">产业企业信用评价</el-button>
 			<!-- <el-button type="primary" @click="getLiteRatingPDF">
 				<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
 				产业企业信用评价</el-button> -->
-			<el-button type="primary">区域信用评价</el-button>
-			<el-button type="primary" >城投企业信用评价</el-button>
+			<el-button type="primary" @click="toReportPage(4)">区域信用评价</el-button>
+			<el-button type="primary" @click="toReportPage(5)">城投企业信用评价</el-button>
 <!--			<el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>-->
        </div>
 	   <div class="table-box" style="margin-top: 30px;">
@@ -154,44 +154,41 @@ export default {
         showJSON () {
             this.dialogVisible = true;
         },
-		toCreditEvaluate(){
-			this.$router.push({
-			    path: '/creditEvaluate',
-			    query: {
-			        companyId:this.$route.query.companyId,
-					companyName:this.$route.query.companyName,
-					creditCode:this.$route.query.creditCode
-			    }
-			})
+		toReportPage(type){
+			let param=  {
+				companyId:this.$route.query.companyId,
+				companyName:this.$route.query.companyName,
+				creditCode:this.$route.query.creditCode,
+				index:'3'
+			}
+			if(type==1){
+				//风险初筛
+				this.$router.push({
+				    path: '/report/riskScreen',
+				    query:param
+				})
+			}else if(type==2){
+				//财务排雷
+			}else if(type==3){
+				//产业企业信用评价
+				this.$router.push({
+				    path: '/report/creditEvaluate',
+				    query:param
+				})
+			}else if(type ==4){
+				//区域信用评价
+				this.$router.push({
+				    path: '/report/areaCreditEvaluate',
+				    query:param
+				})
+			}else if(type == 5){
+				//城投企业信用评价  
+				this.$router.push({
+				    path: '/report/cityInvEvaluate',
+				    query:param
+				})
+			}
 		},
-		// getLiteRatingPDF(){
-		// 	//产业信用评价下载
-		// 	let param={
-		// 		fileName:this.fileName
-		// 	}
-		// 	console.log(param)
-		// 	this.loading = true;
-		// 	this.$ajax.manage.getLiteRatingPDF(param).then(res => {
-		// 	   // console.log(res)
-		// 	   this.loading=false
-		// 	    const content = res.data
-		// 	    const blob = new Blob([content])
-		// 	    const fileName = `产业信用评价-${this.$route.query.companyName}.pdf`
-		// 	    if ('download' in document.createElement('a')) { // 非IE下载
-		// 	        const elink = document.createElement('a')
-		// 	        elink.download = fileName
-		// 	        elink.style.display = 'none'
-		// 	        elink.href = URL.createObjectURL(blob)
-		// 	        console.log(elink.href);
-		// 	        document.body.appendChild(elink)
-		// 	        elink.click()
-		// 	        URL.revokeObjectURL(elink.href) // 释放URL 对象
-		// 	        document.body.removeChild(elink)
-		// 	    } else { // IE10+下载
-		// 	        navigator.msSaveBlob(blob, fileName)
-		// 	    }
-		// 	})
-		//},
 		downloadFile(row){
 			let param={
 				fileName:row.fileName

@@ -4,7 +4,8 @@
 		<div style="margin-bottom: 15px;">
 			<el-breadcrumb separator-class="el-icon-arrow-right">
 			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-			  <el-breadcrumb-item>单次信用评价</el-breadcrumb-item>
+			  <el-breadcrumb-item :to="{ path: '/essInfo' ,query:$route.query}">查看</el-breadcrumb-item>
+			  <el-breadcrumb-item>产业企业信用评价</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="content">
@@ -141,24 +142,7 @@
 				companyTypeOptions:['中央国有企业','国企非上市公司','国企上市公司','民企非上市公司','民企上市公司'],
 				lastDisabled:true,
 				nextDisabled:false,
-				tableData:[
-					{
-						year:'2019',
-						month:'12',
-						time:'年报',
-						from:'系统内置',
-						uploaderName:'系统',
-						uploadTime:'2019/12/30'
-					},
-					{
-						year:'2019',
-						month:'12',
-						time:'年报',
-						from:'系统内置',
-						uploaderName:'系统',
-						uploadTime:'2019/12/30'
-					},
-				],
+				tableData:[],
 				htmlContent:'',
 				backData:{},
 				multipleSelection:[],

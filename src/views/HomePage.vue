@@ -307,7 +307,6 @@
                         companyName: item.companyName,
                         companyId: item.companyId,
                         creditCode: item.creditCode,
-                        buildDate: item.buildDate,
                         index: index
                     }
                 })

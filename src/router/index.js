@@ -31,9 +31,24 @@ const routes = [
                 component: () => import('../views/components/IframePage.vue')
             },
 			{
-			    path: '/creditEvaluate',
-			    name: 'IframePage',
-			    component: () => import('../views/CreditEvaluate.vue')
+			    path: '/report/creditEvaluate',
+			    name: 'CreditEvaluate',
+			    component: () => import('../views/report/CreditEvaluate.vue')
+			},
+			{
+				path:'/report/riskScreen',
+				name:'RiskScreen',
+				component: () => import('../views/report/RiskScreen.vue')
+			},
+			{
+				path:'/report/cityInvEvaluate',
+				name:'CityInvEvaluate',
+				component: () => import('../views/report/CityInvEvaluate.vue')
+			},
+			{
+				path:'/report/areaCreditEvaluate',
+				name:'AreaCreditEvaluate',
+				component: () => import('../views/report/AreaCreditEvaluate.vue')
 			}
         ]
     },
