@@ -49,7 +49,7 @@
 			}
 		},
 		mounted(){
-			this.getRiskScreenHtml()
+			//this.getRiskScreenHtml()
 		},
 		watch:{
 			active(newVal,oldVal){
