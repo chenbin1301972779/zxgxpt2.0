@@ -4,7 +4,10 @@
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
         </el-breadcrumb>
-        <iframe :src="srcUrl" width="100%" height="80%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
+		<div style="height: calc(100% - 50px);min-height: 800px;">
+			 <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
+		</div>
+       
     </div>
 </template>
 <script>

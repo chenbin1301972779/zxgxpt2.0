@@ -242,7 +242,6 @@ export default {
                 userId: parseInt(this.$Cookies.get('userId'))
             }
             this.$ajax.manage.getCareStatus(param).then(res => {
-                console.log(res)
                 if (res.data.code == '0') {
                     this.careStatus = JSON.parse(res.data.careStatus);
                     this.companyName = this.careStatus.companyName;
@@ -263,7 +262,6 @@ export default {
         getArea () {
             //获取省市区县信息
             this.$ajax.manage.getArea({}).then(res => {
-                console.log(res);
                 if (res.status == 200) {
                     this.provinceOptions = res.data.areaList
                 }
@@ -429,7 +427,6 @@ export default {
         },
         getTYCUrl(){
             //TODO 组装天眼查URL
-            console.log("1111"+this.$route.query.companyName);
             this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
                 let tycid = res.data.result.items[0].id
                 this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`

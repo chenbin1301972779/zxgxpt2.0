@@ -120,6 +120,12 @@ async function getIndustry (param) {
      let getCityInvRatingHtml = await ajax.post(`/api/company/zhongChengXin/getCityInvRatingHtml`, param)
      return getCityInvRatingHtml
  }
+ //区域信用评价
+ async function getRegionRatingHtml (param) {
+     let getRegionRatingHtml = await ajax.post(`/api/company/zhongChengXin/getRegionRatingHtml`, param)
+     return getRegionRatingHtml
+ }
+ 
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -143,7 +149,8 @@ const manage = {
 	getBaseInfo:getBaseInfo,
 	getLiteRatingList:getLiteRatingList,
 	getRiskScreenHtml:getRiskScreenHtml,
-	getCityInvRatingHtml:getCityInvRatingHtml
+	getCityInvRatingHtml:getCityInvRatingHtml,
+	getRegionRatingHtml:getRegionRatingHtml
 }
 
 export default manage

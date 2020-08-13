@@ -88,8 +88,8 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="灰名单" name="2">灰名单</el-tab-pane>
-                            <el-tab-pane label="黑名单" name="3">黑名单</el-tab-pane>
+                            <!-- <el-tab-pane label="灰名单" name="2">灰名单</el-tab-pane> -->
+                            <el-tab-pane label="黑名单" name="2">黑名单</el-tab-pane>
                         </el-tabs>
                     </div>
                 </div>

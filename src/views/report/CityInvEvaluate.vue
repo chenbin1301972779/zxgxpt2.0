@@ -224,12 +224,12 @@
 			</div>
 			<div class="main" v-if="active===2">
 				<el-card class="box-card">
-				  <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
+				  <div v-html="htmlContent" style="overflow: auto;height: 550px;margin: auto;"></div>
 				</el-card>
 			</div>
 			<div class="main" v-if="active===3" >
 				<div class="btn-box">
-					<el-button type="primary" style="align:center">
+					<el-button type="primary" style="align:center" @click="getLiteRatingPDF">
 						<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
 						报告下载</el-button>
 				</div>
@@ -286,11 +286,11 @@
 						from:'系统'
 					}
 				],
-				radio:0
+				radio:0,
+				fileName:''
 			}
 		},
 		mounted(){
-			//this.getRiskScreenHtml()；
 			this.getArea()
 		},
 		watch:{
@@ -342,6 +342,7 @@
 					areaCode = this.form.countyCode
 				}
 				let param = {
+					ver: "1.0",
 					companyId:this.$route.query.companyId.toString(),
 					creditCode:this.$route.query.creditCode,
 					isImportant:this.radio==0?true:false,
@@ -349,15 +350,14 @@
 					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
 					areaCode:areaCode
 				}
-				console.log(param)
 				this.$ajax.manage.getCityInvRatingHtml(param).then(res=>{
 					console.log(res);
-					// if(res.status==200){
-					// 	this.htmlContent = res.data;
-					// 	let temp = 'content-disposition'
-					// 	let data = res.headers[temp];
-					// 	this.fileName=data.split('=')[1];
-					// }
+					if(res.status==200){
+						this.htmlContent = res.data;
+						let temp = 'content-disposition'
+						let data = res.headers[temp];
+						this.fileName=data.split('=')[1];
+					}
 				})
 			},
 			nextStep(){
@@ -393,11 +393,38 @@
 				}
 				this.active++
 				if(this.active==2){
-					//this.getCityInvRatingHtml()
+					this.getCityInvRatingHtml()
 				}
 			},
 			lastStep(){
 				this.active--;
+			},
+			getLiteRatingPDF(){
+				//报告下载
+				let param={
+					fileName:this.fileName,
+				}
+				this.loading = true;
+				this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+					// console.log(res)
+					this.loading=false
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `城投企业信用评价-${this.$route.query.companyName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				})
 			}
 		}
 	}

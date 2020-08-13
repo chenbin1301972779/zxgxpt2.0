@@ -16,13 +16,13 @@
 				</el-steps>
 			</div>
 			<div class="main" v-if="active===0">
-				<el-card class="box-card">
-				  <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
+				<el-card class="box-card" v-loading="htmlLoading">
+				  <div v-html="htmlContent" style="overflow: auto;height: 550px;margin: auto;"></div>
 				</el-card>
 			</div>
 			<div class="main" v-if="active===1" >
 				<div class="btn-box">
-					<el-button type="primary" style="align:center">
+					<el-button type="primary" style="align:center" @click="getLiteRatingPDF">
 						<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
 						报告下载</el-button>
 				</div>
@@ -46,10 +46,12 @@
 				loading:false,
 				lastDisabled:true,
 				nextDisabled:false,
+				fileName:'',
+				htmlLoading:false
 			}
 		},
 		mounted(){
-			//this.getRiskScreenHtml()
+			this.getRiskScreenHtml()
 		},
 		watch:{
 			active(newVal,oldVal){
@@ -69,30 +71,50 @@
 					companyId:this.$route.query.companyId.toString(),
 					creditCode:this.$route.query.creditCode
 				}
-				console.log(param)
+				this.htmlLoading=true;
 				this.$ajax.manage.getRiskScreenHtml(param).then(res=>{
-					console.log(res);
-					// if(res.status==200){
-					// 	this.htmlContent = res.data;
-					// 	let temp = 'content-disposition'
-					// 	let data = res.headers[temp];
-					// 	this.fileName=data.split('=')[1];
-					// }
+					this.htmlLoading=false;
+					if(res.status==200){
+						this.htmlContent = res.data;
+						let temp = 'content-disposition'
+						let data = res.headers[temp];
+						this.fileName=data.split('=')[1];
+					}
 				})
 			},
 			nextStep(){
-				// if(this.active<1){
-				// 	this.active++;
-				// 	this.nextDisabled=true;
-				// 	this.lastDisabled=false
-				// }else if(this.active==1){
-				// 	this.nextDisabled=true;
-				// 	this.lastDisabled=false
-				// }
 				this.active++
 			},
 			lastStep(){
 				this.active--;
+			},
+			getLiteRatingPDF(){
+				//报告下载
+				let param={
+					fileName:this.fileName,
+				}
+				console.log(param)
+				this.loading = true;
+				this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+					// console.log(res)
+					this.loading=false
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `风险初筛-${this.$route.query.companyName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				})
 			}
 		}
 	}

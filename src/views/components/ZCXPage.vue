@@ -125,7 +125,6 @@ export default {
 			}
 			this.tableLoading=true;
 			this.$ajax.manage.getLiteRatingList(param).then(res=>{
-				console.log(res)
 				this.tableLoading=false;
 				if(res.data.code=='0'){
 					this.tableData = res.data.reportList.map(row=>{

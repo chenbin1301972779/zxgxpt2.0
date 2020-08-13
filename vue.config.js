@@ -47,6 +47,7 @@ module.exports = {
                     minRatio: 1
                 })
             )
+			config.entry.app=["babel-polyfill","./src/main.js"]
 
             //打包去除console.log
             config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true

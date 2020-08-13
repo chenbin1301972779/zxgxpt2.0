@@ -19,7 +19,7 @@
 			</div>
 			<div class="main" v-if="active===0">
 				<table style="margin-bottom: 15px;">
-					<tr>
+					<!-- <tr>
 						<td style="text-align: right;">评价年度：</td>
 						<td>
 							<el-date-picker
@@ -27,6 +27,27 @@
 							      type="year"
 							      placeholder="" size="small" style="width:200px">
 							 </el-date-picker>
+						</td>
+					</tr> -->
+					<tr>
+						<td style="text-align: right;">所属行业：</td>
+						<td>
+							<el-select v-model="form.profession" placeholder="请选择" size="small" style="width:200px" @change="changeProfession">
+							    <el-option
+							      v-for="item in professionOptions"
+							      :key="item"
+							      :label="item"
+							      :value="item">
+							    </el-option>
+							  </el-select>
+							  <el-select v-model="form.professionDetail" placeholder="请选择" size="small" style="margin-left: 15px;width:200px">
+							      <el-option
+							        v-for="item in professionDetailOptions"
+							        :key="item"
+							        :label="item"
+							        :value="item">
+							      </el-option>
+							  </el-select>
 						</td>
 					</tr>
 					<tr>
@@ -62,9 +83,13 @@
 			</div>
 			<div class="main" v-if="active==1">
 				<table style="width: auto;">
-					<tr>
+					<!-- <tr>
 						<td style="text-align: right;">评价年度：</td>
 						<td>{{$formatDate(form.year,'yyyy')}}</td>
+					</tr> -->
+					<tr>
+						<td style="text-align: right;">所属行业：</td>
+						<td>{{form.professionDetail}}</td>
 					</tr>
 					<tr>
 						<td style="text-align: right;">行政级别：</td>
@@ -224,12 +249,12 @@
 			</div>
 			<div class="main" v-if="active===2">
 				<el-card class="box-card">
-				  <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
+				  <div v-html="htmlContent" style="overflow: auto;height: 550px;margin: auto;"></div>
 				</el-card>
 			</div>
 			<div class="main" v-if="active===3" >
 				<div class="btn-box">
-					<el-button type="primary" style="align:center">
+					<el-button type="primary" style="align:center" @click="getLiteRatingPDF">
 						<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
 						报告下载</el-button>
 				</div>
@@ -260,8 +285,12 @@
 					cityCode: '',
 					cityName: '',
 					countyCode: '',
-					countyName: ''
+					countyName: '',
+					profession:'',
+					professionDetail:''
 				},
+				professionOptions:[],
+				professionDetailOptions:[],
 				areaLevelOptions: [
 				    {
 				        code: '1',
@@ -287,12 +316,15 @@
 						from:'系统'
 					}
 				],
-				radio:0
+				radio:0,
+				fileName:'',
+				backData:[]
 			}
 		},
 		mounted(){
 			//this.getRiskScreenHtml()；
-			this.getArea()
+			this.getArea();
+			this.getIndustry()
 		},
 		watch:{
 			active(newVal,oldVal){
@@ -310,6 +342,53 @@
 			}
 		},
 		methods:{
+			getRegionRatingHtml(){
+				let areaCode='';
+				if(this.form.areaLevel=='1'){
+					areaCode = this.form.provinceCode
+				}else if(this.form.areaLevel=='2'){
+					areaCode = this.form.cityCode
+				}else if(this.form.areaLevel=='3'){
+					areaCode = this.form.countyCode
+				}
+				let param = {
+					ver: "1.0",
+					companyId:this.$route.query.companyId.toString(),
+					creditCode: this.$route.query.creditCode,
+					industry: this.form.professionDetail,
+					areaCode: areaCode,
+					type:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
+					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
+				 }
+				 this.$ajax.manage.getRegionRatingHtml(param).then(res=>{
+					 console.log(res);
+					 if(res.status==200){
+					 	this.htmlContent = res.data;
+					 	let temp = 'content-disposition'
+					 	let data = res.headers[temp];
+					 	this.fileName=data.split('=')[1];
+					 }
+				 })
+			},
+			getIndustry(){
+				this.$ajax.manage.getIndustry({}).then(res=>{
+					if(res.status==200){
+						let list = [];
+						for(let i in res.data.areaList){
+							list.push(i)
+						}
+						this.professionOptions =list;
+						this.backData=res.data.areaList
+					}
+				})
+			},
+			changeProfession(val){
+				for(let i in this.backData){
+					if(i==val){
+						this.professionDetailOptions = this.backData[i]
+					}
+				}
+			},
 			getArea () {
 			    //获取省市区县信息
 			    this.$ajax.manage.getArea({}).then(res => {
@@ -332,34 +411,6 @@
 				if(val!=''){
 					this.countyOptions = this.cityOptions.find(item => item.areaCode === val).children;
 				}
-			},
-			getCityInvRatingHtml(){
-				let areaCode='';
-				if(this.form.areaLevel=='1'){
-					areaCode = this.form.provinceCode
-				}else if(this.form.areaLevel=='2'){
-					areaCode = this.form.cityCode
-				}else if(this.form.areaLevel=='3'){
-					areaCode = this.form.countyCode
-				}
-				let param = {
-					companyId:this.$route.query.companyId.toString(),
-					creditCode:this.$route.query.creditCode,
-					isImportant:this.radio==0?true:false,
-					type:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
-					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
-					areaCode:areaCode
-				}
-				console.log(param)
-				this.$ajax.manage.getCityInvRatingHtml(param).then(res=>{
-					console.log(res);
-					// if(res.status==200){
-					// 	this.htmlContent = res.data;
-					// 	let temp = 'content-disposition'
-					// 	let data = res.headers[temp];
-					// 	this.fileName=data.split('=')[1];
-					// }
-				})
 			},
 			nextStep(){
 				if(this.active==0){
@@ -387,6 +438,9 @@
 							this.$message.warning('请选择区县级名称');
 							return;
 						}
+					}else if(this.form.professionDetail==''){
+						this.$message.warning('请选择所属行业说');
+						return;
 					}else if(this.form.areaLevel==''){
 						this.$message.warning('请选择行政级别');
 						return;
@@ -394,11 +448,39 @@
 				}
 				this.active++
 				if(this.active==2){
-					//this.getCityInvRatingHtml()
+					this.getRegionRatingHtml()
 				}
 			},
 			lastStep(){
 				this.active--;
+			},
+			getLiteRatingPDF(){
+				//报告下载
+				let param={
+					fileName:this.fileName,
+				}
+				console.log(param)
+				this.loading = true;
+				this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+					// console.log(res)
+					this.loading=false
+					const content = res.data
+					const blob = new Blob([content])
+					const fileName = `区域信用评价-${this.$route.query.companyName}.pdf`
+					if ('download' in document.createElement('a')) { // 非IE下载
+						const elink = document.createElement('a')
+						elink.download = fileName
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						console.log(elink.href);
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href) // 释放URL 对象
+						document.body.removeChild(elink)
+					} else { // IE10+下载
+						navigator.msSaveBlob(blob, fileName)
+					}
+				})
 			}
 		}
 	}
