@@ -29,12 +29,9 @@ module.exports = {
 			}
         }
     },
-    transpileDependencies: [
-        // 打包后生效
-        'element-ui',
-        'axios',
-        'nprogress'
-    ],
+    // transpileDependencies: [
+    //     /node_modules[/\\\\](element-ui|vuex|)[/\\\\]/
+    // ],
     configureWebpack: config => {
         if (process.env.NODE_ENV === 'production') {
             //打包压缩gzip

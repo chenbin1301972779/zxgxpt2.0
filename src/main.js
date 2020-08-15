@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -30,7 +30,7 @@ Vue.prototype.$sysTitle = sysTitle
 import Bus from '@/assets/bus.js'
 Vue.prototype.$Bus = Bus
 
-import Es6Promise from 'es6-promise' 
+import Es6Promise from 'es6-promise'
 require('es6-promise').polyfill() 
 Es6Promise.polyfill()
 new Vue({

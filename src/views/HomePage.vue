@@ -210,7 +210,7 @@
                 useList: [
                     { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
                     { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
-                    { img: require('../../public/img/images/use_icon03.png'), name: '站内信' },
+                    { img: require('../../public/img/images/use_icon03.png'), name: '客商填报' },
                     { img: require('../../public/img/images/use_icon04.png'), name: '关注清单' },
                     { img: require('../../public/img/images/use_icon05.png'), name: '用户管理' },
                 ],
@@ -276,6 +276,7 @@
                     this.goHmdsp()
                 } else if (index == 2) {
                     //站内信
+                    this.goKstb()
                 } else if (index == 3) {
                     //关注清单
                 } else if (index == 4) {
@@ -401,6 +402,15 @@
                     query: {
                         title:encodeURIComponent('黑名单审批'),
                         url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
+                    }
+                })
+            },
+            goKstb(){
+                this.$router.push({
+                    path: '/iframePage',
+                    query: {
+                        title:encodeURIComponent('客商填报'),
+                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
                     }
                 })
             }

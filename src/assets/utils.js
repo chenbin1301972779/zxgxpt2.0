@@ -105,19 +105,19 @@ function formatDate (dateStr, formatter = 'yyyy-MM-dd hh:mm:ss') {
     return new Date(dateStr).Format(formatter)
 }
 
-let Base64 = require('js-base64').Base64
+// let Base64 = require('js-base64').Base64
 
-const Base64Utils = {
-    encode: str => {
-        return Base64.encode(str)
-    },
-    encodeURI: str => {
-        return Base64.encodeURI(str)
-    },
-    decode: str => {
-        return Base64.decode(str)
-    }
-}
+// const Base64Utils = {
+//     encode: str => {
+//         return Base64.encode(str)
+//     },
+//     encodeURI: str => {
+//         return Base64.encodeURI(str)
+//     },
+//     decode: str => {
+//         return Base64.decode(str)
+//     }
+// }
 
 function getUUID () {
     var s = []
@@ -133,4 +133,4 @@ function getUUID () {
     return uuid
 }
 
-export { getCookie, getCookieKey, stringToByte, byteToString, formatDate, Base64Utils, getUUID }
+export { getCookie, getCookieKey, stringToByte, byteToString, formatDate, getUUID }
