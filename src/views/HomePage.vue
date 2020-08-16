@@ -89,7 +89,13 @@
                                 </div>
                             </el-tab-pane>
                             <!-- <el-tab-pane label="灰名单" name="2">灰名单</el-tab-pane> -->
-                            <el-tab-pane label="黑名单" name="2">黑名单</el-tab-pane>
+                            <el-tab-pane label="黑名单" name="2">
+								<div class="tab-content-wrapper">
+									<div v-for="(item,index) in blackListData" :key="index" class="care-list">
+									    <span>{{item.entName}}</span>
+									</div>
+								</div>
+							</el-tab-pane>
                         </el-tabs>
                     </div>
                 </div>
@@ -217,16 +223,26 @@
                 searchList: [],
                 sourceType: '',
                 showBox: 1,
-                careList: []
+                careList: [],
+				blackListData:[]
             }
         },
         mounted() {
             if (this.$Cookies.get(this.$getCookieKey())) {
                 this.getLatestSearchList();
                 this.getCareList();//关注清单
+				this.getBlackList();//黑名单
             }
         },
         methods: {
+			getBlackList(){
+				this.$ajax.manage.getBlackList({}).then(res=>{
+					console.log(res);
+					if(res.data.code==0){
+						this.blackListData = res.data.blackList
+					}
+				})
+			},
             seachContent() {
                 if (this.searchVal === '') {
                     this.showBox = 1
