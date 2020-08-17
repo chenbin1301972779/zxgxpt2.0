@@ -35,7 +35,7 @@
 			<!-- 天眼查 -->
             <el-tab-pane label="工商舆情"> 
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
-                <iframe width="100%" height="620px" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
+                <iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
 			<!-- 中信保 -->
             <el-tab-pane label="信保报告">
@@ -225,7 +225,8 @@ export default {
                     { validator: validateCounty, trigger: 'change' }
                 ]
             },
-            tycUrl:''
+            tycUrl:'',
+            curHeight:''
         }
     },
     created () {
@@ -233,6 +234,8 @@ export default {
         this.getArea();
     },
     mounted() {
+        var h = document.documentElement.clientHeight || document.body.clientHeight;
+        this.curHeight =h-210; //减去页面上固定高度height
         this.getTYCUrl()
     },
     methods: {
@@ -427,10 +430,15 @@ export default {
         },
         getTYCUrl(){
             //TODO 组装天眼查URL
+            let tycid = this.$route.query.id;
+            this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
+            /**
             this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
                 let tycid = res.data.result.items[0].id
+                alert(tycid);
                 this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
             })
+            */
         }
     }
 }

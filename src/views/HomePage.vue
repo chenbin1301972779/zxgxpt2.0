@@ -321,6 +321,7 @@
                 this.$router.push({
                     path: '/essInfo',
                     query: {
+                        id: item.id,
                         companyName: item.companyName,
                         companyId: item.companyId,
                         creditCode: item.creditCode,
