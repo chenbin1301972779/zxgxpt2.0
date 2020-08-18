@@ -106,112 +106,58 @@
 				</table>
 				<div  class="title">区域定量指标：</div>
 				<div class="table-box">
-					<table>
+					<table v-for="(item,index) in regionInfo.values">
 						<tr>
-							<th>2018</th>
+							<th>{{index}}</th>
 							<th>数值</th>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								城镇居民人均可支配收入（元）</td>
-							<td width="200px">&nbsp;</td>
+							<td>{{item.v12}}</td>
 						</tr>
 						<tr>	
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								一般公共预算收入（亿元）</td>
-							<td></td>
+							<td>{{item.v8}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								税收收入（亿元）</td>
-							<td></td>
+							<td>{{item.v15}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								地方政府债务余额（亿元）</td>
-							<td></td>
+							<td>{{item.v16}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								地方政府PPP余额（亿元）</td>
-							<td></td>
+							<td>{{item.v17}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								一般公共预算支出（亿元）</td>
-							<td></td>
+							<td>{{item.v14}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								区域内公开发债城投企业有息债务余额（亿元）</td>
-							<td></td>
+							<td>{{item.v18}}</td>
 						</tr>
 						<tr>
 							<td>
 								<span style="color: red;font-size: 20px;">*</span>
 								GDP（亿元）</td>
-							<td></td>
-						</tr>
-					</table>
-					<table>
-						<tr>
-							<th>2019</th>
-							<th>数值</th>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								城镇居民人均可支配收入（元）</td>
-							<td width="200px">&nbsp;</td>
-						</tr>
-						<tr>	
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								一般公共预算收入（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								税收收入（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								地方政府债务余额（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								地方政府PPP余额（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								一般公共预算支出（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								区域内公开发债城投企业有息债务余额（亿元）</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<span style="color: red;font-size: 20px;">*</span>
-								GDP（亿元）</td>
-							<td></td>
+							<td>{{item.v10}}</td>
 						</tr>
 					</table>
 				</div>
@@ -318,7 +264,8 @@
 				],
 				radio:0,
 				fileName:'',
-				backData:[]
+				backData:[],
+				regionInfo:{}
 			}
 		},
 		mounted(){
@@ -448,7 +395,9 @@
 					}
 				}
 				this.active++
-				if(this.active==2){
+				if(this.active==1){
+					this.getRegionInfo()
+				}else if(this.active==2){
 					this.getRegionRatingHtml()
 				}
 			},
@@ -480,6 +429,32 @@
 						document.body.removeChild(elink)
 					} else { // IE10+下载
 						navigator.msSaveBlob(blob, fileName)
+					}
+				})
+			},
+			getRegionInfo(){
+				let areaCode='';
+				if(this.form.areaLevel=='1'){
+					areaCode = this.form.provinceCode
+				}else if(this.form.areaLevel=='2'){
+					areaCode = this.form.cityCode
+				}else if(this.form.areaLevel=='3'){
+					areaCode = this.form.countyCode
+				}
+				let param = {
+					companyId:this.$route.query.companyId.toString(),
+					creditCode: this.$route.query.creditCode,
+					industry: this.form.professionDetail,
+					areaCode: areaCode,
+					type:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
+					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
+					userId:this.$Cookies.get("userId")
+				}
+				this.$ajax.manage.getRegionInfo(param).then(res=>{
+					console.log(res);
+					if(res.data.code=='0'){
+						this.regionInfo=JSON.parse(res.data.regionInfo.data);
+						console.log(this.regionInfo)
 					}
 				})
 			}
@@ -529,7 +504,7 @@
 						td{
 							border:1px solid #EBEEF5;
 							font-size: 14px;
-							padding-left: 10px;
+							padding:0 10px;
 						}
 						th{
 							border:1px solid #EBEEF5;

@@ -135,7 +135,11 @@ async function getReportList (param) {
      let getBlackList = await ajax.post(`/api/common/getBlackList`, param)
      return getBlackList
  }
- 
+ //
+ async function getRegionInfo (param) {
+     let getRegionInfo = await ajax.post(`/api/company/zhongChengXin/getRegionInfo`, param)
+     return getRegionInfo
+ }
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -162,7 +166,8 @@ const manage = {
 	getRiskScreenHtml:getRiskScreenHtml,
 	getCityInvRatingHtml:getCityInvRatingHtml,
 	getRegionRatingHtml:getRegionRatingHtml,
-	getBlackList:getBlackList
+	getBlackList:getBlackList,
+	getRegionInfo:getRegionInfo
 }
 
 export default manage
