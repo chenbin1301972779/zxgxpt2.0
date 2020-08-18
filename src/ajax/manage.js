@@ -110,6 +110,11 @@ async function getIndustry (param) {
      let getLiteRatingList = await ajax.post(`/api/company/zhongChengXin/getLiteRatingList`, param)
      return getLiteRatingList
  }
+ //查询所有类型的历史报告
+async function getReportList (param) {
+    let getReportList = await ajax.post(`/api/company/zhongChengXin/getReportList`, param)
+    return getReportList
+}
  //风险初筛html
  async function getRiskScreenHtml (param) {
      let getRiskScreenHtml = await ajax.post(`/api/company/zhongChengXin/getRiskScreenHtml`, param)
@@ -153,6 +158,7 @@ const manage = {
 	getLiteRatingPDF:getLiteRatingPDF,
 	getBaseInfo:getBaseInfo,
 	getLiteRatingList:getLiteRatingList,
+    getReportList:getReportList,
 	getRiskScreenHtml:getRiskScreenHtml,
 	getCityInvRatingHtml:getCityInvRatingHtml,
 	getRegionRatingHtml:getRegionRatingHtml,

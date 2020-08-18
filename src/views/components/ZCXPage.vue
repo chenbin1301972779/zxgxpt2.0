@@ -116,25 +116,26 @@ export default {
     created () {
         this.data = JSON.stringify(json, null, '\t');
 		//this.getHtml();
-		this.getLiteRatingList()
+		this.getReportList()
     },
     methods: {
-		getLiteRatingList(){
+		getReportList(){
 			let param ={
 				companyId:this.$route.query.companyId,
 			}
 			this.tableLoading=true;
-			this.$ajax.manage.getLiteRatingList(param).then(res=>{
-				this.tableLoading=false;
-				if(res.data.code=='0'){
-					this.tableData = res.data.reportList.map(row=>{
-						row.fileLoading = false;
-						return row
-					});
-					this.page.total = res.data.reportList.length
-				}
-			})
-		},
+			//this.$ajax.manage.getLiteRatingList(param).then(res=>{
+			this.$ajax.manage.getReportList(param).then(res=>{
+					this.tableLoading=false;
+					if(res.data.code=='0'){
+						this.tableData = res.data.reportList.map(row=>{
+							row.fileLoading = false;
+							return row
+						});
+						this.page.total = res.data.reportList.length
+					}
+				})
+			},
 			
 		getHtml(){
 			let param = {

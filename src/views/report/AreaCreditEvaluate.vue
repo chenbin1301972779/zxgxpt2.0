@@ -359,6 +359,7 @@
 					areaCode: areaCode,
 					type:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
 					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
+					userId:this.$Cookies.get("userId")
 				 }
 				 this.$ajax.manage.getRegionRatingHtml(param).then(res=>{
 					 console.log(res);

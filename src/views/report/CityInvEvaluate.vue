@@ -348,7 +348,8 @@
 					isImportant:this.radio==0?true:false,
 					type:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
 					level:this.areaLevelOptions.find(item=>item.code==this.form.areaLevel).value,
-					areaCode:areaCode
+					areaCode:areaCode,
+					userId:this.$Cookies.get("userId")
 				}
 				this.$ajax.manage.getCityInvRatingHtml(param).then(res=>{
 					console.log(res);

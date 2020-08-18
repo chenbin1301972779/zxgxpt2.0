@@ -68,6 +68,7 @@
 		methods:{
 			getRiskScreenHtml(){
 				let param = {
+					userId:this.$Cookies.get("userId"),
 					companyId:this.$route.query.companyId.toString(),
 					creditCode:this.$route.query.creditCode
 				}
