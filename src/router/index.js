@@ -10,9 +10,14 @@ const routes = [
         name: 'Home',
         component: Home,
         children: [
+			{
+			    path: '/',
+			    name: 'homeLogin',
+			    component: () => import('../views/HomeLogin.vue')
+			},
             {
-                path: '/',
-                name: 'HomePage',
+                path: '/homePage',
+                name: 'homePage',
                 component: () => import('../views/HomePage.vue')
             },
             {
@@ -20,6 +25,11 @@ const routes = [
                 name: 'UserManage',
                 component: () => import('../views/UserManage.vue')
             },
+			{
+			    path: '/messageCenter',
+			    name: 'MessageCenter',
+			    component: () => import('../views/messageCenter.vue')
+			},
             {
                 path: '/essInfo',
                 name: 'EssInfo',
@@ -49,7 +59,7 @@ const routes = [
 				path:'/report/areaCreditEvaluate',
 				name:'AreaCreditEvaluate',
 				component: () => import('../views/report/AreaCreditEvaluate.vue')
-			}
+			},
         ]
     },
 

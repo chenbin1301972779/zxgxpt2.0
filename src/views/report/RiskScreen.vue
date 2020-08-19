@@ -3,7 +3,7 @@
 	<div class="risk-screen">
 		<div style="margin-bottom: 15px;">
 			<el-breadcrumb separator-class="el-icon-arrow-right">
-			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+			  <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
 			  <el-breadcrumb-item :to="{ path: '/essInfo' ,query:$route.query}">查看</el-breadcrumb-item>
 			  <el-breadcrumb-item>风险初筛</el-breadcrumb-item>
 			</el-breadcrumb>

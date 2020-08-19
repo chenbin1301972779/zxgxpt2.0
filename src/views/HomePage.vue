@@ -1,74 +1,23 @@
 <!-- 首页 -->
 <template>
     <div class="main-wrapper">
-        <div class="search-content">
-            <div><img src="../../public/img/bannerLogo.png" alt=""> </div>
-            <div>
-                <el-input placeholder="请输入内容" v-model="searchVal" class="input-with-select" style="width: 500px;"
-                    clearable="" @keyup.enter.native="seachContent">
-                    <el-button slot="append" icon="el-icon-search" style="background-color: #1b7fbd;color: #FFFFFF;"
-                        @click="seachContent"></el-button>
-                </el-input>
-                <div class="latest-search">
-                    最近搜索：
-                    <span v-for="item in latestSearchList" :key="item.id"
-                        @click="searchContent(item)">{{item.keyWord}}</span>
-                </div>
-            </div>
-        </div>
-        <div v-if="$Cookies.get(this.$getCookieKey())&&showBox==1">
+		<div class="search-content">
+		    <div class="title">资 信 共 享 平 台</div>
+		    <div >
+		        <el-input placeholder="请输入内容" v-model="searchVal" class="input-with-select" style="width: 600px;height: 50px; box-shadow: 0 0 5px 5px lightslategray;"
+		            clearable="" @keyup.enter.native="seachContent">
+					<el-button slot="append" icon="el-icon-search" style="height: 50px;width: 70px;background: #409eff;color: #fff;"
+					    @click="seachContent" ></el-button>
+		        </el-input>
+				<div class="latest-search">
+				    最近搜索：
+				    <span v-for="item in latestSearchList" :key="item.id"
+				        @click="searchContent(item)">{{item.keyWord}}</span>
+				</div>
+		    </div>
+		</div>
+        <div v-if="showBox==1">
             <div class="main-content">
-                <div class="content-item leftBox">
-                    <div class="title">
-                        <span class="icon"></span>
-                        <span>预警推送</span>
-                    </div>
-                    <div class="main">
-                        <el-tabs v-model="activeAlarmTab" stretch>
-                            <el-tab-pane label="天眼查" name="1">
-                                <div class="tab-content-wrapper">
-                                    <div class="tab-content" v-for="(item,index) in qichachaData" :key="index">
-                                        <p style="font-weight:bold;font-size:14px">
-                                            <span>{{item.company}}</span>
-                                            <span>{{item.level}}</span>
-                                        </p>
-                                        <p style="color:#999;font-size:12px">
-                                            <span>{{item.reason}}</span>
-                                        </p>
-                                        <p style="color:#617be3;font-size:12px">
-                                            <span>风险推送人：{{item.person}}</span>
-                                            <span>推送时间：{{item.time}}</span>
-                                        </p>
-                                    </div>
-                                </div>
-
-                            </el-tab-pane>
-                            <el-tab-pane label="中诚信" name="2">
-                                <div class="tab-content-wrapper">
-									<div style="text-align: right;font-size: 14px;color:#617be3;margin-bottom: 10px;cursor: pointer;" @click="gobi">查看更多>></div>
-									<div class="tab-content" v-for="(item,index) in zhongchengxinData" :key="index">
-									    <p style="font-size:14px;margin-bottom: 10px;">
-									        <span>{{item.companyName}}
-												<span style="background-color:#617be3;" class="status-style" v-if="item.status==1">一般</span>
-												<span style="background-color:#E6A23C;" class="status-style" v-else-if="item.status==2">重大</span>
-											</span>
-									    </p>
-									    <p style="font-size:14px">
-									        <span>风险事件类型：{{item.type}}</span>
-									        <span>最新推送时间：{{item.time}}</span>
-									    </p>
-									</div>
-								</div>
-                            </el-tab-pane>
-                            <el-tab-pane label="站内信" name="3">
-                                <div class="tab-content-wrapper">站内信</div>
-                            </el-tab-pane>
-                            <el-tab-pane label="集团公示" name="4">
-                                <div class="tab-content-wrapper">集团公示</div>
-                            </el-tab-pane>
-                        </el-tabs>
-                    </div>
-                </div>
                 <div class="content-item rightBox">
                     <div class="title">
                         <span class="icon"></span>
@@ -97,22 +46,6 @@
 								</div>
 							</el-tab-pane>
                         </el-tabs>
-                    </div>
-                </div>
-            </div>
-
-            <div class="usually-box">
-                <div class="title">
-                    <span class="icon"></span>
-                    <span>常用应用</span>
-                </div>
-                <div class="main">
-                    <div class="img-box" v-for="(item,index) in useList" :key="index" @click="goToApp(index)">
-                        <el-card shadow="hover">
-                            <img :src="item.img" alt="">
-                            <div>{{item.name}}</div>
-                        </el-card>
-
                     </div>
                 </div>
             </div>
@@ -180,46 +113,7 @@
             return {
                 searchVal: '',
                 latestSearchList: [],
-                activeAlarmTab: "1",
                 activeUserTab: '1',
-                qichachaData: [
-                    {
-                        'company': 'ABC有限公司',
-                        'level': '2级别',
-                        'reason': '鉴于国内猪肉价格上涨',
-                        'person': '张三',
-                        'time': '2020-7-24'
-
-                    },
-                    {
-                        'company': 'ABC有限公司',
-                        'level': '2级别',
-                        'reason': '鉴于国内猪肉价格上涨',
-                        'person': '张三',
-                        'time': '2020-7-24'
-                    },
-                ],//天眼查
-				zhongchengxinData:[
-					{
-						companyName:'顾家家股份有限公司',
-						type:'开庭公告',
-						status:'1',
-						time:'2020-07-29'
-					},
-					{
-						companyName:'顾家家股份有限公司',
-						type:'注册资本',
-						status:'2',
-						time:'2020-07-29'
-					}
-				],
-                useList: [
-                    { img: require('../../public/img/images/use_icon01.png'), name: '黑名单申报' },
-                    { img: require('../../public/img/images/use_icon02.png'), name: '黑名单审批' },
-                    { img: require('../../public/img/images/use_icon03.png'), name: '客商填报' },
-                    { img: require('../../public/img/images/use_icon04.png'), name: '关注清单' },
-                    { img: require('../../public/img/images/use_icon05.png'), name: '用户管理' },
-                ],
                 searchList: [],
                 sourceType: '',
                 showBox: 1,
@@ -244,10 +138,11 @@
 				})
 			},
             seachContent() {
+				console.log(sessionStorage.getItem('username'))
                 if (this.searchVal === '') {
                     this.showBox = 1
                 } else {
-                    if (this.$Cookies.get(this.$getCookieKey())) {
+                    if (sessionStorage.getItem('username')) {
                         //已登录=>搜索
                         let param = {
                             "keyword": this.searchVal,
@@ -261,6 +156,7 @@
                                 this.searchList = res.data.searchList
                                 this.sourceType = res.data.sourceType;
                                 this.showBox = 2;
+								this.getLatestSearchList()
                             }
                         })
                     } else {
@@ -280,30 +176,6 @@
                         this.latestSearchList = res.data.latestWords
                     }
                 })
-            },
-            goToApp(index) {
-                //常用应用
-                console.log(index)
-                if (index == 0) {
-                    //黑名单申报
-                    this.goHmdsb()
-                } else if (index == 1) {
-                    //黑名单审批
-                    this.goHmdsp()
-                } else if (index == 2) {
-                    //站内信
-                    this.goKstb()
-                } else if (index == 3) {
-                    //关注清单
-                } else if (index == 4) {
-                    //用户管理
-                    if (this.$Cookies.get('username') != 'admin') {
-                        this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
-                    } else {
-                        //55109783
-                        this.$router.push({ path: '/userManage' })
-                    }
-                }
             },
             moreNews(item, index) {
                 console.log(item)
@@ -395,42 +267,6 @@
 			        return val;
 			      }
 			    },
-            gobi(){
-                this.$router.push({
-                    path: '/iframePage',
-                    query: {
-                        title:encodeURIComponent('中诚信'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
-                    }
-                })
-            },
-            goHmdsb(){
-                this.$router.push({
-                    path: '/iframePage',
-                    query: {
-                        title:encodeURIComponent('黑名单申报'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
-                    }
-                })
-            },
-            goHmdsp(){
-                this.$router.push({
-                    path: '/iframePage',
-                    query: {
-                        title:encodeURIComponent('黑名单审批'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
-                    }
-                })
-            },
-            goKstb(){
-                this.$router.push({
-                    path: '/iframePage',
-                    query: {
-                        title:encodeURIComponent('客商填报'),
-                        url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
-                    }
-                })
-            }
         },
     }
 </script>
@@ -442,18 +278,34 @@
 </style>
 <style lang="less" scoped>
     .main-wrapper {
+        /deep/.el-input__inner{
+        	height: 50px;
+        	line-height: 50px;
+        	font-size: 16px;
+        }
+		/deep/.el-input-group__append, .el-input-group__prepend{
+			border: none;
+		}
         width: 100%;
         height: 100%;
         overflow: auto;
-
         .search-content {
-            height: 250px;
-            width: 700px;
+            height: 500px;
+            width: 100%;
             text-align: center;
             padding-top: 30px;
             box-sizing: border-box;
-            margin: auto;
-
+        	background: url(../../public/img/bg.jpg) no-repeat;
+        	background-size: cover;
+			margin-bottom:20px;
+			opacity: 0.8;
+        	.title{
+        		font-size: 40px;
+        		color: #fff;
+        		width: 100%;
+        		height: 200px;
+        		line-height: 200px;
+        	}
             img {
                 height: 100px;
                 margin-bottom: 30px;
@@ -461,17 +313,18 @@
 
             .latest-search {
                 font-size: 14px;
-                color: #333333;
-                margin-top: 10px;
+                color: #fff;
+                margin: 15px auto;
                 text-align: left;
                 padding-left: 110px;
-
+				width: 680px;
+				
                 span {
                     margin-right: 10px;
                     cursor: pointer;
 
                     &:hover {
-                        color: #1b7fbd;
+                        color: #409eff;
                         text-decoration-line: underline;
                     }
                 }
@@ -495,7 +348,8 @@
             }
 
             .rightBox {
-                width: 450px;
+                width: 600px;
+				//flex: 1;
             }
 
             .title {
@@ -526,8 +380,6 @@
             }
 
             .main {
-                
-
                 .proList_li {
                     li {
                         padding: 10px;

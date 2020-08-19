@@ -3,14 +3,30 @@
         <span class="title">
             <img src="../../public/img/logo.png" alt="" @click="goHome">
         </span>
-        <span class="info" v-if="$Cookies.get(this.$getCookieKey())">
+       <!-- <span class="info" v-if="$Cookies.get(this.$getCookieKey())"> -->
+		<span class="info" v-if="showUserData">
+			<el-dropdown @command="handleCommand" style="margin-right:20px">
+			  <span class="el-dropdown-link">
+			    常用应用<i class="el-icon-arrow-down el-icon--right"></i>
+			  </span>
+			   <el-divider direction="vertical"></el-divider>
+			  <el-dropdown-menu slot="dropdown">
+			    <el-dropdown-item command="1">黑名单报告</el-dropdown-item>
+			    <el-dropdown-item command="2">黑名单审批</el-dropdown-item>
+			    <el-dropdown-item command="3">客商初筛</el-dropdown-item>
+			    <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
+			    <el-dropdown-item command="5">用户管理</el-dropdown-item>
+				<el-dropdown-item command="6">消息中心</el-dropdown-item>
+			  </el-dropdown-menu>
+			</el-dropdown>
             <span style="margin-right: 20px;" @click="showUserInfo">
                 <i class="el-icon-user-solid"></i>
                 {{$Cookies.get('username')}}</span>
+			<el-divider direction="vertical"></el-divider>
             <span style="cursor: pointer;" @click="logOut">安全退出</span>
         </span>
-        <span class="info" v-else @click="openLoginDialog">登录</span>
-
+		<el-button type="primary" v-else @click="openLoginDialog" style="float:right;margin-top: 12px;">登录</el-button>
+       <!-- <span class="info" v-else @click="openLoginDialog">登录</span> -->
         <el-dialog title="登录" :visible.sync="dialogVisible" width="450px">
             <el-form :model="form" label-width="100px">
                 <el-form-item label="用户名">
@@ -73,7 +89,8 @@
                     password: '',
                     email: '',
                     mobile: ''
-                }
+                },
+				showUserData:sessionStorage.getItem('username'),
             }
         },
         created() {
@@ -82,13 +99,70 @@
             })
         },
         mounted() {
-            console.log(this.$route.query.username);
+			// if(sessionStorage.getItem('username')){
+			// 	this.showUserData = true
+			// }else{
+			// 	this.showUserData = false
+			// }
             if (this.$route.query.username) {
                 this.skipLogin();
             }
             //this.reload()
         },
         methods: {
+			handleCommand(command) {
+				console.log(command)
+				if (command == 1) {
+				    //黑名单申报
+				    this.goHmdsb()
+				} else if (command == 2) {
+				    //黑名单审批
+				    this.goHmdsp()
+				} else if (command == 3) {
+				    //客商初筛
+				    this.goKstb()
+				} else if (command == 4) {
+				    //信保报告申请
+				} else if (command == 5) {
+				    //用户管理
+				    if (this.$Cookies.get('username') != 'admin') {
+				        this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
+				    } else {
+				        //55109783
+				        this.$router.push({ path: '/userManage' })
+				    }
+				}
+			},
+			goHmdsb(){
+			    this.$router.push({
+			        path: '/iframePage',
+			        query: {
+			            title:encodeURIComponent('黑名单申报'),
+			            url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
+			        }
+			    })
+				this.reload()
+			},
+			goHmdsp(){
+			    this.$router.push({
+			        path: '/iframePage',
+			        query: {
+			            title:encodeURIComponent('黑名单审批'),
+			            url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
+			        }
+			    })
+				this.reload()
+			},
+			goKstb(){
+			    this.$router.push({
+			        path: '/iframePage',
+			        query: {
+			            title:encodeURIComponent('客商填报'),
+			            url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${this.$Cookies.get('userCode')}`)
+			        }
+			    })
+				this.reload()
+			},
             openLoginDialog() {
                 //打开登录弹框
                 this.dialogVisible = true;
@@ -113,9 +187,14 @@
                         this.$Cookies.set('username', res.data.name, { expires: 30 });
                         this.$Cookies.set('userCode',res.data.username,{ expires: 30 });
                         this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+						sessionStorage.setItem('username', res.data.name);
+						sessionStorage.setItem('userCode', res.data.username);
+						sessionStorage.setItem('userId', res.data.userId);
                         this.dialogVisible = false;
                         this.loginUserName = res.data.name;
-                        this.reload()
+                        //this.reload()
+						this.$router.push({ path: '/homePage' });
+						this.reload()
                     } else {
                         this.$message.error(res.data.msg)
                     }
@@ -127,9 +206,12 @@
                 this.$Cookies.remove('username');
                 this.$Cookies.remove('userCode');
                 this.$Cookies.remove('userId');
+				sessionStorage.removeItem('username');
+				sessionStorage.removeItem('userCode');
+				sessionStorage.removeItem('userId');
                 this.$router.push({ path: '/' });
                 this.reload()
-                this.$router.go(0);
+                // this.$router.go(0);
             },
             skipLogin() {
                 let param = {
@@ -143,8 +225,11 @@
                         this.$Cookies.set('username', res.data.name, { expires: 30 });
                         this.$Cookies.set('userCode',res.data.username,{ expires: 30 });
                         this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+						sessionStorage.setItem('username', res.data.name);
+						sessionStorage.setItem('userCode', res.data.username);
+						sessionStorage.setItem('userId', res.data.userId);
                         this.loginUserName = res.data.name;
-                        this.$router.push({ path: '/' });
+                        this.$router.push({ path: '/homePage' });
                         this.reload()
                     } else {
                         this.$message.error(res.data.msg)
@@ -200,25 +285,43 @@
             goHome() {
                 // 
                 console.log(this.$route);
-                if (this.$route.path == '/') {
-                    this.reload();
-                } else {
-                    this.$router.push({ path: '/' });
-                }
+				this.$router.push({ path: '/homePage' });
+                // if (this.$route.path == '/') {
+                //     this.reload();
+                // } else {
+                //     this.$router.push({ path: '/' });
+                // }
             }
         }
     }
 </script>
-
+<style>
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #333333;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+</style>
 <style lang="less">
+	
     .header-box{
-        line-height: 58px;
+		.el-dropdown/deep/{
+			height: 40px;
+			//float: right;
+		}
+		.el-dialog__header/deep/{
+			line-height: 20px;
+		}
+        line-height: 68px;
         white-space: nowrap;
         overflow: hidden;
-        margin-bottom: 10px;
-        background: #1b7fbd;
+        //margin-bottom: 10px;
+       // background: #1b7fbd;
+	   background-color: #fff;
         padding: 0 60px;
-
+		position:relative;
         img {
             height: 40px;
             cursor: pointer;
@@ -229,8 +332,8 @@
             font-weight: bold;
             color: rgba(71, 140, 209, 1);
             margin-left: 16px;
-            color: #fff;
-
+            //color: #fff;
+			color:#333333;
             img {
                 vertical-align: middle;
             }
@@ -239,11 +342,15 @@
         .info {
             float: right;
             margin-right: 38px;
-            font-size: 14px;
+            font-size: 16px;
             color: #333333;
             cursor: pointer;
-            color: #fff;
-
+            color:#333333;
+			span{
+				&:hover{
+					color:#409eff
+				}
+			}
             .infoImg {
                 display: inline-block;
                 width: 20px;

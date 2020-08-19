@@ -1,7 +1,7 @@
 <template>
     <div class="iframePage">
         <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
         </el-breadcrumb>
 		<div style="height: calc(100% - 50px);min-height: 800px;">

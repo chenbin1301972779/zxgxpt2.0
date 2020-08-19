@@ -2,7 +2,7 @@
     <div class="essInfo">
 		<div style="margin-bottom: 15px;">
 			<el-breadcrumb separator-class="el-icon-arrow-right" style="display: inline-block;">
-			  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+			  <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
 			  <el-breadcrumb-item>查看</el-breadcrumb-item>
 			</el-breadcrumb>
 			<span class="name" style="margin-left: 30px;">{{companyName}}</span>
