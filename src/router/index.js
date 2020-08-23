@@ -5,18 +5,26 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [
+    // {
+    //     path: '/',
+    //     redirect: '/homeLogin'
+    // },
     {
         path: '/',
+        name: 'homeLogin',
+        component: () => import('../views/HomeLogin.vue')
+    },
+    {
+        path: '/homePage',
         name: 'Home',
         component: Home,
         children: [
-			{
-			    path: '/',
-			    name: 'homeLogin',
-			    component: () => import('../views/HomeLogin.vue')
-			},
+            // {
+            //     path: '/',
+            //     redirect: '/homePage'
+            // },
             {
-                path: '/homePage',
+                path: '/',
                 name: 'homePage',
                 component: () => import('../views/HomePage.vue')
             },
@@ -25,11 +33,11 @@ const routes = [
                 name: 'UserManage',
                 component: () => import('../views/UserManage.vue')
             },
-			{
-			    path: '/messageCenter',
-			    name: 'MessageCenter',
-			    component: () => import('../views/messageCenter.vue')
-			},
+            {
+                path: '/messageCenter',
+                name: 'MessageCenter',
+                component: () => import('../views/messageCenter.vue')
+            },
             {
                 path: '/essInfo',
                 name: 'EssInfo',
@@ -40,35 +48,45 @@ const routes = [
                 name: 'IframePage',
                 component: () => import('../views/components/IframePage.vue')
             },
-			{
-			    path: '/report/creditEvaluate',
-			    name: 'CreditEvaluate',
-			    component: () => import('../views/report/CreditEvaluate.vue')
-			},
-			{
-				path:'/report/riskScreen',
-				name:'RiskScreen',
-				component: () => import('../views/report/RiskScreen.vue')
-			},
-			{
-				path:'/report/cityInvEvaluate',
-				name:'CityInvEvaluate',
-				component: () => import('../views/report/CityInvEvaluate.vue')
-			},
-			{
-				path:'/report/areaCreditEvaluate',
-				name:'AreaCreditEvaluate',
-				component: () => import('../views/report/AreaCreditEvaluate.vue')
-			},
+            {
+                path: '/report/creditEvaluate',
+                name: 'CreditEvaluate',
+                component: () => import('../views/report/CreditEvaluate.vue')
+            },
+            {
+                path: '/report/riskScreen',
+                name: 'RiskScreen',
+                component: () => import('../views/report/RiskScreen.vue')
+            },
+            {
+                path: '/report/cityInvEvaluate',
+                name: 'CityInvEvaluate',
+                component: () => import('../views/report/CityInvEvaluate.vue')
+            },
+            {
+                path: '/report/areaCreditEvaluate',
+                name: 'AreaCreditEvaluate',
+                component: () => import('../views/report/AreaCreditEvaluate.vue')
+            },
         ]
     },
 
 ]
-
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
 })
-
+router.beforeEach((to, from, next) => {
+    if (to.path === '/') {
+        next();
+    } else {
+        let token = sessionStorage.getItem('username');
+        if (token === null || token === '') {
+            next('/');
+        } else {
+            next();
+        }
+    }
+});
 export default router

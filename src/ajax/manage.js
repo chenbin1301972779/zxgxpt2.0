@@ -1,7 +1,7 @@
 /**
  * 本模块主要用于监控管理
  */
-import { ajax, redirectAjax, fileAjax ,newAjax} from './ajax.js'
+import { ajax, redirectAjax, fileAjax, newAjax } from './ajax.js'
 
 //登录
 async function login (param) {
@@ -88,58 +88,73 @@ async function getHtml (param) {
     return getHtml
 }
 async function getData (param) {
-    let getData = await newAjax.get(`/tycApi/services/open/search/2.0?word=`+param)
+    let getData = await newAjax.get(`/tycApi/services/open/search/2.0?word=` + param)
     return getData
 }
 //获取行业数据
 async function getIndustry (param) {
-    let getIndustry = await ajax.post(`/api/common/getIndustry`,param)
+    let getIndustry = await ajax.post(`/api/common/getIndustry`, param)
     return getIndustry
 }
- //产业信用评价下载
- async function getLiteRatingPDF (param) {
-     let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
-     return getLiteRatingPDF
- }
- //企业基本信息
- async function getBaseInfo (param) {
-     let getBaseInfo = await ajax.post(`/api/company/getBaseInfo`, param)
-     return getBaseInfo
- }
- async function getLiteRatingList (param) {
-     let getLiteRatingList = await ajax.post(`/api/company/zhongChengXin/getLiteRatingList`, param)
-     return getLiteRatingList
- }
- //查询所有类型的历史报告
+//产业信用评价下载
+async function getLiteRatingPDF (param) {
+    let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
+    return getLiteRatingPDF
+}
+//企业基本信息
+async function getBaseInfo (param) {
+    let getBaseInfo = await ajax.post(`/api/company/getBaseInfo`, param)
+    return getBaseInfo
+}
+async function getLiteRatingList (param) {
+    let getLiteRatingList = await ajax.post(`/api/company/zhongChengXin/getLiteRatingList`, param)
+    return getLiteRatingList
+}
+//查询所有类型的历史报告
 async function getReportList (param) {
     let getReportList = await ajax.post(`/api/company/zhongChengXin/getReportList`, param)
     return getReportList
 }
- //风险初筛html
- async function getRiskScreenHtml (param) {
-     let getRiskScreenHtml = await ajax.post(`/api/company/zhongChengXin/getRiskScreenHtml`, param)
-     return getRiskScreenHtml
- }
- //城投企业信用评价 
- async function getCityInvRatingHtml (param) {
-     let getCityInvRatingHtml = await ajax.post(`/api/company/zhongChengXin/getCityInvRatingHtml`, param)
-     return getCityInvRatingHtml
- }
- //区域信用评价
- async function getRegionRatingHtml (param) {
-     let getRegionRatingHtml = await ajax.post(`/api/company/zhongChengXin/getRegionRatingHtml`, param)
-     return getRegionRatingHtml
- }
- //黑名单
- async function getBlackList (param) {
-     let getBlackList = await ajax.post(`/api/common/getBlackList`, param)
-     return getBlackList
- }
- //
- async function getRegionInfo (param) {
-     let getRegionInfo = await ajax.post(`/api/company/zhongChengXin/getRegionInfo`, param)
-     return getRegionInfo
- }
+//风险初筛html
+async function getRiskScreenHtml (param) {
+    let getRiskScreenHtml = await ajax.post(`/api/company/zhongChengXin/getRiskScreenHtml`, param)
+    return getRiskScreenHtml
+}
+//城投企业信用评价 
+async function getCityInvRatingHtml (param) {
+    let getCityInvRatingHtml = await ajax.post(`/api/company/zhongChengXin/getCityInvRatingHtml`, param)
+    return getCityInvRatingHtml
+}
+//区域信用评价
+async function getRegionRatingHtml (param) {
+    let getRegionRatingHtml = await ajax.post(`/api/company/zhongChengXin/getRegionRatingHtml`, param)
+    return getRegionRatingHtml
+}
+//黑名单
+async function getBlackList (param) {
+    let getBlackList = await ajax.post(`/api/common/getBlackList`, param)
+    return getBlackList
+}
+//
+async function getRegionInfo (param) {
+    let getRegionInfo = await ajax.post(`/api/company/zhongChengXin/getRegionInfo`, param)
+    return getRegionInfo
+}
+//中信保基本信息
+async function getBusinessInfo (param) {
+    let getBusinessInfo = await ajax.post(`/api/company/zhongxinbao/getBusinessInfo`, param)
+    return getBusinessInfo
+}
+//中信保接口
+async function getShareInfo (param) {
+    let getShareInfo = await ajax.post(`/api/company/zhongxinbao/getShareInfo`, param)
+    return getShareInfo
+}
+//国家代码接口
+async function getNationCode (param) {
+    let getNationCode = await ajax.post(`/api/common/getNationCode`, param)
+    return getNationCode
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -154,20 +169,23 @@ const manage = {
     getCareStatus: getCareStatus,
     getArea: getArea,
     getUserInfo: getUserInfo,
-	getCodeInfo:getCodeInfo,
-    getNewCompany:getNewCompany,
-	getHtml:getHtml,
-	getData:getData,
-	getIndustry:getIndustry,
-	getLiteRatingPDF:getLiteRatingPDF,
-	getBaseInfo:getBaseInfo,
-	getLiteRatingList:getLiteRatingList,
-    getReportList:getReportList,
-	getRiskScreenHtml:getRiskScreenHtml,
-	getCityInvRatingHtml:getCityInvRatingHtml,
-	getRegionRatingHtml:getRegionRatingHtml,
-	getBlackList:getBlackList,
-	getRegionInfo:getRegionInfo
+    getCodeInfo: getCodeInfo,
+    getNewCompany: getNewCompany,
+    getHtml: getHtml,
+    getData: getData,
+    getIndustry: getIndustry,
+    getLiteRatingPDF: getLiteRatingPDF,
+    getBaseInfo: getBaseInfo,
+    getLiteRatingList: getLiteRatingList,
+    getReportList: getReportList,
+    getRiskScreenHtml: getRiskScreenHtml,
+    getCityInvRatingHtml: getCityInvRatingHtml,
+    getRegionRatingHtml: getRegionRatingHtml,
+    getBlackList: getBlackList,
+    getRegionInfo: getRegionInfo,
+    getShareInfo: getShareInfo,
+    getBusinessInfo: getBusinessInfo,
+    getNationCode: getNationCode
 }
 
 export default manage
