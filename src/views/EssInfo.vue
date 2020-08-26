@@ -246,19 +246,24 @@ export default {
             }
             this.$ajax.manage.getCareStatus(param).then(res => {
                 if (res.data.code == '0') {
-                    this.careStatus = JSON.parse(res.data.careStatus);
-                    this.companyName = this.careStatus.companyName;
-                    this.form.entName = this.careStatus.companyName;
-                    if (this.careStatus.zhongchengxin == '1') {
-                        this.zhongchengxinCare = true
-                    } else {
-                        this.zhongchengxinCare = false
-                    };
-                    if (this.careStatus.tianyancha == '1') {
-                        this.tianyanchaCare = true
-                    } else {
-                        this.tianyanchaCare = false
-                    }
+					console.log(res)
+					if(res.data.careStatus){
+						this.careStatus = JSON.parse(res.data.careStatus);
+						//this.companyName = this.careStatus.companyName;
+						//this.form.entName = this.careStatus.companyName;
+						this.companyName = this.$route.query.companyName;
+						this.form.entName =this.$route.query.companyName;
+						if (this.careStatus.zhongchengxin == '1') {
+						    this.zhongchengxinCare = true
+						} else {
+						    this.zhongchengxinCare = false
+						};
+						if (this.careStatus.tianyancha == '1') {
+						    this.tianyanchaCare = true
+						} else {
+						    this.tianyanchaCare = false
+						}
+					}
                 }
             })
         },

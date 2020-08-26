@@ -111,9 +111,9 @@ export default {
         }
     },
     created () {
-        console.log(this.$route.query)
-       // this.basicInfo = this.$route.query
-	   this.getBaseInfo()
+	   if(this.$route.query.companyId){
+		   this.getBaseInfo()
+	   }
     },
 	methods:{
 		getBaseInfo(){

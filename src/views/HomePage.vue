@@ -277,6 +277,12 @@ export default {
         this.goKstb()
       } else if (command == 4) {
         //信保报告申请
+		this.$router.push({
+		  path: '/essInfo',
+		  query: {
+		    index: '2'
+		  }
+		})
       } else if (command == 5) {
         //用户管理
         if (this.$Cookies.get('username') != 'admin') {

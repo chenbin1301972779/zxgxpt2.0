@@ -273,9 +273,13 @@ export default {
     }
   },
   mounted () {
-    this.getBusinessInfo();
-    this.getShareInfo();
-    this.getNationCode()
+	  if(this.$route.query.companyId){
+		  this.getBusinessInfo();
+		  this.getShareInfo();
+		  this.getNationCode()
+	  }else{
+		  this.dialogVisible=true;
+	  }
   },
   methods: {
     getNationCode () {
