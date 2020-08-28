@@ -97,8 +97,12 @@ async function getIndustry (param) {
     return getIndustry
 }
 //产业信用评价下载
+// async function getLiteRatingPDF (param) {
+//     let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
+//     return getLiteRatingPDF
+// }
 async function getLiteRatingPDF (param) {
-    let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getLiteRatingPDF`, param)
+    let getLiteRatingPDF = await fileAjax.post(`/api/company/zhongChengXin/getReportPDF`, param)
     return getLiteRatingPDF
 }
 //企业基本信息
