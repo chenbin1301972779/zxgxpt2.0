@@ -54,6 +54,7 @@
     <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%">
       <div v-loading="pdfLoading">
         <iframe :src="src" frameborder="0" width="100%" height="600px"></iframe>
+<!--        <embed :src="src" width="100%" height="600px"></embed>-->
       </div>
     </el-dialog>
   </div>

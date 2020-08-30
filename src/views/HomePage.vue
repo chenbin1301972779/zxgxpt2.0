@@ -412,6 +412,7 @@ export default {
     },
     //搜索高亮
     brightenKeyword (val, keyword) {
+      keyword = keyword.replace(/\s*/g,'');
       if (keyword.length > 0) {
         let keywordArr = keyword.split("");
         val = val + "";
@@ -555,10 +556,12 @@ export default {
     .leftBox {
       margin-right: 30px;
       width: 500px;
+      vertical-align: top;
     }
 
     .rightBox {
       width: 500px;
+      vertical-align: top;
     }
 
     .title {

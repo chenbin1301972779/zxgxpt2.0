@@ -14,7 +14,7 @@ function redirectAjax (url, param) {
  * 获取一个新的自定义的axios实例
  */
 let ajax = new axios.create({
-    // timeout: 600000,
+    timeout: 600000,
     //设置Content-Type
     headers: {
         'content-type': 'application/json',
