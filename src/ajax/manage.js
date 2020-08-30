@@ -159,6 +159,11 @@ async function getNationCode (param) {
     let getNationCode = await ajax.post(`/api/common/getNationCode`, param)
     return getNationCode
 }
+//权限
+async function verifyPermissions (param) {
+    let verifyPermissions = await ajax.post(`/api/user/verifyPermissions`, param)
+    return verifyPermissions
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -189,7 +194,8 @@ const manage = {
     getRegionInfo: getRegionInfo,
     getShareInfo: getShareInfo,
     getBusinessInfo: getBusinessInfo,
-    getNationCode: getNationCode
+    getNationCode: getNationCode,
+	verifyPermissions:verifyPermissions
 }
 
 export default manage

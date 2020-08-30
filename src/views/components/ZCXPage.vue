@@ -2,8 +2,8 @@
 <template>
   <div class="ZCXpage">
     <div style="margin-bottom:20px">
-      <p style="font-size: 14px;line-height: 30px;">统一社会信用代码：{{creditCode}}</p>
-      <p style="font-size: 14px;line-height: 30px;">成立时间：{{buildDate}}</p>
+      <!-- <p style="font-size: 14px;line-height: 30px;">统一社会信用代码：{{creditCode}}</p>
+      <p style="font-size: 14px;line-height: 30px;">成立时间：{{buildDate}}</p> -->
     </div>
     <div>
       <el-button type="primary" @click="toReportPage(1)">风险初筛</el-button>

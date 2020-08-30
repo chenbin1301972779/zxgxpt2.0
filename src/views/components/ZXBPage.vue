@@ -5,7 +5,7 @@
       <el-button type="primary" @click="applyReport">报告申请</el-button>
     </div>
     <div class="main-box">
-      <div class="titile">基本信息</div>
+      <div class="titile">信保基本信息</div>
       <div class="table-wrapper">
         <table border="1">
           <tr>

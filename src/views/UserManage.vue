@@ -102,6 +102,16 @@
         <el-form-item label="部门：">
           <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
         </el-form-item>
+		<el-form-item label="权限：" v-if="editType=='编辑用户'">
+			 <el-select v-model="userInfo.permission" multiple placeholder="请选择" style="width:250px">
+			    <el-option
+			      v-for="item in permissionList"
+			      :key="item.code"
+			      :label="item.name"
+			      :value="item.name">
+			    </el-option>
+			  </el-select>
+		</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -116,8 +126,8 @@ export default {
   data () {
     var validateMobile = (rule, value, callback) => {
       let TEL_REGEXP = /^[1][3,4,5,7,8][0-9]{9}$/;
-      if (value == "") {
-        callback(new Error("请输入手机号"));
+      if (value === ""||typeof value=='undefined') {
+        callback();
       } else if (!TEL_REGEXP.test(value)) {
         callback(new Error("请输入正确的手机号!"));
       } else {
@@ -159,13 +169,14 @@ export default {
         email: '',
         companyCode: '',
         companyName: '',
-        deptName: ''
+        deptName: '',
+		permission:[]
       },
       newCompany: [],
       newCompanyFlag: 0,
       rules: {
         mobile: [
-          { required: true, validator: validateMobile, trigger: 'blur' }
+          {  validator: validateMobile, trigger: 'blur' }
         ],
         companyName: [
           { required: true, message: '请选择公司名称', trigger: 'change' }
@@ -179,7 +190,25 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'change' }
         ],
-      }
+      },
+	  permissionList:[
+		  {
+			  code:'1',
+			  name:'超级管理员'
+		  },
+		  {
+			  code:'2',
+			  name:'黑名单申请'
+		  },
+		  {
+			  code:'3',
+			  name:'黑名单审批'
+		  },
+		  {
+			  code:'4',
+			  name:'子管理员'
+		  },
+	  ]
     }
   },
   created () {

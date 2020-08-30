@@ -16,7 +16,7 @@
 			        天眼查
 			    </span>
 			</div>
-			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='3'">
+			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='0'">
 			    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
 			        <img src="../../public/img/images/notice.png" alt="">
 			        取消关注
@@ -31,6 +31,8 @@
         <el-tabs type="border-card" v-model="activeTab">
             <el-tab-pane label="企业基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
+				 <ZXBPage></ZXBPage>
+				 <ZCXPage></ZCXPage>
             </el-tab-pane>
 			<!-- 天眼查 -->
             <el-tab-pane label="工商舆情"> 
@@ -38,13 +40,13 @@
                 <iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
 			<!-- 中信保 -->
-            <el-tab-pane label="信保报告">
+           <!-- <el-tab-pane label="信保报告">
                 <ZXBPage></ZXBPage>
-            </el-tab-pane>
+            </el-tab-pane> -->
 			<!-- 中诚信 -->
-            <el-tab-pane label="企业评级报告">
+            <!-- <el-tab-pane label="企业评级报告">
                 <ZCXPage></ZCXPage>
-            </el-tab-pane>
+            </el-tab-pane> -->
         </el-tabs>
 
         <el-dialog title="关注" :visible.sync="dialogFormVisible" width="500px" @close="cancle">
