@@ -11,12 +11,12 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="1">黑名单报告</el-dropdown-item>
-          <el-dropdown-item command="2">黑名单审批</el-dropdown-item>
-          <el-dropdown-item command="3">客商初筛</el-dropdown-item>
-          <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
-          <el-dropdown-item command="5">用户管理</el-dropdown-item>
-          <el-dropdown-item command="6">消息中心</el-dropdown-item>
+         <el-dropdown-item command="1" v-if="blacklistAudit">黑名单报告</el-dropdown-item>
+         <el-dropdown-item command="2" v-if="blacklistApply">黑名单审批</el-dropdown-item>
+         <el-dropdown-item command="3">客商初筛</el-dropdown-item>
+         <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
+         <el-dropdown-item command="5" v-if="userManage">用户管理</el-dropdown-item>
+         <el-dropdown-item command="6">消息中心</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <span style="margin-right: 20px;" @click="showUserInfo">
@@ -91,6 +91,9 @@ export default {
         mobile: ''
       },
       showUserData: sessionStorage.getItem('username'),
+	  blacklistAudit:false,
+	  userManage: false,
+	  blacklistApply: false
     }
   },
   created () {
@@ -99,17 +102,27 @@ export default {
     })
   },
   mounted () {
-    // if(sessionStorage.getItem('username')){
-    // 	this.showUserData = true
-    // }else{
-    // 	this.showUserData = false
-    // }
     if (this.$route.query.username) {
       this.skipLogin();
     }
-    //this.reload()
+	this.verifyPermissions()
   },
   methods: {
+	  verifyPermissions(){
+	  	//权限
+	  	let param = {
+	  		userId: this.$Cookies.get("userId"),
+	  		permissionPoint:"user.manage,blacklist.audit,blacklist.apply"
+	  	}
+	  	this.$ajax.manage.verifyPermissions(param).then(res=>{
+	  		console.log(res)
+	  		if(res.data.code==0){
+	  			this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
+	  			this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply']
+	  			this.userManage = res.data.verifyPermissionResult['user.manage']
+	  		}
+	  	})
+	  },
     handleCommand (command) {
       console.log(command)
       if (command == 1) {
