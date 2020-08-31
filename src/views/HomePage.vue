@@ -145,6 +145,104 @@
         <el-button type="primary" @click="saveUserInfo">保 存</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="信保报告申请" :visible.sync="dialogXBVisible" width="1200px">
+      <div class="report-box">
+        <table border="1">
+          <tr>
+            <td colspan="9" style="background:#E3E3E3;font-weight:bold">信保报告申请（已有信保代码）</td>
+          </tr>
+          <tr class="gbGray">
+            <th width="100px">买方代码</th>
+            <th width="200px">待调查企业中国信保企业代码</th>
+            <th width="100px">待调查企业国别</th>
+            <th width="150px">待调查企业中文名称</th>
+            <th width="150px">待调查企业英文名称 </th>
+            <th width="100px">待调查企业地址</th>
+            <th width="220px">待调查企业统一社会信用代码</th>
+            <th width="70px">是否导读</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>
+              <el-input v-model="haveCreditCode.clientNo"></el-input>
+            </td>
+            <td>
+              <el-input v-model="haveCreditCode.reportbuyerNo"></el-input>
+            </td>
+            <td style="background:#FAFAFA"></td>
+            <td style="background:#FAFAFA"></td>
+            <td style="background:#FAFAFA"></td>
+            <td style="background:#FAFAFA"></td>
+            <td style="background:#FAFAFA"></td>
+            <td>
+              <el-select v-model="haveCreditCode.istranslation">
+                <el-option v-for="(item,index) in istranslation" :value="item.id" :key="item.id" :label="item.name">
+                </el-option>
+              </el-select>
+            </td>
+            <td>
+              <el-button type="primary" size="mini" @click="applyHaveCode">点击申请</el-button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="report-box">
+        <table border="1">
+          <tr>
+            <td colspan="9" style="background:#E3E3E3;font-weight:bold">信保报告申请（无信保代码）</td>
+          </tr>
+          <tr class="gbGray">
+            <th width="100px">买方代码</th>
+            <th width="200px">待调查企业中国信保企业代码</th>
+            <th width="100px">待调查企业国别</th>
+            <th width="150px">待调查企业中文名称</th>
+            <th width="150px">待调查企业英文名称 </th>
+            <th width="100px">待调查企业地址</th>
+            <th width="220px">待调查企业统一社会信用代码</th>
+            <th width="70px">是否导读</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>
+              <el-input v-model="haveCreditCode.clientNo"></el-input>
+            </td>
+            <td style="background:#FAFAFA"></td>
+            <td>
+              <!-- <el-input v-model="noCreditCode.reportCorpCountryCode"></el-input> -->
+              <el-select v-model="noCreditCode.reportCorpCountryCode" placeholder='' filterable>
+                <el-option v-for="item in nationTypeOptions" :key="item.nationCode" :label="item.nationName"
+                           :value="item.nationCode">
+                  <span style="float: left">{{ item.nationName }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.nationCode }}</span>
+                </el-option>
+              </el-select>
+            </td>
+            <td>
+              <el-input v-model="noCreditCode.reportCorpChnName"></el-input>
+            </td>
+            <td>
+              <el-input v-model="noCreditCode.reportCorpEngName"></el-input>
+            </td>
+            <td>
+              <el-input v-model="noCreditCode.reportCorpaddress"></el-input>
+            </td>
+            <td>
+              <el-input v-model="noCreditCode.creditno"></el-input>
+            </td>
+            <td>
+              <el-select v-model="noCreditCode.noIstranslation">
+                <el-option v-for="(item,index) in noIstranslation" :value="item.id" :key="item.id" :label="item.name">
+                </el-option>
+              </el-select>
+            </td>
+            <td>
+              <el-button type="primary" size="mini" @click="applyNoCode">点击申请</el-button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -171,7 +269,30 @@ export default {
       },
 	  blacklistAudit:false,
 	  userManage: false,
-	  blacklistApply: false
+	  blacklistApply: false,
+      dialogXBVisible: false,
+      haveCreditCode: {
+        clientNo: '',
+        userId: parseInt(this.$Cookies.get('userId')),
+        reportbuyerNo: '',
+        reportCorpCountryCode: '',
+        reportCorpChnName: '',
+        reportCorpEngName: '',
+        reportCorpaddress: '',
+        creditno: '',
+        istranslation: '0'
+      },
+      noCreditCode: {
+        clientNo: '',
+        userId: parseInt(this.$Cookies.get('userId')),
+        reportbuyerNo: '',
+        reportCorpCountryCode: '',
+        reportCorpChnName: '',
+        reportCorpEngName: '',
+        reportCorpaddress: '',
+        creditno: '',
+        noIstranslation: '0',
+      },
     }
   },
   mounted () {
@@ -299,12 +420,7 @@ export default {
         this.goKstb()
       } else if (command == 4) {
         //信保报告申请
-		this.$router.push({
-		  path: '/essInfo',
-		  query: {
-		    index: '2'
-		  }
-		})
+        this.applyReport()
       } else if (command == 5) {
         //用户管理
         if (this.$Cookies.get('username') != 'admin') {
@@ -450,6 +566,67 @@ export default {
         return val;
       }
     },
+    applyReport () {
+      //打开报告申请弹框
+      this.dialogXBVisible = true;
+      this.getCodeInfo()
+    },
+    getCodeInfo () {
+      let param = {
+        userId: this.$Cookies.get('userId')
+      }
+      this.$ajax.manage.getCodeInfo(param).then(res => {
+        console.log(res)
+        if (res.data.code == '0') {
+          if (res.data.codeInfo) {
+            this.haveCreditCode.clientNo = res.data.codeInfo.clientNo;
+            this.noCreditCode.clientNo = res.data.codeInfo.clientNo;
+            this.haveCreditCode.reportbuyerNo = res.data.codeInfo.reportbuyerNo
+          }
+        }
+      })
+    },
+    applyNoCode () {
+      if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
+        this.$message.warning('请输入买方代码');
+        return;
+      } else if (this.noCreditCode.reportCorpCountryCode === '') {
+        this.$message.warning('请输入待调查企业国别');
+        return;
+      } else if (this.noCreditCode.reportCorpChnName === '' && this.noCreditCode.reportCorpEngName === '') {
+        this.$message.warning('请输入待调查企业中文名称或英文名称');
+        return;
+      } else if (this.noCreditCode.reportCorpaddress === '') {
+        this.$message.warning('请输入待调查企业地址');
+        return;
+      } else if (this.noCreditCode.creditno === '') {
+        this.$message.warning('请输入待调查企业统一社会信用代码');
+        return;
+      }
+      console.log(this.noCreditCode);
+      this.$ajax.manage.zhongxinbao(this.noCreditCode).then(res => {
+        if (res.status == 200) {
+          this.$message.success(res.data.returnMsg);
+          this.dialogXBVisible = false
+        }
+      })
+    },
+    applyHaveCode () {
+      if (!this.haveCreditCode.clientNo || this.haveCreditCode.clientNo === '') {
+        this.$message.warning('请输入买方代码');
+        return;
+      } else if (!this.haveCreditCode.reportbuyerNo || this.haveCreditCode.reportbuyerNo == '') {
+        this.$message.warning('请输入待调查企业中国信保企业代码');
+        return;
+      }
+      console.log(this.haveCreditCode)
+      this.$ajax.manage.zhongxinbao(this.haveCreditCode).then(res => {
+        if (res.status == 200) {
+          this.$message.success(res.data.returnMsg);
+          this.dialogXBVisible = false
+        }
+      })
+    }
   },
 }
 </script>
@@ -739,6 +916,46 @@ export default {
         width: 20px;
         height: 20px;
         margin: 0 5px;
+      }
+    }
+  }
+  table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #e3e3e3;
+    margin: 15px auto;
+    table-layout: fixed;
+    td {
+      word-break: break-all;
+      /*允许在字内换行,即单词可分*/
+      word-wrap: break-word;
+      /*允许长单词或URL地址换行*/
+      border-right: 1px solid #e3e3e3;
+      border-bottom: 1px solid #e3e3e3;
+      font-size: 14px;
+      height: 36px;
+    }
+
+    .gbGray {
+      background: #f1f3f4;
+    }
+  }
+  .report-box {
+    table {
+      table-layout: auto;
+
+      th {
+        border-right: 1px solid #e3e3e3;
+        border-bottom: 1px solid #e3e3e3;
+        height: 36px;
+      }
+
+      border: none;
+
+      td {
+        // border: none;
       }
     }
   }
