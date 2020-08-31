@@ -293,6 +293,9 @@ export default {
         creditno: '',
         noIstranslation: '0',
       },
+	  nationTypeOptions:[],
+	  istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
+	  noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
     }
   },
   mounted () {
@@ -300,10 +303,19 @@ export default {
       this.getLatestSearchList();
       this.getCareList();//关注清单
       this.getBlackList();//黑名单
-	  this.verifyPermissions()
+	  this.verifyPermissions();
+	  this.getNationCode()
     }
   },
   methods: {
+	  getNationCode () {
+	    this.$ajax.manage.getNationCode({}).then(res => {
+	      console.log(res);
+	      if (res.status == 200) {
+	        this.nationTypeOptions = res.data.nationCode
+	      }
+	    })
+	  },
 	verifyPermissions(){
 		//权限
 		let param = {
