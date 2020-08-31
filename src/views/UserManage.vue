@@ -128,7 +128,7 @@ export default {
       let TEL_REGEXP = /^[1][3,4,5,7,8][0-9]{9}$/;
       if (value === ""||typeof value=='undefined') {
         callback();
-      } else if (!TEL_REGEXP.test(value)) {
+      } else if (value && !TEL_REGEXP.test(value)) {
         callback(new Error("请输入正确的手机号!"));
       } else {
         callback();
@@ -194,18 +194,14 @@ export default {
 	  permissionList:[
 		  {
 			  code:'1',
-			  name:'超级管理员'
-		  },
-		  {
-			  code:'2',
 			  name:'黑名单申请'
 		  },
 		  {
-			  code:'3',
+			  code:'2',
 			  name:'黑名单审批'
 		  },
 		  {
-			  code:'4',
+			  code:'3',
 			  name:'子管理员'
 		  },
 	  ]

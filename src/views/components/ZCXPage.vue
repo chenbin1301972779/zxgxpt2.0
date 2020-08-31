@@ -33,6 +33,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="address" label="报告类型">
+          <template slot-scope="scope">
+            {{scope.row.reportType}}
+          </template>
         </el-table-column>
         <el-table-column prop="address" label="更新时间">
           <template slot-scope="scope">
