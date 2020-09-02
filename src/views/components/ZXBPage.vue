@@ -104,16 +104,18 @@
             <td class="gbGray">文件路径</td>
             <td class="gbGray">更新时间</td>
           </tr>
-          <tr>
-            <td style="color:#1b7fbd;cursor:pointer" @click="downPdf">
-              中国企业资信评估准报告.pdf
-              <el-button size="mini" type="primary" plain v-on:click.stop="viewPdf" style="margin-left: 10px;">预览
-              </el-button>
-            </td>
-            <td>461964000461964 </td>
-            <td>"/home/ftpuser/461964000461964.pdf"</td>
-            <td>2020/05/15</td>
-          </tr>
+          <template v-if="pdfList.length>0">
+            <tr v-for="(item,index) in pdfList" :key="index">
+              <td style="color:#1b7fbd;cursor:pointer" @click="downPdf">
+                {{item.noticeSerialno}}
+                <el-button size="mini" type="primary" plain v-on:click.stop="viewPdf" style="margin-left: 10px;">预览
+                </el-button>
+              </td>
+              <td>461964000461964 </td>
+              <td>"/home/ftpuser/461964000461964.pdf"</td>
+              <td>2020/05/15</td>
+            </tr>
+          </template>
         </table>
       </div>
     </div>
@@ -269,14 +271,16 @@ export default {
       src: '',
       businessInfo: {},
       shareInfo: [],
-      nationTypeOptions: []
+      nationTypeOptions: [],
+      pdfList:[]
     }
   },
   mounted () {
 	  if(this.$route.query.companyId){
 		  this.getBusinessInfo();
 		  this.getShareInfo();
-		  this.getNationCode()
+		  this.getNationCode();
+		  this.getPDFList();
 	  }else{
 		  this.dialogVisible=true;
 	  }
@@ -317,6 +321,19 @@ export default {
         if (res.data.code == 0) {
           if (res.data.shareInfo) {
             this.businessInfo = res.data.shareInfo;
+          }
+        }
+      })
+    },
+    getPDFList (){
+      let param = {
+        companyId: this.$route.query.companyId
+      }
+      this.$ajax.manage.getPDFList(param).then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          if (res.data.pdfList) {
+            this.pdfList = res.data.pdfList;
           }
         }
       })

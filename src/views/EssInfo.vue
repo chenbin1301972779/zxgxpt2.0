@@ -10,20 +10,24 @@
 			    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
 			        <img src="../../public/img/images/notice.png" alt="">
 			        取消关注
+                    (数据源：天眼查)
 			    </span>
 			    <span @click="goTYCFocus" v-else>
 			        <img src="../../public/img/images/noticeDel.png" alt="">
-			        天眼查
+			        关注
+                    (数据源：天眼查)
 			    </span>
 			</div>
 			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='0'">
 			    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
-			        <img src="../../public/img/images/notice.png" alt="">
 			        取消关注
+			        <img src="../../public/img/images/notice.png" alt="">
+                    (数据源：中诚信)
 			    </span>
 			    <span @click="goZCXFocus" v-else>
+			        关注
 			        <img src="../../public/img/images/noticeDel.png" alt="">
-			        中诚信
+                    (数据源：中诚信)
 			    </span>
 			</div>
 		</div>

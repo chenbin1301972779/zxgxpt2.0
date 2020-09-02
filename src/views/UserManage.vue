@@ -30,8 +30,9 @@
         </el-table-column>
         <el-table-column prop="name" label="姓名">
         </el-table-column>
-        <el-table-column prop="permissionLevel" label="权限级别">
-        </el-table-column>
+        <!--<el-table-column prop="permissionLevel" label="权限级别">-->
+        <!--<el-table-column prop="permissionRoles" label="角色">
+        </el-table-column>-->
         <el-table-column prop="email" show-overflow-tooltip label="邮箱">
         </el-table-column>
         <el-table-column prop="mobile" label="手机号">
@@ -103,12 +104,12 @@
           <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
         </el-form-item>
 		<el-form-item label="权限：" v-if="editType=='编辑用户'">
-			 <el-select v-model="userInfo.permission" multiple placeholder="请选择" style="width:250px">
+			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:250px">
 			    <el-option
 			      v-for="item in permissionList"
-			      :key="item.code"
-			      :label="item.name"
-			      :value="item.name">
+			      :key="item.permissionRole"
+			      :label="item.permissionPointName"
+			      :value="item.permissionRole">
 			    </el-option>
 			  </el-select>
 		</el-form-item>
@@ -170,7 +171,9 @@ export default {
         companyCode: '',
         companyName: '',
         deptName: '',
-		permission:[]
+		permission:[],
+        permissionRoles: '',
+        operator: this.$Cookies.get('userCode')
       },
       newCompany: [],
       newCompanyFlag: 0,
@@ -191,24 +194,12 @@ export default {
           { required: true, message: '请输入密码', trigger: 'change' }
         ],
       },
-	  permissionList:[
-		  {
-			  code:'1',
-			  name:'黑名单申请'
-		  },
-		  {
-			  code:'2',
-			  name:'黑名单审批'
-		  },
-		  {
-			  code:'3',
-			  name:'子管理员'
-		  },
-	  ]
+	  permissionList:[]
     }
   },
   created () {
     this.getNewCompany();
+    this.getEnablePermission();
   },
   mounted () {
     this.getData();
@@ -220,11 +211,11 @@ export default {
         pageSize: this.page.pageSize,
         username: this.search.userCode,
         name: this.search.userName,
-        status: this.search.status
+        status: this.search.status,
+        operator:this.$Cookies.get('userCode')
       }
       this.loading = true;
       this.$ajax.manage.getUserList(param).then(res => {
-        //console.log(res);
         if (res.data.code == 0) {
           this.loading = false;
           this.tableData = res.data.userList;
@@ -245,7 +236,8 @@ export default {
       //点击启用或停用
       let param = {
         userId: row.userId,
-        status: status
+        status: status,
+        operator:this.$Cookies.get('userCode')
       }
       this.$ajax.manage.updateUser(param).then(res => {
         if (res.status == 200) {
@@ -265,16 +257,33 @@ export default {
       this.editType = '编辑用户';
       row.newCompanyFlag = 0;
       this.userInfo = row;
+      if(this.userInfo.permissionRoles&&!(this.userInfo.permissionRoles instanceof Array)) {
+        this.userInfo.permissionRoles = this.userInfo.permissionRoles.split(',');
+      }
       this.editUserDialog = true;
     },
     getNewCompany () {
       let param = {
-
+        operator:this.$Cookies.get('userCode')
       }
-      this.$ajax.manage.getNewCompany(param).then(res => {
-        // console.log(res);
+      /*this.$ajax.manage.getNewCompany(param).then(res => {
         if (res.data.code == 0) {
           this.newCompany = res.data.newCompany;
+        }
+      })*/
+      this.$ajax.manage.getUserCompany(param).then(res => {
+        if (res.data.code == 0) {
+          this.newCompany = res.data.userCompanyList;
+        }
+      })
+    },
+    getEnablePermission () {
+      let param = {
+        operator:this.$Cookies.get('userCode')
+      }
+      this.$ajax.manage.getEnablePermission(param).then(res => {
+        if (res.data.permissionList) {
+          this.permissionList = res.data.permissionList;
         }
       })
     },
@@ -285,8 +294,13 @@ export default {
     saveUserInfo (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if(this.userInfo.permissionRoles&&(this.userInfo.permissionRoles instanceof Array)){
+            this.userInfo.permissionRoles = this.userInfo.permissionRoles.join(',');
+          }
+          //增加当前操作人
+          this.userInfo.operator = this.$Cookies.get('userCode');
+          console.log(this.userInfo);
           this.$ajax.manage.updateUser(this.userInfo).then(res => {
-            console.log(res.data);
             if (res.data.code == 0) {
               this.$message.success(res.data.msg);
               this.editUserDialog = false;
@@ -316,7 +330,8 @@ export default {
       this.clearUserInfo();
       this.$nextTick(() => {
         this.$refs.userInfo.resetFields();
-      })
+      });
+      this.editUserDialog = false;
     }
   }
 }

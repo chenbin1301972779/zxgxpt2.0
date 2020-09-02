@@ -36,6 +36,11 @@ async function getPDF (param) {
     let getPDF = await fileAjax.post(`/api/company/getPDF`, param)
     return getPDF
 }
+//中信保pdf下载
+async function getPDFList (param) {
+    let getPDFList = await fileAjax.post(`/api/company/getPDFList`, param)
+    return getPDFList
+}
 
 //关注清单列表
 async function getCareList (param) {
@@ -164,12 +169,23 @@ async function verifyPermissions (param) {
     let verifyPermissions = await ajax.post(`/api/user/verifyPermissions`, param)
     return verifyPermissions
 }
+//维护用户的时候的公司列表
+async function getUserCompany (param) {
+    let getUserCompany = await ajax.post(`/api/common/getUserCompany`, param)
+    return getUserCompany
+}
+//获取操作者对某个用户操作修改能拿到的权限
+async function getEnablePermission (param) {
+    let getEnablePermission = await ajax.post(`/api/user/getEnablePermission`, param)
+    return getEnablePermission
+}
 const manage = {
     login: login,
     latestWords: latestWords,
     getSearchList: getSearchList,
     getUserList: getUserList,
     getPDF: getPDF,
+    getPDFList: getPDFList,
     updateUser: updateUser,
     getCareList: getCareList,
     careOrNot: careOrNot,
@@ -195,7 +211,9 @@ const manage = {
     getShareInfo: getShareInfo,
     getBusinessInfo: getBusinessInfo,
     getNationCode: getNationCode,
-	verifyPermissions:verifyPermissions
+	verifyPermissions:verifyPermissions,
+    getUserCompany:getUserCompany,
+    getEnablePermission:getEnablePermission
 }
 
 export default manage
