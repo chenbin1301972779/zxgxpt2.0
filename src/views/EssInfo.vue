@@ -20,13 +20,13 @@
 			</div>
 			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='0'">
 			    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
-			        取消关注
 			        <img src="../../public/img/images/notice.png" alt="">
+			        取消关注
                     (数据源：中诚信)
 			    </span>
 			    <span @click="goZCXFocus" v-else>
-			        关注
 			        <img src="../../public/img/images/noticeDel.png" alt="">
+			        关注
                     (数据源：中诚信)
 			    </span>
 			</div>

@@ -318,6 +318,7 @@ export default {
         companyId: this.$route.query.companyId
       }
       this.$ajax.manage.getBusinessInfo(param).then(res => {
+        console.log(res.data);
         if (res.data.code == 0) {
           if (res.data.shareInfo) {
             this.businessInfo = res.data.shareInfo;
@@ -330,7 +331,7 @@ export default {
         companyId: this.$route.query.companyId
       }
       this.$ajax.manage.getPDFList(param).then(res => {
-        console.log(res);
+        console.log(res.data);
         if (res.code == 0) {
           if (res.data.pdfList) {
             this.pdfList = res.data.pdfList;

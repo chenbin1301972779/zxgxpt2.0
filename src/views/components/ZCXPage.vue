@@ -151,7 +151,8 @@ export default {
         companyId: this.$route.query.companyId,
         companyName: this.$route.query.companyName,
         creditCode: this.$route.query.creditCode,
-        index: '3'
+        id: this.$route.query.id,
+        index: this.$route.query.index,
       }
       if (type == 1) {
         //风险初筛

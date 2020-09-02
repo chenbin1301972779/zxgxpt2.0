@@ -14,7 +14,7 @@
               <el-dropdown-item command="2" v-if="blacklistApply">黑名单审批</el-dropdown-item>
               <el-dropdown-item command="3">客商初筛</el-dropdown-item>
               <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
-              <el-dropdown-item command="5" v-if="userManage">用户管理</el-dropdown-item>
+              <el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
               <el-dropdown-item command="6">消息中心</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -269,6 +269,7 @@ export default {
       },
 	  blacklistAudit:false,
 	  userManage: false,
+      sub_manage: false,
 	  blacklistApply: false,
       dialogXBVisible: false,
       haveCreditCode: {
@@ -320,7 +321,7 @@ export default {
 		//权限
 		let param = {
 			userId: this.$Cookies.get("userId"),
-			permissionPoint:"user.manage,blacklist.audit,blacklist.apply"
+			permissionPoint:"user.manage,user.sub_manage,blacklist.audit,blacklist.apply"
 		}
 		this.$ajax.manage.verifyPermissions(param).then(res=>{
 			console.log(res)
@@ -331,6 +332,10 @@ export default {
 				this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
 				this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply']
 				this.userManage = res.data.verifyPermissionResult['user.manage']
+				this.sub_manage = res.data.verifyPermissionResult['user.sub_manage']
+                if(this.userManage||this.sub_manage){
+                  this.$Cookies.set('userManage','true');
+                }
 			}
 		})
 	},
@@ -435,7 +440,7 @@ export default {
         this.applyReport()
       } else if (command == 5) {
         //用户管理
-        if (this.$Cookies.get('username') != 'admin') {
+        if (this.$Cookies.get('username') != 'admin' && this.$Cookies.get('userManage') != 'true') {
           this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
         } else {
           //55109783

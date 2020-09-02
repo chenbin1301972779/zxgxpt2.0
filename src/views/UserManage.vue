@@ -95,10 +95,16 @@
           <el-input v-model="userInfo.companyCode" disabled style="width:250px"></el-input>
         </el-form-item>
         <el-form-item label="公司：" prop="companyName">
-          <el-select v-model="userInfo.companyName" placeholder="请选择公司" @change="selectChange" style="width:250px">
-            <el-option v-for="item in newCompany" :disabled="!isNew" :key="item.name" :label="item.name"
-              :value="item.name" />
-          </el-select>
+          <el-autocomplete
+                  v-model="userInfo.companyName"
+                  placeholder="请输入公司名称"
+                  :fetch-suggestions="querySearch"
+                  :trigger-on-focus="false"
+                  @select="selectChange"
+                  style="width:250px"
+                  :disabled="!isNew"
+          >
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="部门：">
           <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
@@ -205,14 +211,14 @@ export default {
     this.getData();
   },
   methods: {
-    getData (page) {
+    getData(page) {
       let param = {
         pageIndex: page ? page : 1,
         pageSize: this.page.pageSize,
         username: this.search.userCode,
         name: this.search.userName,
         status: this.search.status,
-        operator:this.$Cookies.get('userCode')
+        operator: this.$Cookies.get('userCode')
       }
       this.loading = true;
       this.$ajax.manage.getUserList(param).then(res => {
@@ -223,21 +229,21 @@ export default {
         }
       })
     },
-    searchData () {
+    searchData() {
       this.page.currentPage = 1;
       this.getData()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       //页码切换
       this.getData(val)
     },
-    updateStatus (row, status) {
+    updateStatus(row, status) {
       // console.log(status)
       //点击启用或停用
       let param = {
         userId: row.userId,
         status: status,
-        operator:this.$Cookies.get('userCode')
+        operator: this.$Cookies.get('userCode')
       }
       this.$ajax.manage.updateUser(param).then(res => {
         if (res.status == 200) {
@@ -246,40 +252,35 @@ export default {
         }
       })
     },
-    newUser () {
+    newUser() {
       this.isNew = true;
       this.editType = '新增用户';
-      this.userInfo = { newCompanyFlag: 1 };
+      this.userInfo = {newCompanyFlag: 1};
       this.editUserDialog = true;
     },
-    editUser (row) {
+    editUser(row) {
       this.isNew = false;
       this.editType = '编辑用户';
       row.newCompanyFlag = 0;
       this.userInfo = row;
-      if(this.userInfo.permissionRoles&&!(this.userInfo.permissionRoles instanceof Array)) {
+      if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
         this.userInfo.permissionRoles = this.userInfo.permissionRoles.split(',');
       }
       this.editUserDialog = true;
     },
-    getNewCompany () {
+    getNewCompany() {
       let param = {
-        operator:this.$Cookies.get('userCode')
+        operator: this.$Cookies.get('userCode')
       }
-      /*this.$ajax.manage.getNewCompany(param).then(res => {
-        if (res.data.code == 0) {
-          this.newCompany = res.data.newCompany;
-        }
-      })*/
       this.$ajax.manage.getUserCompany(param).then(res => {
         if (res.data.code == 0) {
           this.newCompany = res.data.userCompanyList;
         }
       })
     },
-    getEnablePermission () {
+    getEnablePermission() {
       let param = {
-        operator:this.$Cookies.get('userCode')
+        operator: this.$Cookies.get('userCode')
       }
       this.$ajax.manage.getEnablePermission(param).then(res => {
         if (res.data.permissionList) {
@@ -287,14 +288,14 @@ export default {
         }
       })
     },
-    selectChange (selectValue) {
+    selectChange(selectValue) {
       // console.log(selectValue);
-      this.userInfo.companyCode = this.newCompany.find(item => item.name === selectValue).code;
+      this.userInfo.companyCode = this.newCompany.find(item => item.name === selectValue.name).code;
     },
-    saveUserInfo (formName) {
+    saveUserInfo(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.userInfo.permissionRoles&&(this.userInfo.permissionRoles instanceof Array)){
+          if (this.userInfo.permissionRoles && (this.userInfo.permissionRoles instanceof Array)) {
             this.userInfo.permissionRoles = this.userInfo.permissionRoles.join(',');
           }
           //增加当前操作人
@@ -313,7 +314,7 @@ export default {
         }
       });
     },
-    clearUserInfo () {
+    clearUserInfo() {
       this.userInfo = {
         userId: '',
         username: '',
@@ -326,12 +327,36 @@ export default {
         deptName: ''
       };
     },
-    closeDialog () {
+    closeDialog() {
       this.clearUserInfo();
       this.$nextTick(() => {
         this.$refs.userInfo.resetFields();
       });
       this.editUserDialog = false;
+    },
+    querySearch(queryString, cb) {
+      let results = queryString ? this.newCompany.filter(this.createFilter(queryString)) : this.newCompany;
+      let companys = [];
+      for(let item of results){
+        companys.push({
+          value:item.name,
+          id:item.code
+        });
+      }
+      let companys2 = companys.sort(this.compare("value"));
+      cb(companys2);
+    },
+    createFilter(queryString){
+      return (company)=>{
+        return (company.name.indexOf(queryString)>=0);
+      }
+    },
+    compare(p){ //这是比较函数
+      return function(m,n){
+        let a = m[p];
+        let b = n[p];
+        return a - b; //升序
+      }
     }
   }
 }
