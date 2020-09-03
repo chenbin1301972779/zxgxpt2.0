@@ -100,20 +100,16 @@
         <table border="1">
           <tr>
             <td class="gbGray">报告</td>
-            <td class="gbGray">报告单号</td>
-            <td class="gbGray">文件路径</td>
             <td class="gbGray">更新时间</td>
           </tr>
           <template v-if="pdfList.length>0">
             <tr v-for="(item,index) in pdfList" :key="index">
-              <td style="color:#1b7fbd;cursor:pointer" @click="downPdf">
+              <td style="color:#1b7fbd;cursor:pointer" @click="downPdf(item.noticeSerialno)">
                 {{item.noticeSerialno}}
-                <el-button size="mini" type="primary" plain v-on:click.stop="viewPdf" style="margin-left: 10px;">预览
+                <el-button size="mini" type="primary" plain v-on:click.stop="viewPdf(item.noticeSerialno)" style="margin-left: 10px;">预览
                 </el-button>
               </td>
-              <td>461964000461964 </td>
-              <td>"/home/ftpuser/461964000461964.pdf"</td>
-              <td>2020/05/15</td>
+              <td>{{item.updateTime}}</td>
             </tr>
           </template>
         </table>
@@ -331,7 +327,6 @@ export default {
         companyId: this.$route.query.companyId
       }
       this.$ajax.manage.getPDFList(param).then(res => {
-        console.log(res.data);
         if (res.code == 0) {
           if (res.data.pdfList) {
             this.pdfList = res.data.pdfList;
@@ -339,19 +334,16 @@ export default {
         }
       })
     },
-    downPdf () {
+    downPdf (pdfName) {
       //pdf下载
       let param = {
-        "userId": parseInt(this.$Cookies.get('userId')),
-        "username": "admin",
-        "password": "123456",
-        "clientNo": "20000340"
+        "noticeSerialno": pdfName,
       }
       this.$ajax.manage.getPDF(param).then(res => {
         console.log(res)
         const content = res.data
         const blob = new Blob([content])
-        const fileName = '中国企业资信评估准报告.pdf'
+        const fileName = pdfName
         if ('download' in document.createElement('a')) { // 非IE下载
           const elink = document.createElement('a')
           elink.download = fileName
@@ -401,25 +393,20 @@ export default {
     //     });
 
     // },
-    viewPdf () {
+    viewPdf (pdfName) {
       let src = '';
       let param = {
-        "userId": parseInt(this.$Cookies.get('userId')),
-        "username": "admin",
-        "password": "123456",
-        "clientNo": "20000340"
+        "noticeSerialno": pdfName
       }
       this.pdfDialogVisible = true
       this.pdfLoading = true;
       this.$ajax.manage.getPDF(param).then(res => {
         this.pdfLoading = false;
-        console.log(res.data);
         const content = res.data
         const blob = new Blob([content], {
           type: 'application/pdf;chartset=UTF-8'
         })
         let fileURL = URL.createObjectURL(blob);
-        //window.open(fileURL);
         this.src = fileURL
       });
     },

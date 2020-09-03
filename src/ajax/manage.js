@@ -38,7 +38,7 @@ async function getPDF (param) {
 }
 //中信保pdf下载
 async function getPDFList (param) {
-    let getPDFList = await fileAjax.post(`/api/company/getPDFList`, param)
+    let getPDFList = await ajax.post(`/api/company/getPDFList`, param)
     return getPDFList
 }
 
@@ -184,6 +184,11 @@ async function userExists (param) {
     let userExists = await ajax.post(`/api/user/userExists`, param)
     return userExists
 }
+//同步用户启用状态到FR
+async function updateUserStatus (param) {
+    let updateUserStatus = await ajax.post(`/api/user/updateUserStatus`, param)
+    return updateUserStatus
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -219,7 +224,8 @@ const manage = {
 	verifyPermissions:verifyPermissions,
     getUserCompany:getUserCompany,
     getEnablePermission:getEnablePermission,
-    userExists:userExists
+    userExists:userExists,
+    updateUserStatus:updateUserStatus
 }
 
 export default manage
