@@ -10,8 +10,8 @@
               常用应用<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="1" v-if="blacklistAudit">黑名单报告</el-dropdown-item>
-              <el-dropdown-item command="2" v-if="blacklistApply">黑名单审批</el-dropdown-item>
+              <el-dropdown-item command="1" v-if="blacklistApply">黑名单报告</el-dropdown-item>
+              <el-dropdown-item command="2" v-if="blacklistAudit">黑名单审批</el-dropdown-item>
               <el-dropdown-item command="3">客商初筛</el-dropdown-item>
               <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
               <el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>

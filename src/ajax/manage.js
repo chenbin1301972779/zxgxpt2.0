@@ -179,6 +179,11 @@ async function getEnablePermission (param) {
     let getEnablePermission = await ajax.post(`/api/user/getEnablePermission`, param)
     return getEnablePermission
 }
+//校验工号是否唯一
+async function userExists (param) {
+    let userExists = await ajax.post(`/api/user/userExists`, param)
+    return userExists
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -213,7 +218,8 @@ const manage = {
     getNationCode: getNationCode,
 	verifyPermissions:verifyPermissions,
     getUserCompany:getUserCompany,
-    getEnablePermission:getEnablePermission
+    getEnablePermission:getEnablePermission,
+    userExists:userExists
 }
 
 export default manage

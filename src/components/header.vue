@@ -11,8 +11,8 @@
         </el-button>
         <el-divider direction="vertical"></el-divider>
         <el-dropdown-menu slot="dropdown">
-         <el-dropdown-item command="1" v-if="blacklistAudit">黑名单报告</el-dropdown-item>
-         <el-dropdown-item command="2" v-if="blacklistApply">黑名单审批</el-dropdown-item>
+         <el-dropdown-item command="1" v-if="blacklistApply">黑名单报告</el-dropdown-item>
+         <el-dropdown-item command="2" v-if="blacklistAudit">黑名单审批</el-dropdown-item>
          <el-dropdown-item command="3">客商初筛</el-dropdown-item>
          <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
          <el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>

@@ -73,26 +73,26 @@
     <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px" @close="closeDialog" :rules="rules">
       <el-form :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
         <el-form-item label="用户ID：" v-show="!isNew">
-          <el-input v-model="userInfo.userId" disabled style="width:250px"></el-input>
+          <el-input v-model="userInfo.userId" disabled style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="工号：" prop="username">
-          <el-input v-model="userInfo.username" :disabled="!isNew" style="width:250px"></el-input>
+          <el-input v-model="userInfo.username" :disabled="!isNew" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="姓名：" prop="name">
-          <el-input v-model="userInfo.name" style="width:250px"></el-input>
+          <el-input v-model="userInfo.name" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="密码：" prop="password">
-          <el-input v-model="userInfo.password" style="width:250px" type="password">
+          <el-input v-model="userInfo.password" style="width:300px" type="password">
           </el-input>
         </el-form-item>
         <el-form-item label="手机：" prop="mobile">
-          <el-input v-model.number="userInfo.mobile" style="width:250px"></el-input>
+          <el-input v-model.number="userInfo.mobile" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：">
-          <el-input v-model="userInfo.email" style="width:250px"></el-input>
+          <el-input v-model="userInfo.email" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="公司代码：">
-          <el-input v-model="userInfo.companyCode" disabled style="width:250px"></el-input>
+          <el-input v-model="userInfo.companyCode" disabled style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="公司：" prop="companyName">
           <el-autocomplete
@@ -101,16 +101,16 @@
                   :fetch-suggestions="querySearch"
                   :trigger-on-focus="false"
                   @select="selectChange"
-                  style="width:250px"
+                  style="width:300px"
                   :disabled="!isNew"
           >
           </el-autocomplete>
         </el-form-item>
         <el-form-item label="部门：">
-          <el-input v-model="userInfo.deptName" style="width:250px"></el-input>
+          <el-input v-model="userInfo.deptName" style="width:300px"></el-input>
         </el-form-item>
 		<el-form-item label="权限：" v-if="editType=='编辑用户'">
-			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:250px">
+			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:300px">
 			    <el-option
 			      v-for="item in permissionList"
 			      :key="item.permissionRole"
@@ -137,6 +137,24 @@ export default {
         callback();
       } else if (value && !TEL_REGEXP.test(value)) {
         callback(new Error("请输入正确的手机号!"));
+      } else {
+        callback();
+      }
+    };
+    var userExists = (rule, value, callback) => {
+      if (value === ""||typeof value=='undefined'||!this.isNew) {
+        callback();
+      } else if (value) {
+        let param = {
+          username: value
+        }
+        this.$ajax.manage.userExists(param).then(res => {
+          if (res.status == 200) {
+            if(res.data.userExists){
+              callback(new Error("工号已存在"));
+            }
+          }
+        });
       } else {
         callback();
       }
@@ -191,7 +209,8 @@ export default {
           { required: true, message: '请选择公司名称', trigger: 'change' }
         ],
         username: [
-          { required: true, message: '请输入工号', trigger: 'change' }
+          { required: true, message: '请输入工号', trigger: 'change' },
+          { validator: userExists, message: '工号已存在', trigger: 'change' }
         ],
         name: [
           { required: true, message: '请输入用户名', trigger: 'change' }
