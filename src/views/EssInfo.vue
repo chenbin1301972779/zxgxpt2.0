@@ -69,7 +69,7 @@
                 </el-form-item>
                 <el-form-item label="行政级别：" prop="areaLevel">
                     <el-select v-model="form.areaLevel" placeholder="请选择行政级别" style="width:220px" clearable>
-                        <el-option :label="item.value" :value="item.code" v-for="item in areaLevelOptions"
+                        <el-option :label="item.value" :value="item.value" v-for="item in areaLevelOptions"
                             :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>

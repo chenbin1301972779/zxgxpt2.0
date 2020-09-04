@@ -327,7 +327,7 @@ export default {
         companyId: this.$route.query.companyId
       }
       this.$ajax.manage.getPDFList(param).then(res => {
-        if (res.code == 0) {
+        if (res.data.code == 0) {
           if (res.data.pdfList) {
             this.pdfList = res.data.pdfList;
           }
