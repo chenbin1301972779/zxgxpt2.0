@@ -154,6 +154,8 @@
 				lastDisabled: true,
 				nextDisabled: false,
 				htmlContent: '',
+				loading: false,
+				fileName: '',
 			}
 		},
 		watch: {
@@ -190,7 +192,7 @@
 			      return;
 			    }
 			  } else if (this.active == 1) {
-			    this.getHtml();
+			    this.getRegionRatingHtml();
 			  }
 			  this.active++
 			},
@@ -237,11 +239,59 @@
 			  }
 			  this.professionDetail = this.professionDetailOptions[0];
 			},
-			getHtml(){
-				
+			getRegionRatingHtml () {
+			  let param = {
+			    ver: "1.0",
+			    companyId: this.$route.query.companyId.toString(),
+			    creditCode: this.$route.query.creditCode,
+			    industry: this.professionDetail,
+				nature:this.companyType,
+			    userId: this.$Cookies.get("userId"),
+			  }
+			  console.log(param)
+			  this.$ajax.manage.getLatestFinancialDeminingHtml(param).then(res => {
+			    console.log(res);
+			    if (res.status == 200) {
+			      this.htmlContent = res.data;
+			      let temp = 'content-disposition'
+			      let data = res.headers[temp];
+			      this.fileName = data.split('=')[1];
+			    }
+			  })
 			},
 			getLiteRatingPDF(){
-				
+				let param = {
+				  fileName: this.fileName,
+				}
+				console.log(param)
+				this.loading = true;
+				this.$notify({
+				  title: '提示',
+				  message: 'PDF正在加载中，请耐心等待...',
+				  position: 'top-left',
+				  duration: 10000,
+				  type: 'success'
+				});
+				this.$ajax.manage.getLiteRatingPDF(param).then(res => {
+				  // console.log(res)
+				  this.loading = false
+				  const content = res.data
+				  const blob = new Blob([content])
+				  const fileName = `财务排雷-${this.$route.query.companyName}.pdf`
+				  if ('download' in document.createElement('a')) { // 非IE下载
+				    const elink = document.createElement('a')
+				    elink.download = fileName
+				    elink.style.display = 'none'
+				    elink.href = URL.createObjectURL(blob)
+				    console.log(elink.href);
+				    document.body.appendChild(elink)
+				    elink.click()
+				    URL.revokeObjectURL(elink.href) // 释放URL 对象
+				    document.body.removeChild(elink)
+				  } else { // IE10+下载
+				    navigator.msSaveBlob(blob, fileName)
+				  }
+				})
 			}
 		}
 	}

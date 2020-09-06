@@ -129,6 +129,11 @@ async function getRiskScreenHtml (param) {
     let getRiskScreenHtml = await ajax.post(`/api/company/zhongChengXin/getRiskScreenHtml`, param)
     return getRiskScreenHtml
 }
+//财务排雷html
+async function getLatestFinancialDeminingHtml (param) {
+    let getLatestFinancialDeminingHtml = await ajax.post(`/api/company/zhongChengXin/getLatestFinancialDeminingHtml`, param)
+    return getLatestFinancialDeminingHtml
+}
 //城投企业信用评价 
 async function getCityInvRatingHtml (param) {
     let getCityInvRatingHtml = await ajax.post(`/api/company/zhongChengXin/getCityInvRatingHtml`, param)
@@ -225,7 +230,8 @@ const manage = {
     getUserCompany:getUserCompany,
     getEnablePermission:getEnablePermission,
     userExists:userExists,
-    updateUserStatus:updateUserStatus
+    updateUserStatus:updateUserStatus,
+	getLatestFinancialDeminingHtml:getLatestFinancialDeminingHtml
 }
 
 export default manage
