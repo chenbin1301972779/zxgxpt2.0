@@ -68,6 +68,11 @@ const routes = [
                 name: 'AreaCreditEvaluate',
                 component: () => import('../views/report/AreaCreditEvaluate.vue')
             },
+			{
+			    path: '/report/financialDemining',
+			    name: 'FinancialDemining',
+			    component: () => import('../views/report/FinancialDemining.vue')
+			},
         ]
     },
 

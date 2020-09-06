@@ -162,6 +162,10 @@ export default {
         })
       } else if (type == 2) {
         //财务排雷
+		this.$router.push({
+		  path: '/report/financialDemining',
+		  query: param
+		})
       } else if (type == 3) {
         //产业企业信用评价
         this.$router.push({
