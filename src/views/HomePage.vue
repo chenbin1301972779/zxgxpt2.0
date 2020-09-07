@@ -295,6 +295,13 @@ export default {
 	  noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
     }
   },
+  created(){
+	  console.log(this.$route.query)
+	  if(this.$route.query.searchVal){
+		  this.searchVal=this.$route.query.searchVal;
+		  this.seachContent()
+	  }
+  },
   mounted () {
     if (this.$Cookies.get(this.$getCookieKey())) {
       this.getLatestSearchList();

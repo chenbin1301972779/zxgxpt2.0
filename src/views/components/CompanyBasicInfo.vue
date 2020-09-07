@@ -46,7 +46,7 @@
                         </table>
                     </div>
                 </div>
-                <div style="margin-top:40px;">
+               <!-- <div style="margin-top:40px;">
                     <div class="titile">预警推送</div>
                     <div class="table-wrapper">
                         <table border="1">
@@ -66,9 +66,9 @@
                             </tr>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </div>
-            <div class="right-box">
+            <!-- <div class="right-box">
                 <div>
                     <div class="titile">资信信息综合画像</div>
                     <div class="table-wrapper">
@@ -94,7 +94,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

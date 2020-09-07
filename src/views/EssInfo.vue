@@ -35,13 +35,17 @@
         <el-tabs type="border-card" v-model="activeTab">
             <el-tab-pane label="企业基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
-				 <ZXBPage></ZXBPage>
-				 <ZCXPage></ZCXPage>
+				<div style="display: flex;">
+					<div style="flex: 1;margin-right: 10px;"><ZXBPage></ZXBPage></div>
+					<div style="flex: 1;"> <ZCXPage></ZCXPage></div>
+				</div>
+				 
             </el-tab-pane>
 			<!-- 天眼查 -->
             <el-tab-pane label="工商舆情"> 
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
-                <iframe id="tycUrl" width="100%" :height="curHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
+			    <el-button @click="isFullscreen=true" style="margin-bottom:10px;float: right;" isFullscreen  type="success" round>全屏查看</el-button>
+               <iframe id="tycUrl" width="100%" :height="curHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
 			<!-- 中信保 -->
            <!-- <el-tab-pane label="信保报告">
@@ -100,9 +104,9 @@
                 <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定</el-button>
             </div>
         </el-dialog>
-<!--        <el-dialog width="100%" height="100%" style="position:absolute;left:0px;top:0px;" :visible.sync="isFullscreen" @close="cancle">-->
-<!--            <iframe width="100%" :height="maxHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>-->
-<!--        </el-dialog>-->
+       <el-dialog width="100%" height="100%"  :visible.sync="isFullscreen" fullscreen title="全屏查看">
+         <iframe width="100%" :height="maxHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>-->
+      </el-dialog>
     </div>
 </template>
 <script>
@@ -236,7 +240,7 @@ export default {
             tycUrl:'',
             curHeight:'',
             maxHeight: document.documentElement.clientHeight || document.body.clientHeight,
-            isFullscreen: true
+            isFullscreen: false
         }
     },
     created () {
@@ -466,6 +470,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .essInfo {
+	/deep/ .el-dialog__body{
+		padding: 0;
+	}
     width: 100%;
     min-width: 1300px;
     height: 100%;

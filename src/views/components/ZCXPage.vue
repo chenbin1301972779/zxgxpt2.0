@@ -1,10 +1,6 @@
 <!-- 中诚信 -->
 <template>
   <div class="ZCXpage">
-    <div style="margin-bottom:20px">
-      <!-- <p style="font-size: 14px;line-height: 30px;">统一社会信用代码：{{creditCode}}</p>
-      <p style="font-size: 14px;line-height: 30px;">成立时间：{{buildDate}}</p> -->
-    </div>
     <div>
       <el-button type="primary" @click="toReportPage(1)">风险初筛</el-button>
       <el-button type="primary" @click="toReportPage(2)">财务排雷</el-button>
@@ -14,15 +10,15 @@
 				产业企业信用评价</el-button> -->
       <el-button type="primary" @click="toReportPage(4)">区域信用评价</el-button>
       <el-button type="primary" @click="toReportPage(5)">城投企业信用评价</el-button>
-      <!--			<el-button type="primary" @click="toCreditEvaluate">查看JSON</el-button>-->
+      <!--			<el-button type="primary" @click="toCsreditEvaluate">查看JSON</el-button>-->
     </div>
-    <div class="table-box" style="margin-top: 30px;">
-      <div>历史报告列表：</div>
+    <div class="table-box" >
+      <div style="margin: 13px 0;font-weight: bold;">历史报告列表</div>
       <el-table :data="tableData.slice((page.currentPage-1)*page.pageSize,page.currentPage*page.pageSize)"
-        style="width: 100%" v-loading="tableLoading">
-        <el-table-column prop="reportId" label="报告单号" width="100px" align="center">
+        style="width: 100%" v-loading="tableLoading" border >
+        <el-table-column prop="reportId" label="单号" width="50px" align="center">
         </el-table-column>
-        <el-table-column prop="pdfName" label="报告">
+        <el-table-column prop="pdfName" label="报告" >
           <template slot-scope="scope">
             <span class="text" style="color: #409EFF;cursor: pointer;" @click="downloadFile(scope.row)">
               <i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
@@ -32,12 +28,12 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="报告类型">
+        <el-table-column prop="address" label="报告类型" width="150px" show-overflow-tooltip>
           <template slot-scope="scope">
             {{scope.row.reportType}}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="更新时间">
+        <el-table-column prop="address" label="更新时间" width="150px" show-overflow-tooltip>
           <template slot-scope="scope">
             {{$formatDate(scope.row.updateTime)}}
           </template>
@@ -96,7 +92,7 @@ export default {
       page: {
         currentPage: 1,
         total: 0,
-        pageSize: 10
+        pageSize: 8
       },
       tableLoading: false,
       fileLoading: false,

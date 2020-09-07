@@ -4,6 +4,11 @@
       <img src="../../public/img/logo.png" alt="" @click="goHome">
     </span>
     <!-- <span class="info" v-if="$Cookies.get(this.$getCookieKey())"> -->
+	<span>
+		<el-input placeholder="请输入搜索内容" v-model="searchVal" class="input-with-select" style="width: 300px;margin-left: 100px;">
+		    <el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
+		  </el-input>
+	</span>
     <span class="info" v-if="showUserData">
       <el-dropdown style="margin-right:20px" @command="handleCommand">
         <el-button type="primary" round>
@@ -219,6 +224,7 @@ export default {
       nationTypeOptions:[],
       istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
       noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
+	  searchVal:''
     }
   },
   created () {
@@ -233,6 +239,17 @@ export default {
 	this.verifyPermissions()
   },
   methods: {
+	  searchData(){
+		  if(this.searchVal==''){
+			  this.$message.warning('请输入搜索内容');
+			  return;
+		  }else{
+			   this.$router.push({ 
+				   path: '/homePage' ,
+				   query:{searchVal:this.searchVal}
+				 });
+		  }
+	  },
 	  verifyPermissions(){
 	  	//权限
 	  	let param = {
@@ -509,7 +526,7 @@ export default {
   font-size: 12px;
 }
 </style>
-<style lang="less">
+<style lang="less" scoped>
 .header-box {
   // background: url(../../public/img/header.png) no-repeat;
   // background-size: cover;

@@ -119,7 +119,9 @@
 		  </div>
 		  <div class="main" v-if="active===2">
 		    <el-card class="box-card">
-		      <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div>
+				<iframe :srcdoc="htmlContent" height="600px" width="100%" frameborder="0" marginwidth="0">
+				</iframe>
+		      <!-- <div v-html="htmlContent" style="overflow: auto;height: 400px;margin: auto;"></div> -->
 		    </el-card>
 		  
 		  </div>
