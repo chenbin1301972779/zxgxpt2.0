@@ -91,13 +91,9 @@
                   <p>成立时间：{{item.buildDate}}</p>
                 </div>
                 <dl class="fl-right proList_btn">
-                  <el-button plain type="primary" size="medium" @click="moreNews(item,'1')">天眼查
+                  <el-button plain type="primary" size="medium" @click="moreNews(item,'0')">企业基本信息
                   </el-button>
-                  <el-button plain type="primary" size="medium" @click="moreNews(item,'0')">中信保
-                  </el-button>
-                  <el-button plain type="primary" size="medium" @click="moreNews(item,'0')">中诚信
-                  </el-button>
-                  <el-button plain type="primary" size="medium" @click="moreNews(item,'0')">更多详情
+                  <el-button plain type="primary" size="medium" @click="moreNews(item,'1')">工商舆情
                   </el-button>
                 </dl>
               </li>

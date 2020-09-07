@@ -81,7 +81,7 @@
 		        <td>数据取自近两年财报</td>
 		      </tr>
 		    </table>
-			<table border="1" style="margin-top: 15px;">	
+			<table border="1" style="margin-top: 15px; visibility: hidden" >
 				<tr>
 					<td colspan="3">补充财务信息</td>
 				</tr>

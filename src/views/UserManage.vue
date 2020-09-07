@@ -86,7 +86,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="手机：" prop="mobile">
-          <el-input v-model.number="userInfo.mobile" style="width:300px"></el-input>
+          <el-input v-model="userInfo.mobile" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：">
           <el-input v-model="userInfo.email" style="width:300px"></el-input>
@@ -109,7 +109,7 @@
         <el-form-item label="部门：">
           <el-input v-model="userInfo.deptName" style="width:300px"></el-input>
         </el-form-item>
-		<el-form-item label="权限：" v-if="editType=='编辑用户'">
+		<el-form-item label="权限：">
 			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:300px">
 			    <el-option
 			      v-for="item in permissionList"
@@ -152,7 +152,11 @@ export default {
           if (res.status == 200) {
             if(res.data.userExists){
               callback(new Error("工号已存在"));
+            }else{
+              callback();
             }
+          }else{
+            callback();
           }
         });
       } else {
@@ -315,10 +319,11 @@ export default {
     },
     selectChange(selectValue) {
       // console.log(selectValue);
-      this.userInfo.companyCode = this.newCompany.find(item => item.name === selectValue.name).code;
+      this.userInfo.companyCode = selectValue.id;
     },
     saveUserInfo(formName) {
       this.$refs[formName].validate((valid) => {
+        console.log(1111111);
         if (valid) {
           if (this.userInfo.permissionRoles && (this.userInfo.permissionRoles instanceof Array)) {
             this.userInfo.permissionRoles = this.userInfo.permissionRoles.join(',');

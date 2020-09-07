@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <div class="main-box">
+    <div class="main-box" v-if="shareInfo.length>0">
       <div class="titile">持股信息</div>
       <div class="table-wrapper">
         <table border="1">
@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <div class="main-box">
+    <div class="main-box" v-if="pdfList.length>0">
       <div class="titile">信保报告列表</div>
       <div class="table-wrapper">
         <table border="1">

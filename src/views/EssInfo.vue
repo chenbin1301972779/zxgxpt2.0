@@ -41,7 +41,7 @@
 			<!-- 天眼查 -->
             <el-tab-pane label="工商舆情"> 
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
-                <iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
+                <iframe id="tycUrl" width="100%" :height="curHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
 			<!-- 中信保 -->
            <!-- <el-tab-pane label="信保报告">
@@ -52,7 +52,6 @@
                 <ZCXPage></ZCXPage>
             </el-tab-pane> -->
         </el-tabs>
-
         <el-dialog title="关注" :visible.sync="dialogFormVisible" width="500px" @close="cancle">
             <el-form :model="form" label-width="150px" :rules="rules" ref="form">
                 <el-form-item label="统一社会信用代码：" prop="code">
@@ -101,6 +100,9 @@
                 <el-button type="primary" @click="confirmZCX('form')" v-else-if="type==2">确 定</el-button>
             </div>
         </el-dialog>
+<!--        <el-dialog width="100%" height="100%" style="position:absolute;left:0px;top:0px;" :visible.sync="isFullscreen" @close="cancle">-->
+<!--            <iframe width="100%" :height="maxHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>-->
+<!--        </el-dialog>-->
     </div>
 </template>
 <script>
@@ -232,7 +234,9 @@ export default {
                 ]
             },
             tycUrl:'',
-            curHeight:''
+            curHeight:'',
+            maxHeight: document.documentElement.clientHeight || document.body.clientHeight,
+            isFullscreen: true
         }
     },
     created () {
@@ -450,6 +454,12 @@ export default {
                 this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
             })
             */
+        },
+        //全屏
+        quan() {
+            /*全屏iframe兼容*/
+            var docElm = document.documentElement;
+            document.querySelector("iframe").setAttribute("style","height:100%;width:100%;position:fixed;left:0px;top:0px;");
         }
     }
 }
