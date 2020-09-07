@@ -148,17 +148,19 @@ export default {
     background: url(../../public/img/bg.png) no-repeat;
     background-size: cover;
     .header-box {
-      height: 60px;
+      padding: 0 20px;
+      height: 70px;
       background: none;
       display: flex;
       justify-content: space-between;
-      color: #fff;
-      line-height: 60px;
+      color: #fff !important;
+      line-height: 70px;
       position: relative;
       img {
         vertical-align: middle;
         position: relative;
         top: 10px;
+    	height: 44px;
       }
     }
     .title {

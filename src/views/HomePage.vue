@@ -3,7 +3,7 @@
   <div class="main-wrapper">
     <div class="search-content">
       <div class="header-box">
-        <img src="../../public/img/logo2.png" alt="">
+        <img src="../../public/img/logo2.png" alt="" >
         <span style="font-size:16px">
           <el-dropdown style="margin-right:20px" @command="handleCommand">
             <el-button type="primary" round>
@@ -675,17 +675,19 @@ export default {
     background: url(../../public/img/bg.png) no-repeat;
     background-size: cover;
     .header-box {
-      height: 60px;
+	  padding: 0 20px;
+      height: 70px;
       background: none;
       display: flex;
       justify-content: space-between;
       color: #fff !important;
-      line-height: 60px;
+      line-height: 70px;
       position: relative;
       img {
         vertical-align: middle;
         position: relative;
         top: 10px;
+		height: 44px;
       }
     }
     .title {
