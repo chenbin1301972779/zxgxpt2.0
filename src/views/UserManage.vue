@@ -99,7 +99,7 @@
                   v-model="userInfo.companyName"
                   placeholder="请输入公司名称"
                   :fetch-suggestions="querySearch"
-                  :trigger-on-focus="false"
+                  :trigger-on-focus="true"
                   @select="selectChange"
                   style="width:300px"
                   :disabled="!isNew"
