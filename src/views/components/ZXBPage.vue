@@ -1,8 +1,9 @@
 <!-- 中信保 -->
 <template>
   <div class="zxbPage">
-    <div style="margin-bottom:15px;">
-      <el-button type="primary" @click="applyReport">信保报告申请</el-button>
+	  <h4>信保报告</h4>
+    <div style="margin:15px 0;">
+      <el-button type="primary" @click="applyReport" size="small">信保报告申请</el-button>
     </div>
     <div class="main-box">
       <div class="titile">信保基本信息</div>
@@ -219,9 +220,9 @@
                 <pdfView :url="pdfUrl"></pdfView>
             </div>
         </el-dialog> -->
-    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%">
-      <div v-loading="pdfLoading">
-        <iframe :src="src" frameborder="0" width="100%" height="600px"></iframe>
+    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="90%" :fullscreen="true">
+      <div v-loading="pdfLoading" style="height: 100%;">
+        <iframe :src="src" frameborder="0" width="100%" :height="iframeHeight"></iframe>
       </div>
     </el-dialog>
   </div>
@@ -268,7 +269,8 @@ export default {
       businessInfo: {},
       shareInfo: [],
       nationTypeOptions: [],
-      pdfList:[]
+      pdfList:[],
+	  iframeHeight: document.documentElement.clientHeight-80 || document.body.clientHeight-80,
     }
   },
   mounted () {

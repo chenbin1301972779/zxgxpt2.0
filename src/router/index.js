@@ -73,6 +73,11 @@ const routes = [
 			    name: 'FinancialDemining',
 			    component: () => import('../views/report/FinancialDemining.vue')
 			},
+			{
+			    path: '/searchResult',
+			    name: 'SearchResult',
+			    component: () => import('../views/SearchResult.vue')
+			},
         ]
     },
 

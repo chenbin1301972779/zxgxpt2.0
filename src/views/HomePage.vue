@@ -100,20 +100,6 @@
             </ul>
           </div>
         </div>
-        <!-- <div class="content-item rightBox">
-          <div class="title">
-            <span class="icon"></span>
-            <span>我的关注</span>
-          </div>
-          <div class="tab-content-wrapper">
-            <div v-for="(item,index) in careList" :key="index" class="care-list">
-              <img src="../../public/img/images/notice.png" alt="" @click="cancleFocus(item)">
-              <span @click="moreNews(item,'0')">{{item.companyName}}</span>
-              <img src="../../public/img/images/index_icon01.png" alt="" v-if="item.zhongchengxin===1" class="care">
-              <img src="../../public/img/images/index_icon02.png" alt="" v-if="item.tianyancha===1" class="care">
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
 

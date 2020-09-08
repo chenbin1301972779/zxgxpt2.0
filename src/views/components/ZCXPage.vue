@@ -1,16 +1,13 @@
 <!-- 中诚信 -->
 <template>
   <div class="ZCXpage">
+	  <h4 style="margin-bottom: 15px;">评级报告</h4>
     <div>
-      <el-button type="primary" @click="toReportPage(1)">风险初筛</el-button>
-      <el-button type="primary" @click="toReportPage(2)">财务排雷</el-button>
-      <el-button type="primary" @click="toReportPage(3)">产业企业评价</el-button>
-      <!-- <el-button type="primary" @click="getLiteRatingPDF">
-				<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
-				产业企业信用评价</el-button> -->
-      <el-button type="primary" @click="toReportPage(4)">区域信用评价</el-button>
-      <el-button type="primary" @click="toReportPage(5)">城投企业评价</el-button>
-      <!--			<el-button type="primary" @click="toCsreditEvaluate">查看JSON</el-button>-->
+      <el-button type="primary" @click="toReportPage(1)" size="small">风险初筛</el-button>
+      <el-button type="primary" @click="toReportPage(2)" size="small">财务排雷</el-button>
+      <el-button type="primary" @click="toReportPage(3)" size="small">产业企业评价</el-button>
+      <el-button type="primary" @click="toReportPage(4)" size="small">区域信用评价</el-button>
+      <el-button type="primary" @click="toReportPage(5)" size="small">城投企业评价</el-button>
     </div>
     <div class="table-box" >
       <div style="margin: 13px 0;font-weight: bold;">历史报告列表</div>
@@ -50,9 +47,9 @@
         <JsonView :value="data"></JsonView>
       </div>
     </el-dialog>
-    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%">
+    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%" :fullscreen="true">
       <div v-loading="pdfLoading">
-        <iframe :src="src" frameborder="0" width="100%" height="600px"></iframe>
+        <iframe :src="src" frameborder="0" width="100%" :height="iframeHeight"></iframe>
 <!--        <embed :src="src" width="100%" height="600px"></embed>-->
       </div>
     </el-dialog>
@@ -98,7 +95,8 @@ export default {
       fileLoading: false,
       src: '',
       pdfDialogVisible: false,
-      pdfLoading: false
+      pdfLoading: false,
+	  iframeHeight: document.documentElement.clientHeight-80 || document.body.clientHeight-80,
     }
   },
   created () {

@@ -29,6 +29,10 @@
         <el-table-column prop="username" label="工号">
         </el-table-column>
         <el-table-column prop="name" label="姓名">
+			<template slot-scope="scope">
+				{{scope.row.name}}
+				<i class="el-icon-s-custom" style="color:#409EFF" v-if="scope.row.permissionRoles&&scope.row.permissionRoles.indexOf('sub_admin')!=-1"></i>
+			</template>
         </el-table-column>
         <!--<el-table-column prop="permissionLevel" label="权限级别">-->
         <!--<el-table-column prop="permissionRoles" label="角色">

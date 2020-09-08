@@ -44,7 +44,7 @@
             <el-tab-pane label="基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
 				<div style="display: flex;">
-					<div style="flex: 1;margin-right: 10px;"><ZXBPage></ZXBPage></div>
+					<div style="flex: 1;margin-right: 15px;"><ZXBPage></ZXBPage></div>
 					<div style="flex: 1;"> <ZCXPage></ZCXPage></div>
 				</div>
 				 
