@@ -2,7 +2,7 @@
 <template>
   <div class="zxbPage">
     <div style="margin-bottom:15px;">
-      <el-button type="primary" @click="applyReport">报告申请</el-button>
+      <el-button type="primary" @click="applyReport">信保报告申请</el-button>
     </div>
     <div class="main-box">
       <div class="titile">信保基本信息</div>

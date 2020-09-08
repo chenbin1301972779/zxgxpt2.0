@@ -4,12 +4,12 @@
     <div>
       <el-button type="primary" @click="toReportPage(1)">风险初筛</el-button>
       <el-button type="primary" @click="toReportPage(2)">财务排雷</el-button>
-      <el-button type="primary" @click="toReportPage(3)">产业企业信用评价</el-button>
+      <el-button type="primary" @click="toReportPage(3)">产业企业评价</el-button>
       <!-- <el-button type="primary" @click="getLiteRatingPDF">
 				<i :class="{'el-icon-loading':loading,'el-icon-download':!loading}"></i>
 				产业企业信用评价</el-button> -->
       <el-button type="primary" @click="toReportPage(4)">区域信用评价</el-button>
-      <el-button type="primary" @click="toReportPage(5)">城投企业信用评价</el-button>
+      <el-button type="primary" @click="toReportPage(5)">城投企业评价</el-button>
       <!--			<el-button type="primary" @click="toCsreditEvaluate">查看JSON</el-button>-->
     </div>
     <div class="table-box" >

@@ -1,24 +1,32 @@
 <template>
     <div class="essInfo">
 		<div style="margin-bottom: 15px;">
-			<el-breadcrumb separator-class="el-icon-arrow-right" style="display: inline-block;">
+			<!--<el-breadcrumb separator-class="el-icon-arrow-right" style="display: inline-block;">
 			  <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
 			  <el-breadcrumb-item>查看</el-breadcrumb-item>
 			</el-breadcrumb>
-			<span class="name" style="margin-left: 30px;">{{companyName}}</span>
-			<div class="title" style="display:inline-block;float:right" v-if="activeTab=='1'">
+			<span class="name" style="margin-left: 30px;">{{companyName}}</span>-->
+			<div class="title" v-if="activeTab=='1'">
 			    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
+                    <el-button @click="isFullscreen=true" @click.stop="isFullscreen=true" size="mini" type="success" round>
+                        <i class="el-icon-full-screen"></i>
+                        全屏查看
+                    </el-button>
 			        <img src="../../public/img/images/notice.png" alt="">
-			        取消关注
+                    取消关注
                     (数据源：天眼查)
 			    </span>
 			    <span @click="goTYCFocus" v-else>
+                    <el-button @click="isFullscreen=true" @click.stop="isFullscreen=true" size="mini" type="success" round>
+                        <i class="el-icon-full-screen"></i>
+                        全屏查看
+                    </el-button>
 			        <img src="../../public/img/images/noticeDel.png" alt="">
 			        关注
                     (数据源：天眼查)
 			    </span>
 			</div>
-			<div class="title" style="display:inline-block;float:right" v-else-if="activeTab=='0'">
+			<div class="title" v-else-if="activeTab=='0'">
 			    <span @click="cancleZCXFoucus" v-if="zhongchengxinCare">
 			        <img src="../../public/img/images/notice.png" alt="">
 			        取消关注
@@ -32,8 +40,8 @@
 			</div>
 		</div>
        <!-- <div class="name">{{companyName}}</div> -->
-        <el-tabs type="border-card" v-model="activeTab">
-            <el-tab-pane label="企业基本信息">
+        <el-tabs type="border-card" v-model="activeTab" tabPosition="left">
+            <el-tab-pane label="基本信息">
                 <CompanyBasicInfo></CompanyBasicInfo>
 				<div style="display: flex;">
 					<div style="flex: 1;margin-right: 10px;"><ZXBPage></ZXBPage></div>
@@ -42,9 +50,8 @@
 				 
             </el-tab-pane>
 			<!-- 天眼查 -->
-            <el-tab-pane label="工商舆情"> 
+            <el-tab-pane label="工商舆情">
 <!--                <TYCPage class="tyc" :target="tycUrl"></TYCPage>-->
-			    <el-button @click="isFullscreen=true" style="margin-bottom:10px;float: right;" isFullscreen  type="success" round>全屏查看</el-button>
                <iframe id="tycUrl" width="100%" :height="curHeight"  frameborder="0" marginwidth="0" marginheight="5" :src="tycUrl"></iframe>
             </el-tab-pane>
 			<!-- 中信保 -->
@@ -459,12 +466,6 @@ export default {
             })
             */
         },
-        //全屏
-        quan() {
-            /*全屏iframe兼容*/
-            var docElm = document.documentElement;
-            document.querySelector("iframe").setAttribute("style","height:100%;width:100%;position:fixed;left:0px;top:0px;");
-        }
     }
 }
 </script>
