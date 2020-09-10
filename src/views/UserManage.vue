@@ -120,10 +120,12 @@
 		<el-form-item label="权限：">
 			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:300px">
 			    <el-option
-			      v-for="item in permissionList"
+			      v-for="item in permissionAll"
 			      :key="item.permissionRole"
 			      :label="item.permissionPointName"
-			      :value="item.permissionRole">
+			      :value="item.permissionRole"
+                  :disabled="item.disabled"
+                  :hidden="item.disabled">
 			    </el-option>
 			  </el-select>
 		</el-form-item>
@@ -232,15 +234,20 @@ export default {
           { required: true, message: '请输入密码', trigger: 'change' }
         ],
       },
-	  permissionList:[]
+	  permissionList:[],
+      permissionAll:[
+        {permissionPointName:"黑名单审批权限",permissionRole:"reviewer",disabled:true},
+        {permissionPointName:"黑名单申请权限",permissionRole:"applicant",disabled:true},
+        {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
+      ]
     }
   },
   created () {
     this.getNewCompany();
-    this.getEnablePermission();
   },
   mounted () {
     this.getData();
+    this.getEnablePermission();
   },
   methods: {
     getData(page) {
@@ -324,6 +331,9 @@ export default {
       this.$ajax.manage.getEnablePermission(param).then(res => {
         if (res.data.permissionList) {
           this.permissionList = res.data.permissionList;
+          for(let p of this.permissionList){
+            this.permissionAll.find(item=>item.permissionRole===p.permissionRole).disabled=false;
+          }
         }
       })
     },
@@ -333,7 +343,6 @@ export default {
     },
     saveUserInfo(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(1111111);
         if (valid) {
           if (this.userInfo.permissionRoles && (this.userInfo.permissionRoles instanceof Array)) {
             this.userInfo.permissionRoles = this.userInfo.permissionRoles.join(',');

@@ -64,6 +64,9 @@
             </el-tab-pane> -->
         </el-tabs>
         <el-dialog title="关注" :visible.sync="dialogFormVisible" width="500px" @close="cancle">
+            <div align="center">
+                <label style="font-size: smaller;color: #9b9b9b">如果企业类型为城投企业，则行政级别和省/市/区必填</label>
+            </div>
             <el-form :model="form" label-width="150px" :rules="rules" ref="form">
                 <el-form-item label="统一社会信用代码：" prop="code">
                     <el-input v-model="form.code" disabled style="width:220px"></el-input>
@@ -256,7 +259,7 @@ export default {
     },
     mounted() {
         var h = document.documentElement.clientHeight || document.body.clientHeight;
-        this.curHeight =h-210; //减去页面上固定高度height
+        this.curHeight =h-180; //减去页面上固定高度height
         this.getTYCUrl()
     },
     methods: {
@@ -463,7 +466,8 @@ export default {
         getTYCUrl(){
             //TODO 组装天眼查URL
             let tycid = this.$route.query.id;
-            this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
+            //this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
+            this.tycUrl = `http://pro.tianyancha.com/cloud-std-security/aut/login.json?username=zjb&authId=lf2b4yqy4lsfgp1x&sign=e01ec3cfd0a57ce34feaae0f97970d46&redirectUrl=/company/${tycid}/background`
             /**
             this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
                 let tycid = res.data.result.items[0].id
