@@ -18,6 +18,10 @@
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
+	  <el-select v-model="search.isSubAdmin" placeholder="是否为子管理员" clearable style="width: 200px;margin-right: 10px;">
+	    <el-option label="是" value="1"></el-option>
+		<el-option label="否" value="0"></el-option>
+	  </el-select>
       <el-button type="primary" icon="el-icon-search" @click="searchData">查询</el-button>
       <el-button type="success" icon="el-icon-plus" v-on:click="newUser">新增</el-button>
     </div>
@@ -171,7 +175,8 @@ export default {
       search: {
         userName: '',
         userCode: '',
-        status: ''
+        status: '',
+		isSubAdmin:''
       },
       statusOptions: [
         {
@@ -245,7 +250,8 @@ export default {
         username: this.search.userCode,
         name: this.search.userName,
         status: this.search.status,
-        operator: this.$Cookies.get('userCode')
+        operator: this.$Cookies.get('userCode'),
+		isSubAdmin:this.search.isSubAdmin
       }
       this.loading = true;
       this.$ajax.manage.getUserList(param).then(res => {

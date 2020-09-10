@@ -345,6 +345,12 @@ export default {
                         zhongchengxin: '1'
                     }
                     console.log(param);
+					if(param.entType=='1'){
+						if(param.areaLevel==''){
+							this.$message.warning('请选择行政级别');
+							return;
+						}
+					}
                     this.$ajax.manage.careOrNot(param).then(res => {
                         console.log(res);
                         if (res.data.code == 0) {
