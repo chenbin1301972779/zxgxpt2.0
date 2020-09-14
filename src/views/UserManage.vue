@@ -301,10 +301,11 @@ export default {
     newUser() {
       this.isNew = true;
       this.editType = '新增用户';
-      this.userInfo = {newCompanyFlag: 1};
+      this.userInfo = {newCompanyFlag: 1,status: 1};
       this.editUserDialog = true;
     },
     editUser(row) {
+      this.clearUserInfo();
       this.isNew = false;
       this.editType = '编辑用户';
       row.newCompanyFlag = 0;
@@ -354,8 +355,8 @@ export default {
             if (res.data.code == 0) {
               this.$message.success(res.data.msg);
               this.editUserDialog = false;
-              this.clearUserInfo();
-              this.$refs.userInfo.resetFields();
+              //this.clearUserInfo();
+              //this.$refs.userInfo.resetFields();
             }
           })
         } else {

@@ -285,7 +285,7 @@ export default {
 		  this.getNationCode();
 		  this.getPDFList();
 	  }else{
-		  this.dialogVisible=true;
+		  //this.dialogVisible=true;
 	  }
   },
   methods: {

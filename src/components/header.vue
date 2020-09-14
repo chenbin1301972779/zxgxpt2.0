@@ -259,8 +259,17 @@
 			}
 			this.verifyPermissions();
 			this.getLatestSearchList();
+			this.getNationCode();
 		},
 		methods: {
+			getNationCode () {
+				this.$ajax.manage.getNationCode({}).then(res => {
+					console.log(res);
+					if (res.status == 200) {
+						this.nationTypeOptions = res.data.nationCode
+					}
+				})
+			},
 			getLatestSearchList() {
 				let param = {
 					userId: this.$Cookies.get('userId')
@@ -561,8 +570,8 @@
 			},
 			applyNoCode() {
 				if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
-					this.$message.warning('请输入买方代码');
-					return;
+					// this.$message.warning('请输入买方代码');
+					// return;
 				} else if (this.noCreditCode.reportCorpCountryCode === '') {
 					this.$message.warning('请输入待调查企业国别');
 					return;

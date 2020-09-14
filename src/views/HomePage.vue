@@ -594,8 +594,8 @@ export default {
     },
     applyNoCode () {
       if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
-        this.$message.warning('请输入买方代码');
-        return;
+        // this.$message.warning('请输入买方代码');
+        // return;
       } else if (this.noCreditCode.reportCorpCountryCode === '') {
         this.$message.warning('请输入待调查企业国别');
         return;
