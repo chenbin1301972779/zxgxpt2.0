@@ -63,10 +63,15 @@
                 <ZCXPage></ZCXPage>
             </el-tab-pane> -->
         </el-tabs>
-        <el-dialog title="关注" :visible.sync="dialogFormVisible" width="500px" @close="cancle">
-            <div align="center">
-                <label style="font-size: smaller;color: #9b9b9b">如果企业类型为城投企业，则行政级别和省/市/区必填</label>
+        <el-dialog title="关注" :visible.sync="dialogFormVisible" width="450px" @close="cancle">
+            <div slot="title" class="header-title">
+                <span>关注 &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <!--<br>
+                <span style="color: #409EFF;font-size: smaller"> 温馨提示：如果企业类型为城投企业，则行政级别和省/市/区必填</span>-->
             </div>
+<!--            <div align="center">-->
+<!--                <label style="font-size: smaller;color: #9b9b9b">如果企业类型为城投企业，则行政级别和省/市/区必填</label>-->
+<!--            </div>-->
             <el-form :model="form" label-width="150px" :rules="rules" ref="form">
                 <el-form-item label="统一社会信用代码：" prop="code">
                     <el-input v-model="form.code" disabled style="width:220px"></el-input>
@@ -107,6 +112,9 @@
                             :key="item.areaCode"></el-option>
                     </el-select>
                 </el-form-item>
+                <div align="center">
+                    <label style="font-size: smaller;color: #409EFF">如果企业类型为城投企业，则行政级别和省/市/区必填</label>
+                </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancle">取 消</el-button>

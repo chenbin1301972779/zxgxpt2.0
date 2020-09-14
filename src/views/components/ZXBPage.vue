@@ -203,8 +203,8 @@
               <el-input v-model="noCreditCode.creditno"></el-input>
             </td>
             <td>
-              <el-select v-model="noCreditCode.noIstranslation">
-                <el-option v-for="(item,index) in noIstranslation" :value="item.id" :key="item.id" :label="item.name">
+              <el-select v-model="noCreditCode.istranslation">
+                <el-option v-for="(item,index) in istranslation" :value="item.id" :key="item.id" :label="item.name">
                 </el-option>
               </el-select>
             </td>
@@ -220,7 +220,8 @@
                 <pdfView :url="pdfUrl"></pdfView>
             </div>
         </el-dialog> -->
-    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="90%" :fullscreen="true">
+    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="90%" :fullscreen="false">
+      <el-progress v-if="pdfProgressVisible" :text-inside="true" :stroke-width="20" :percentage="progressNum"></el-progress>
       <div v-loading="pdfLoading" style="height: 100%;">
         <iframe :src="src" frameborder="0" width="100%" :height="iframeHeight"></iframe>
       </div>
@@ -259,7 +260,7 @@ export default {
         reportCorpEngName: '',
         reportCorpaddress: '',
         creditno: '',
-        noIstranslation: '0',
+        istranslation: '0',
       },
       istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
       noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
@@ -270,7 +271,11 @@ export default {
       shareInfo: [],
       nationTypeOptions: [],
       pdfList:[],
-	  iframeHeight: document.documentElement.clientHeight-80 || document.body.clientHeight-80,
+	  iframeHeight: document.documentElement.clientHeight-220 || document.body.clientHeight-80,
+      pdfProgressVisible: true,
+      progressNum: 0,
+      startTimer: '',
+      endTimer: ''
     }
   },
   mounted () {
@@ -400,10 +405,13 @@ export default {
       let param = {
         "noticeSerialno": pdfName
       }
-      this.pdfDialogVisible = true
+      this.pdfDialogVisible = true;
+      this.pdfProgressVisible = true;
+      this.startProgress();
       this.pdfLoading = true;
       this.$ajax.manage.getPDF(param).then(res => {
         this.pdfLoading = false;
+        this.pdfProgressVisible=false;
         const content = res.data
         const blob = new Blob([content], {
           type: 'application/pdf;chartset=UTF-8'
@@ -475,6 +483,28 @@ export default {
           }
         }
       })
+    },
+    startProgress () {
+      this.progressNum = 0;
+      this.startTimer = setInterval(() => {
+        this.progressNum ++
+        if (this.progressNum > 95) {
+          clearInterval(this.startTimer)
+        }
+      }, 100);
+    },
+    endProgress () {
+      clearInterval(this.startTimer)
+      this.endTimer = setInterval(() => {
+        this.progressNum ++
+        if (this.progressNum > 99) {
+          clearInterval(this.endTimer)
+          this.finishProgress()
+        }
+      }, 10);
+    },
+    finishProgress () {
+      this.$emit('finishProgress', false)
     }
   }
 }

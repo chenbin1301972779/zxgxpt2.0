@@ -30,7 +30,7 @@
         <div><img src="../../public/img/subtitle.png" alt=""></div>
       </div>
       <div class="content">
-        <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 840px;height: 76px;"
+        <el-input @keyup.enter="seachContent" placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 840px;height: 76px;"
           clearable="" @keyup.enter.native="seachContent">
         </el-input>
         <el-button @click="seachContent">查 询</el-button>

@@ -8,7 +8,12 @@
 			<!-- <el-input placeholder="请输入搜索内容" v-model="searchVal" class="input-with-select" style="width: 300px;margin-left: 100px;">
 				<el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
 			</el-input> -->
-			<el-autocomplete class="inline-input" v-model="searchVal" :fetch-suggestions="querySearch" placeholder="请输入搜索内容"
+			<el-autocomplete @keyup.enter="searchData()"
+							 @select="searchData"
+							 class="inline-input"
+							 v-model="searchVal"
+							 :fetch-suggestions="querySearch"
+							 placeholder="请输入搜索内容"
 			  style="width: 300px;margin-left: 100px;">
 				<el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
 			</el-autocomplete>

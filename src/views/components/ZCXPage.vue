@@ -47,7 +47,8 @@
         <JsonView :value="data"></JsonView>
       </div>
     </el-dialog>
-    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%" :fullscreen="true">
+    <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%" :fullscreen="false">
+      <el-progress v-if="pdfProgressVisible" :text-inside="true" :stroke-width="20" :percentage="progressNum"></el-progress>
       <div v-loading="pdfLoading">
         <iframe :src="src" frameborder="0" width="100%" :height="iframeHeight"></iframe>
 <!--        <embed :src="src" width="100%" height="600px"></embed>-->
@@ -96,7 +97,12 @@ export default {
       src: '',
       pdfDialogVisible: false,
       pdfLoading: false,
-	  iframeHeight: document.documentElement.clientHeight-80 || document.body.clientHeight-80,
+	  iframeHeight: document.documentElement.clientHeight-220 || document.body.clientHeight-80,
+      pdfProgressVisible: true,
+      progressNum: 0,
+      startTimer: '',
+      endTimer: ''
+
     }
   },
   created () {
@@ -218,7 +224,9 @@ export default {
       let param = {
         fileName: row.fileName
       }
-      this.pdfDialogVisible = true
+      this.pdfDialogVisible = true;
+      this.pdfProgressVisible = true;
+      this.startProgress();
       this.pdfLoading = true;
       this.$notify({
         title: '提示',
@@ -228,7 +236,9 @@ export default {
         type: 'success'
       });
       this.$ajax.manage.getLiteRatingPDF(param).then(res => {
-        console.log(res)
+        this.endProgress();
+        this.finishProgress();
+        this.pdfProgressVisible=false;
         this.pdfLoading = false;
         const content = res.data
         const fileName = `${row.fileName}.pdf`
@@ -242,6 +252,28 @@ export default {
     },
     handleCurrentChange (val) {
       this.page.currentPage = val
+    },
+    startProgress () {
+      this.progressNum = 0;
+      this.startTimer = setInterval(() => {
+        this.progressNum ++
+        if (this.progressNum > 95) {
+          clearInterval(this.startTimer)
+        }
+      }, 100);
+    },
+    endProgress () {
+      clearInterval(this.startTimer)
+      this.endTimer = setInterval(() => {
+        this.progressNum ++
+        if (this.progressNum > 99) {
+          clearInterval(this.endTimer)
+          this.finishProgress()
+        }
+      }, 10);
+    },
+    finishProgress () {
+      this.$emit('finishProgress', false)
     }
   }
 }
