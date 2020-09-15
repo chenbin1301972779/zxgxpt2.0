@@ -214,7 +214,7 @@
               <el-input v-model="noCreditCode.creditno"></el-input>
             </td>
             <td>
-              <el-select v-model="noCreditCode.noIstranslation">
+              <el-select v-model="noCreditCode.istranslation">
                 <el-option v-for="(item,index) in noIstranslation" :value="item.id" :key="item.id" :label="item.name">
                 </el-option>
               </el-select>

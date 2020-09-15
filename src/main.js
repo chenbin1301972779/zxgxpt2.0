@@ -16,7 +16,9 @@ Vue.use(ElementUI)
 
 //请求封装
 import ajax from '@/ajax/index.js'
+import md5 from 'js-md5';
 Vue.prototype.$ajax = ajax
+Vue.prototype.$md5 = md5;
 import Cookies from 'js-cookie'
 import { getCookieKey, getCookie,formatDate } from '@/assets/utils.js'
 Vue.prototype.$getCookieKey = getCookieKey

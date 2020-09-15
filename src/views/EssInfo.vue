@@ -205,7 +205,7 @@ export default {
             zhongchengxinCare: false,
             dialogFormVisible: false,
             form: {
-                code: this.$route.query.creditCode,
+                code: this.$route.query.creditCode ,
                 entName: '',
                 entType: '',
                 areaLevel: '',
@@ -492,8 +492,10 @@ export default {
         getTYCUrl(){
             //TODO 组装天眼查URL
             let tycid = this.$route.query.id;
+            let username = "zjb_"+this.$Cookies.get('userCode');
+            let sign = this.$md5(username+"44bce5ef-873e-4689-b515-a1ef9775aa82");
             //this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
-            this.tycUrl = `http://pro.tianyancha.com/cloud-std-security/aut/login.json?username=zjb&authId=lf2b4yqy4lsfgp1x&sign=e01ec3cfd0a57ce34feaae0f97970d46&redirectUrl=/company/${tycid}/background`
+            this.tycUrl = `http://pro.tianyancha.com/cloud-std-security/aut/login.json?username=${username}&authId=lf2b4yqy4lsfgp1x&sign=${sign}&redirectUrl=/company/${tycid}/background`
             /**
             this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
                 let tycid = res.data.result.items[0].id

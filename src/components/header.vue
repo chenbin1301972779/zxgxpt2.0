@@ -33,7 +33,7 @@
 					<el-dropdown-item command="7">信保报告列表</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
-			<el-button type="success" round v-if="showLargeBtn&&$route.path=='/essInfo'" @click="larger" class="el-icon-full-screen"> 放大</el-button>
+			<el-button type="success" round v-if="showLargeBtn&&$route.path=='/essInfo'" @click="larger" class="el-icon-full-screen"> 全屏</el-button>
 			<el-divider direction="vertical"></el-divider>
 			<span style="margin-right: 20px;" @click="showUserInfo">
 				<i class="el-icon-user-solid"></i>
@@ -168,7 +168,7 @@
 							<el-input v-model="noCreditCode.creditno"></el-input>
 						</td>
 						<td>
-							<el-select v-model="noCreditCode.noIstranslation">
+							<el-select v-model="noCreditCode.istranslation">
 								<el-option v-for="(item,index) in noIstranslation" :value="item.id" :key="item.id" :label="item.name">
 								</el-option>
 							</el-select>
