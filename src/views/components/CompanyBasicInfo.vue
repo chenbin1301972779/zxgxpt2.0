@@ -4,7 +4,12 @@
         <div class="main-box">
             <div class="left-box">
                 <div>
-                    <div class="titile">企业基本信息</div>
+                    <div class="titile" style="margin-bottom: 25px;">
+						企业基本信息
+						<span style="float:right">
+							<slot></slot>
+						</span>
+					</div>
                     <div class="table-wrapper">
                         <table border="1">
                             <tr>

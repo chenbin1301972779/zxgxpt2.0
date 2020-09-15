@@ -23,6 +23,7 @@
 				<el-button type="primary" round>
 					常用应用<i class="el-icon-arrow-down el-icon--right"></i>
 				</el-button>
+				<el-button type="success" round v-if="showLargeBtn&&$route.path=='/essInfo'" @click="larger" class="el-icon-full-screen"> 放大</el-button>
 				<el-divider direction="vertical"></el-divider>
 				<el-dropdown-menu slot="dropdown">
 					<el-dropdown-item command="1" v-if="blacklistApply">黑名单报告</el-dropdown-item>
@@ -246,12 +247,22 @@
 					id: '1'
 				}],
 				searchVal: '',
-				latestSearchList: []
+				latestSearchList: [],
+				showLargeBtn:false
 			}
 		},
 		created() {
+			this.showLargeBtn = false;
 			this.$Bus.$on('showDialog', () => {
 				this.dialogVisible = true;
+			});
+			this.$Bus.$on('showLargeBtn',(data)=>{
+				if(data=='1'){
+					this.showLargeBtn = true;
+				}else{
+					this.showLargeBtn = false;
+				}
+				
 			})
 		},
 		mounted() {
@@ -266,6 +277,9 @@
 			this.getNationCode();
 		},
 		methods: {
+			larger(){
+				this.$Bus.$emit('largerWindow')
+			},
 			getNationCode () {
 				this.$ajax.manage.getNationCode({}).then(res => {
 					console.log(res);

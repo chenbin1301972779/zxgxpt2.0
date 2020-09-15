@@ -1,11 +1,6 @@
 <template>
     <div class="essInfo">
-		<div style="margin-bottom: 15px;">
-			<!--<el-breadcrumb separator-class="el-icon-arrow-right" style="display: inline-block;">
-			  <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
-			  <el-breadcrumb-item>查看</el-breadcrumb-item>
-			</el-breadcrumb>
-			<span class="name" style="margin-left: 30px;">{{companyName}}</span>-->
+		<!-- <div style="margin-bottom: 15px;">
 			<div class="title" v-if="activeTab=='1'">
 			    <span @click="cancleTYCFoucus" v-if="tianyanchaCare">
                     <el-button @click="isFullscreen=true" @click.stop="isFullscreen=true" size="mini" type="success" round>
@@ -38,11 +33,28 @@
                     (数据源：中诚信)
 			    </span>
 			</div>
-		</div>
+		</div> -->
        <!-- <div class="name">{{companyName}}</div> -->
-        <el-tabs type="border-card" v-model="activeTab" tabPosition="left">
-            <el-tab-pane label="基本信息">
-                <CompanyBasicInfo></CompanyBasicInfo>
+        <el-tabs type="border-card" v-model="activeTab" tabPosition="left" @tab-click="handleClick">
+            <el-tab-pane label="基本信息" >
+                <CompanyBasicInfo>
+					<span>
+						<el-button type="primary" size="small" @click="cancleZCXFoucus" v-if="zhongchengxinCare" style="margin-right: 10px;" >
+							<i class="el-icon-star-on" style="font-size: 16px;"></i> 
+							取消关注（数据源：中诚信）</el-button>
+						<el-button type="primary" size="small" @click="goZCXFocus" v-else style="margin-right: 10px;">
+							<i class="el-icon-star-off" style="font-size: 16px;"></i> 
+							关注（数据源：中诚信）</el-button>
+					</span>
+					<span>
+						<el-button type="primary" size="small" @click="cancleTYCFoucus" v-if="tianyanchaCare">
+							<i class="el-icon-star-on" style="font-size: 16px;"></i> 
+							取消关注（数据源：天眼查）</el-button>
+						<el-button type="primary" size="small" @click="goZCXFocus" v-else>
+							<i class="el-icon-star-off" style="font-size: 16px;"></i> 
+							关注（数据源：天眼查）</el-button>
+					</span>
+				</CompanyBasicInfo>
 				<div style="display: flex;">
 					<div style="flex: 1;margin-right: 15px;"><ZXBPage></ZXBPage></div>
 					<div style="flex: 1;"> <ZCXPage></ZCXPage></div>
@@ -264,6 +276,9 @@ export default {
     created () {
         this.getCareStatus();
         this.getArea();
+		this.$Bus.$on('largerWindow',()=>{
+			this.isFullscreen=true
+		})
     },
     mounted() {
         var h = document.documentElement.clientHeight || document.body.clientHeight;
@@ -271,6 +286,9 @@ export default {
         this.getTYCUrl()
     },
     methods: {
+		handleClick(tab,event){
+			this.$Bus.$emit('showLargeBtn',tab.index)
+		},
         getCareStatus () {
             let param = {
                 companyId: parseInt(this.$route.query.companyId),
