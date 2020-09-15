@@ -31,6 +31,7 @@
 					<el-dropdown-item command="4">信保报告申请</el-dropdown-item>
 					<el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
 					<el-dropdown-item command="6">消息中心</el-dropdown-item>
+					<el-dropdown-item command="7">信保报告列表</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 			<span style="margin-right: 20px;" @click="showUserInfo">
@@ -360,6 +361,8 @@
 					this.$router.push({
 						path: '/messageCenter'
 					})
+				} else if (command == 7) {
+					this.$router.push({ path: '/zxbReportList' })
 				}
 			},
 			goHmdsb() {
