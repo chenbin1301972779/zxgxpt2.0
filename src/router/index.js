@@ -78,6 +78,11 @@ const routes = [
 			    name: 'SearchResult',
 			    component: () => import('../views/SearchResult.vue')
 			},
+            {
+                path: '/zxbReportList',
+                name: 'zxbReportList',
+                component: ()=> import('../views/zxbReportList')
+            }
         ]
     },
 

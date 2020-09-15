@@ -102,7 +102,6 @@ export default {
       progressNum: 0,
       startTimer: '',
       endTimer: ''
-
     }
   },
   created () {

@@ -194,6 +194,11 @@ async function updateUserStatus (param) {
     let updateUserStatus = await ajax.post(`/api/user/updateUserStatus`, param)
     return updateUserStatus
 }
+//获取信保报告列表（全部）
+async function getPDFListAll (param) {
+    let getPDFListAll = await ajax.post(`/api/company/getPDFListAll`, param)
+    return getPDFListAll
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -231,7 +236,8 @@ const manage = {
     getEnablePermission:getEnablePermission,
     userExists:userExists,
     updateUserStatus:updateUserStatus,
-	getLatestFinancialDeminingHtml:getLatestFinancialDeminingHtml
+	getLatestFinancialDeminingHtml:getLatestFinancialDeminingHtml,
+    getPDFListAll:getPDFListAll
 }
 
 export default manage

@@ -8,7 +8,7 @@
 			<!-- <el-input placeholder="请输入搜索内容" v-model="searchVal" class="input-with-select" style="width: 300px;margin-left: 100px;">
 				<el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
 			</el-input> -->
-			<el-autocomplete @keyup.enter="searchData()"
+			<el-autocomplete @keyup.enter.native="searchData()"
 							 @select="searchData"
 							 class="inline-input"
 							 v-model="searchVal"
@@ -257,6 +257,9 @@
 			if (this.$route.query.username) {
 				this.skipLogin();
 			}
+			if (this.$route.query.searchVal) {
+				this.searchVal = this.$route.query.searchVal;
+			}
 			this.verifyPermissions();
 			this.getLatestSearchList();
 			this.getNationCode();
@@ -365,7 +368,7 @@
 					query: {
 						title: encodeURIComponent('黑名单申报'),
 						url: encodeURIComponent(
-							`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -377,7 +380,7 @@
 					query: {
 						title: encodeURIComponent('黑名单审批'),
 						url: encodeURIComponent(
-							`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -389,7 +392,7 @@
 					query: {
 						title: encodeURIComponent('客商填报'),
 						url: encodeURIComponent(
-							`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})

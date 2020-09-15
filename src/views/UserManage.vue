@@ -142,7 +142,7 @@
 export default {
   data () {
     var validateMobile = (rule, value, callback) => {
-      let TEL_REGEXP = /^[1][3,4,5,7,8][0-9]{9}$/;
+      let TEL_REGEXP = /^[1][3,4,5,7,8,9][0-9]{9}$/;
       if (value === ""||typeof value=='undefined') {
         callback();
       } else if (value && !TEL_REGEXP.test(value)) {
