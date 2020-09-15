@@ -50,7 +50,7 @@
 						<el-button type="primary" size="small" @click="cancleTYCFoucus" v-if="tianyanchaCare">
 							<i class="el-icon-star-on" style="font-size: 16px;"></i> 
 							取消关注（数据源：天眼查）</el-button>
-						<el-button type="primary" size="small" @click="goZCXFocus" v-else>
+						<el-button type="primary" size="small" @click="goTYCFocus" v-else>
 							<i class="el-icon-star-off" style="font-size: 16px;"></i> 
 							关注（数据源：天眼查）</el-button>
 					</span>
