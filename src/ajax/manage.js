@@ -199,6 +199,11 @@ async function getPDFListAll (param) {
     let getPDFListAll = await ajax.post(`/api/company/getPDFListAll`, param)
     return getPDFListAll
 }
+//记录日志
+async function logPath (param) {
+    let logPath = await ajax.post(`/api/common/logCreditOper`, param)
+    return logPath
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -237,7 +242,8 @@ const manage = {
     userExists:userExists,
     updateUserStatus:updateUserStatus,
 	getLatestFinancialDeminingHtml:getLatestFinancialDeminingHtml,
-    getPDFListAll:getPDFListAll
+    getPDFListAll:getPDFListAll,
+    logPath:logPath
 }
 
 export default manage

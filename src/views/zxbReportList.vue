@@ -100,12 +100,17 @@
                 }
                 this.loading = true;
                 this.$ajax.manage.getPDFListAll(param).then(res => {
+                    this.loading = false;
                     if (res.data.code == 0) {
-                        this.loading = false;
                         console.log(res.data);
                         this.tableData = res.data.pdfList;
                         this.page.total = res.data.totalRecords
+                    }else{
+                        this.$message.error(res.data.msg)
                     }
+                }).catch(error=>{
+                    console.log(error);
+                    this.$message.error(error)
                 })
             },
             searchData() {

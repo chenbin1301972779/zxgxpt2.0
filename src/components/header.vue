@@ -28,9 +28,9 @@
 					<el-dropdown-item command="2" v-if="blacklistAudit">黑名单审批</el-dropdown-item>
 					<el-dropdown-item command="3">客商初筛</el-dropdown-item>
 					<el-dropdown-item command="4">信保报告申请</el-dropdown-item>
+					<el-dropdown-item command="7">信保报告列表</el-dropdown-item>
 					<el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
 					<el-dropdown-item command="6">消息中心</el-dropdown-item>
-					<el-dropdown-item command="7">信保报告列表</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 			<el-button type="success" round v-if="showLargeBtn&&$route.path=='/essInfo'" @click="larger" class="el-icon-full-screen"> 全屏</el-button>
@@ -386,6 +386,7 @@
 						title: encodeURIComponent('黑名单申报'),
 						url: encodeURIComponent(
 							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -398,6 +399,7 @@
 						title: encodeURIComponent('黑名单审批'),
 						url: encodeURIComponent(
 							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -410,6 +412,7 @@
 						title: encodeURIComponent('客商填报'),
 						url: encodeURIComponent(
 							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
