@@ -17,7 +17,9 @@
       </div>
       <div class="main" v-if="active===0">
         <el-card class="box-card" v-loading="htmlLoading">
-          <div v-html="htmlContent" style="overflow: auto;height: 550px;margin: auto;"></div>
+         <!-- <div v-html="htmlContent" style="overflow: auto;height: 550px;margin: auto;"></div> -->
+		 <iframe :srcdoc="htmlContent" height="600px" width="100%" frameborder="0" marginwidth="0">
+		 </iframe>
         </el-card>
       </div>
       <div class="main" v-if="active===1">
@@ -143,7 +145,7 @@ export default {
     .main {
       //padding-left: 200px;
       padding: 0 100px;
-      margin-top: 40px;
+      margin-top: 10px;
       table {
         width: 100%;
         tr {
