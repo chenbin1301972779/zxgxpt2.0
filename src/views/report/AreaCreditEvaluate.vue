@@ -196,8 +196,8 @@
         </div>
       </div>
       <div class="btn-box">
-        <el-button type="primary" size="medium" @click="lastStep" :disabled="lastDisabled">上一步</el-button>
-        <el-button type="primary" size="medium" @click="nextStep" :disabled="nextDisabled">下一步</el-button>
+        <el-button type="primary" size="small" @click="lastStep" :disabled="lastDisabled">上一步</el-button>
+        <el-button type="primary" size="small" @click="nextStep" :disabled="nextDisabled">下一步</el-button>
       </div>
     </div>
   </div>
@@ -458,7 +458,12 @@ export default {
   }
 }
 </script>
-
+<style>
+	.el-step__title{
+		font-size: 14px;
+		line-height: 30px;
+	}
+</style>
 <style lang="less" scoped="">
 .risk-screen {
   width: 100%;
@@ -512,7 +517,7 @@ export default {
     }
     .btn-box {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 20px;
     }
   }
 }
