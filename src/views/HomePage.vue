@@ -17,6 +17,7 @@
               <el-dropdown-item command="7">信保报告列表</el-dropdown-item>
               <el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
               <el-dropdown-item command="6">消息中心</el-dropdown-item>
+              <el-dropdown-item command="8" v-if="$Cookies.get('username')=='admin'">访问日志</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <span style="margin-right: 15px;cursor:pointer" @click="showUserInfo">
@@ -334,8 +335,8 @@ export default {
         path: '/iframePage',
         query: {
           title: encodeURIComponent('黑名单申报'),
-          url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
-          //url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          //url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
         }
       })
     },
@@ -344,8 +345,8 @@ export default {
         path: '/iframePage',
         query: {
           title: encodeURIComponent('黑名单审批'),
-          url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
-          //url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          //url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
         }
       })
     },
@@ -354,8 +355,18 @@ export default {
         path: '/iframePage',
         query: {
           title: encodeURIComponent('客商填报'),
-          url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
-          //url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          //url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+          url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+        }
+      })
+    },
+    goLog (){
+      this.$router.push({
+        path: '/iframePage',
+        query: {
+          title: encodeURIComponent('访问日志'),
+          //url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
+          url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
         }
       })
     },
@@ -443,6 +454,8 @@ export default {
         this.$router.push({ path: '/messageCenter' })
       } else if (command == 7) {
         this.$router.push({ path: '/zxbReportList' })
+      } else if (command == 8){
+        this.goLog()
       }
     },
     getBlackList () {
