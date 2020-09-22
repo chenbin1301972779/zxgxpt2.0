@@ -388,8 +388,8 @@
 					query: {
 						title: encodeURIComponent('黑名单申报'),
 						url: encodeURIComponent(
-							//`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -401,8 +401,8 @@
 					query: {
 						title: encodeURIComponent('黑名单审批'),
 						url: encodeURIComponent(
-							//`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -414,8 +414,8 @@
 					query: {
 						title: encodeURIComponent('客商填报'),
 						url: encodeURIComponent(
-							//`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							//`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -426,8 +426,8 @@
 					path: '/iframePage',
 					query: {
 						title: encodeURIComponent('访问日志'),
-						//url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
-						url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/LOG.frm&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+						url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
+						//url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/LOG.frm&op=write&userCode=${sessionStorage.getItem('userCode')}`)
 					}
 				})
 			},

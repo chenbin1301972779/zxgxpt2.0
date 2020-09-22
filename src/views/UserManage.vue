@@ -27,7 +27,7 @@
     </div>
     <div class="table-box">
       <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" stripe
-        v-loading="loading" :default-sort="{prop: 'status', order: 'descending'}">
+        v-loading='loading'>
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column prop="username" label="工号">

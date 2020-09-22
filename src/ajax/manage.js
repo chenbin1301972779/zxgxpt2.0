@@ -23,7 +23,8 @@ async function getSearchList (param) {
 
 //用户管理查询
 async function getUserList (param) {
-    let getUserList = await ajax.post(`/api/user/searchUserList`, param)
+    //let getUserList = await ajax.post(`/api/user/searchUserList`, param)
+    let getUserList = await ajax.post(`/api/user/searchUserListNew`, param)
     return getUserList
 }
 //用户管理是否启用
