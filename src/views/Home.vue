@@ -62,7 +62,8 @@ export default {
   methods: {
     initWebSocket () { //初始化weosocket
       //const wsuri = `ws://10.0.130.28:9292/webSocket/${this.$Cookies.get('userId')}`;
-      const wsuri = `ws://zibchina.com:9292/webSocket/${this.$Cookies.get('userId')}`;
+      //const wsuri = `ws://zibchina.com:9292/webSocket/${this.$Cookies.get('userId')}`;
+      const wsuri = `ws://credit.zibchina.com:9292/webSocket/${this.$Cookies.get('userId')}`;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
