@@ -3,7 +3,7 @@
   <div class="zxbPage">
 	  <h4>信保报告</h4>
     <div style="margin:15px 0;">
-      <el-button type="primary" @click="applyReport" size="small">信保报告申请</el-button>
+      <el-button type="primary" @click="applyReport" size="small">信保报告申请(待上线)</el-button>
     </div>
     <div class="main-box">
       <div class="titile">信保基本信息</div>

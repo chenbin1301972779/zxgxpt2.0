@@ -3,7 +3,7 @@
 		<div class="main-content">
 		  <div class="content-item " style="width:80%">
 		    <div class="title">
-		      <span>检测列表</span>
+		      <span>检索结果</span>
 		      <span class="text">
 		        根据关键字，共搜索到 {{searchList.length>0?searchList.length:0}} 条数据结果，结果来自
 		        {{sourceType}}
