@@ -79,21 +79,10 @@
 					}
 				],
 				curHeight:'',
-				//test
-				/*urlTab1: `http://10.0.130.27:8080/webroot/decision/view/form?viewlet=Homepage/TYC_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab2: `http://10.0.130.27:8080/webroot/decision/view/form?viewlet=Homepage/ZCX_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab3: `http://10.0.130.27:8080/webroot/decision/view/form?viewlet=Homepage/ZCX_NEWS.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab4: `http://10.0.130.27:8080/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode')*/
-				//12
-				urlTab1: `http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/TYC_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab2: `http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/ZCX_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab3: `http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/ZCX_NEWS.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab4: `http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode')
-				//4
-				// urlTab1: `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/TYC_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				// urlTab2: `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/ZCX_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				// urlTab3: `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/ZCX_NEWS.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				// urlTab4: `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode')
+				urlTab1: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/TYC_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
+				urlTab2: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZCX_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
+				urlTab3: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZCX_NEWS.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
+				urlTab4: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode')
 			}
 		},
 		mounted() {
@@ -106,7 +95,7 @@
 			        path: '/iframePage',
 			        query: {
 			            title:encodeURIComponent('中诚信'),
-			            url:encodeURIComponent(`http://10.0.130.27:8080/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
+			            url:encodeURIComponent(`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=test.cpt&op=view&userCode=${this.$Cookies.get('userCode')}`)
 			        }
 			    })
 			},

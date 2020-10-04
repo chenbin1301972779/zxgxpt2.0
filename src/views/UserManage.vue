@@ -78,7 +78,7 @@
       </div>
     </div>
 
-    <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px" @close="closeDialog" :rules="rules">
+    <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px" @close="closeDialog" :rules="rules" :close-on-click-modal='false'>
       <el-form :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
         <el-form-item label="用户ID：" v-show="!isNew">
           <el-input v-model="userInfo.userId" disabled style="width:300px"></el-input>
@@ -173,6 +173,17 @@ export default {
         callback();
       }
     };
+    var userIsZhrs = (rule, value, callback) => { //中韩人寿必须以zhrs开头
+      if(value&&this.userInfo.companyName&&this.userInfo.companyName.indexOf("中韩人寿")>=0){
+        if(value.indexOf("zhrs")==0){
+          callback();
+        }else{
+          callback(new Error("中航人寿人员必须以zhrs开头"));
+        }
+      }else{
+        callback();
+      }
+    };
     return {
       search: {
         userName: '',
@@ -225,7 +236,8 @@ export default {
         ],
         username: [
           { required: true, message: '请输入工号', trigger: 'change' },
-          { validator: userExists, message: '工号已存在', trigger: 'change' }
+          { validator: userExists, message: '工号已存在', trigger: 'change' },
+          { validator: userIsZhrs, message: '中航人寿员工工号必须以zhrs开始', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入用户名', trigger: 'change' }

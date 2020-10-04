@@ -31,8 +31,8 @@
 					<el-dropdown-item command="7">信保报告列表</el-dropdown-item>
 					<el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
 					<el-dropdown-item command="6">消息中心</el-dropdown-item>
-					<el-dropdown-item command="8" v-if="$Cookies.get('username')=='admin'">访问日志</el-dropdown-item>
-					<el-dropdown-item command="9" v-if="userManage||sub_manage">组织架构维护</el-dropdown-item>
+					<el-dropdown-item command="8" >访问日志</el-dropdown-item>
+					<el-dropdown-item command="9" >组织架构维护</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 			<el-button type="success" round v-if="showLargeBtn&&$route.path=='/essInfo'" @click="larger" class="el-icon-full-screen"> 全屏</el-button>
@@ -394,8 +394,7 @@
 					query: {
 						title: encodeURIComponent('黑名单申报'),
 						url: encodeURIComponent(
-							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							// `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -407,8 +406,7 @@
 					query: {
 						title: encodeURIComponent('黑名单审批'),
 						url: encodeURIComponent(
-							`http://10.0.105.1/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							// `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -420,8 +418,7 @@
 					query: {
 						title: encodeURIComponent('客商填报'),
 						url: encodeURIComponent(
-							`http://10.0.130.27/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-							// `http://analysis.zibchina.com/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -432,8 +429,7 @@
 					path: '/iframePage',
 					query: {
 						title: encodeURIComponent('访问日志'),
-						url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
-						// url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/LOG.frm&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+						url: encodeURIComponent(`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
 					}
 				})
 			},
@@ -442,8 +438,7 @@
 					path: '/iframePage',
 					query: {
 						title: encodeURIComponent('组织架构维护'),
-						url: encodeURIComponent(`http://10.0.105.1/webroot/decision/view/form?viewlet=Homepage/组织架构填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
-						// url: encodeURIComponent(`http://analysis.zibchina.com/webroot/decision/view/form?viewlet=Homepage/组织架构填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
+						url: encodeURIComponent(`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/组织架构填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`)
 					}
 				})
 			},
