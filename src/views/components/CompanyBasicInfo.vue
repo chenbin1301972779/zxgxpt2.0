@@ -15,32 +15,26 @@
                             <tr>
                                 <td class="gbGray">公司名称</td>
                                 <td colspan="2">&nbsp;{{basicInfo.name}}</td>
-                                <td class="gbGray">公司类型</td>
-                                <td colspan="2">&nbsp;{{basicInfo.companyorgtype}}</td>
+                                <td class="gbGray">统一社会信用代码</td>
+                                <td colspan="2">&nbsp;{{basicInfo.creditCode}}</td>
                             </tr>
                             <tr>
-								<td class="gbGray">成立日期</td>
-								<td colspan="2">&nbsp;{{$formatDate(basicInfo.estiblishtime)}}</td>
-                                <td class="gbGray">注册资本</td>
-                                <td colspan="2">&nbsp;{{basicInfo.regcapital}}</td>
+								<td class="gbGray">公司类型</td>
+								<td colspan="2">&nbsp;{{basicInfo.companyorgtype}}</td>
+                                <td class="gbGray">行业</td>
+                                <td colspan="2">&nbsp;{{basicInfo.industry}}</td>
                             </tr>
 							<tr>
 								<td class="gbGray">注册地址</td>
 								<td colspan="2">&nbsp;{{basicInfo.reglocation}}</td>
-								<td class="gbGray">注册登记类型</td>
-								<td colspan="2">&nbsp;{{basicInfo.regtCredidtcode}}</td>
+								<td class="gbGray">注册资本</td>
+								<td colspan="2">&nbsp;{{basicInfo.regcapital}}</td>
 							</tr>
                             <tr>
-                                <td class="gbGray">注册登记号</td>
-                                <td colspan="2">&nbsp;{{basicInfo.regCredidtcode}}</td>
-                                <td class="gbGray">地税登记号</td>
-                                <td colspan="2">&nbsp;{{basicInfo.dsCreditcode}}</td>
-                            </tr>
-                            <tr>
-								<td class="gbGray">国税登记号</td>
-								<td colspan="2">&nbsp;{{basicInfo.gsCreditcode}}</td>
-                                <td class="gbGray">行业分类</td>
-                                <td colspan="2">&nbsp;{{basicInfo.industry}}</td>
+                                <td class="gbGray">企业法人</td>
+                                <td colspan="2">&nbsp;{{basicInfo.legalPersonName}}</td>
+                                <td class="gbGray">成立时间</td>
+                                <td colspan="2">&nbsp;{{$formatDate(basicInfo.estiblishtime)}}</td>
                             </tr>
 							<tr>
 								<td class="gbGray">登记开始时间</td>
@@ -105,6 +99,7 @@
 </template>
 <script>
 import useMap from '@/components/useMap'
+
 export default {
     components: {
         useMap
@@ -126,9 +121,9 @@ export default {
 				companyId:this.$route.query.companyId
 			}
 			this.$ajax.manage.getBaseInfo(param).then(res=>{
-				console.log(res);
 				if(res.status==200){
 					this.basicInfo = res.data.baseInfo
+                    sessionStorage.setItem('tycIndustry', res.data.baseInfo.industry)
 				}
 			})
 		}

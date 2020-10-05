@@ -144,7 +144,6 @@ export default {
   },
   watch: {
     active (newVal, oldVal) {
-      //console.log(newVal,oldVal)
       if (newVal === 0) {
         this.lastDisabled = true;
         this.nextDisabled = false;
@@ -225,7 +224,6 @@ export default {
     },
     getIndustry () {
       this.$ajax.manage.getIndustry({}).then(res => {
-        console.log(res)
         if (res.status == 200) {
           let list = [];
           for (let i in res.data.areaList) {
@@ -233,6 +231,19 @@ export default {
           }
           this.professionOptions = list;
           this.backData = res.data.areaList
+          if(sessionStorage.getItem('tycIndustry')){
+            let tycIndustry = sessionStorage.getItem('tycIndustry');
+            list.forEach(e1=>{
+              let e2 = this.backData[e1]
+              e2.forEach(e3=>{
+                if(e3.indexOf(tycIndustry)>-1){
+                  this.professionDetailOptions = e2
+                  this.profession = e1
+                  this.professionDetail = e3
+                }
+              });
+            });
+          }
         }
       })
     },
@@ -266,7 +277,6 @@ export default {
         isIndustryLeader: this.isIndustryLeader == '1' ? true : false,
         nature: this.companyType
       }
-      console.log(param)
       this.loading = true;
       this.$notify({
         title: '提示',

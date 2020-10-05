@@ -237,7 +237,7 @@ export default {
         username: [
           { required: true, message: '请输入工号', trigger: 'change' },
           { validator: userExists, message: '工号已存在', trigger: 'change' },
-          { validator: userIsZhrs, message: '中航人寿员工工号必须以zhrs开始', trigger: 'blur' }
+          { validator: userIsZhrs, message: '中韩人寿员工工号必须以zhrs开始', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入用户名', trigger: 'change' }

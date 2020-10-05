@@ -65,7 +65,7 @@
           <div class="tab-content-wrapper">
             <div v-for="(item,index) in blackListData" :key="index" class="care-list">
               <img src="../../public/img/focusB.png" alt="">
-              <span>{{item.entName}}</span>
+              <span @click="moreNews(item,'0')">{{item.entName}}</span>
             </div>
           </div>
         </div>
@@ -513,7 +513,6 @@ export default {
       })
     },
     moreNews (item, index) {
-      console.log(item);
       if (index === 0) {
         //基本信息
       } else if (index === 1) {
@@ -525,16 +524,42 @@ export default {
       } else if (index === 4) {
         //更多详情
       }
-      this.$router.push({
-        path: '/essInfo',
-        query: {
-          id: item.id,
-          companyName: item.companyName,
-          companyId: item.companyId,
-          creditCode: item.creditCode,
-          index: index
-        }
-      })
+      if(item.entName){
+        this.$ajax.manage.getCompanyInfoByName({companyName:item.entName}).then(res=>{
+          if(res.status == 200){
+            if(res.data.code == 0){
+              item.id = res.data.company.id
+              item.companyName = res.data.company.companyName
+              item.companyId = res.data.company.companyId
+              item.creditCode = res.data.company.creditCode
+            }else{
+              this.$message.error(res.data.msg)
+              return
+            }
+            this.$router.push({
+              path: '/essInfo',
+              query: {
+                id: item.id,
+                companyName: item.companyName,
+                companyId: item.companyId,
+                creditCode: item.creditCode,
+                index: index
+              }
+            })
+          }
+        });
+      }else{
+        this.$router.push({
+          path: '/essInfo',
+          query: {
+            id: item.id,
+            companyName: item.companyName,
+            companyId: item.companyId,
+            creditCode: item.creditCode,
+            index: index
+          }
+        })
+      }
     },
     getCareList () {
       //关注清单列表
@@ -548,7 +573,6 @@ export default {
       })
     },
     cancleFocus (item) {
-      console.log(item)
       //取消关注
       let param = {
         "userId": this.$Cookies.get('userId'),

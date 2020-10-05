@@ -116,6 +116,11 @@ async function getBaseInfo (param) {
     let getBaseInfo = await ajax.post(`/api/company/getBaseInfo`, param)
     return getBaseInfo
 }
+//根据企业名字获取企业基本信息
+async function getCompanyInfoByName (param) {
+    let getCompanyInfoByName = await ajax.post(`/api/company/getCompanyInfoByName`, param)
+    return getCompanyInfoByName
+}
 async function getLiteRatingList (param) {
     let getLiteRatingList = await ajax.post(`/api/company/zhongChengXin/getLiteRatingList`, param)
     return getLiteRatingList
@@ -227,6 +232,7 @@ const manage = {
     getIndustry: getIndustry,
     getLiteRatingPDF: getLiteRatingPDF,
     getBaseInfo: getBaseInfo,
+    getCompanyInfoByName:getCompanyInfoByName,
     getLiteRatingList: getLiteRatingList,
     getReportList: getReportList,
     getRiskScreenHtml: getRiskScreenHtml,

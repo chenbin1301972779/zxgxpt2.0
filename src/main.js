@@ -67,12 +67,13 @@ const getPageName = (page) => {
     }else if(page.path.indexOf("zxbReportList")>=0){
         return "信保报告列表"
     }else if(page.path.indexOf("iframePage")>=0){
+        //let queryStr = decodeURIComponent(page.query.title)
         let queryStr = decodeURIComponent(JSON.stringify(page.query))
-        if(queryStr&&queryStr.indexOf("黑名单申报")){
+        if(queryStr&&queryStr.indexOf("黑名单申报")>0){
             return "黑名单申报"
-        }else if(queryStr&&queryStr.indexOf("黑名单审批")){
+        }else if(queryStr&&queryStr.indexOf("黑名单审批")>0){
             return "黑名单审批"
-        }else if(queryStr&&queryStr.indexOf("客商填报")){
+        }else if(queryStr&&queryStr.indexOf("客商填报")>0){
             return "客商填报"
         }
     }

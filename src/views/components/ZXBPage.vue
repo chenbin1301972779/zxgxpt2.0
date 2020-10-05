@@ -366,40 +366,6 @@ export default {
         }
       })
     },
-    // viewPdf(){
-    //     let fileUrl = '';
-    //     let param = {
-    //         "userId": parseInt(this.$Cookies.get('userId')),
-    //         "username": "admin",
-    //         "password": "123456",
-    //         "clientNo": "20000340"
-    //     }
-    //     this.$ajax.manage.getPDF(param).then(res => {
-    //         console.log(res.data);
-    //         const content = res.data
-    //         const blob = new Blob([content])
-    //         if (window.createObjectURL != undefined) { // basic
-    //             fileUrl = window.createObjectURL(blob);
-    //         } else if (window.webkitURL != undefined) { // webkit or chrome
-    //             try {
-    //                 fileUrl = window.webkitURL.createObjectURL(blob);
-    //             } catch (error) {
-
-    //             }
-    //         } else if (window.URL != undefined) { // mozilla(firefox)
-    //             try {
-    //                 fileUrl = window.URL.createObjectURL(blob);
-    //             } catch (error) {
-
-    //             }
-    //         }
-    //         console.log(fileUrl);
-    //         this.pdfUrl = '/static/pdf/web/viewer.html?file='+encodeURIComponent(fileUrl);
-    //         window.open(this.pdfUrl);
-    //         this.dialogPDFVisible = true;
-    //     });
-
-    // },
     viewPdf (pdfName) {
       let src = '';
       let param = {

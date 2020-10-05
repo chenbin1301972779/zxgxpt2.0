@@ -218,6 +218,19 @@
 			      }
 			      this.professionOptions = list;
 			      this.backData = res.data.areaList
+					if(sessionStorage.getItem('tycIndustry')){
+						let tycIndustry = sessionStorage.getItem('tycIndustry');
+						list.forEach(e1=>{
+							let e2 = this.backData[e1]
+							e2.forEach(e3=>{
+								if(e3.indexOf(tycIndustry)>-1){
+									this.professionDetailOptions = e2
+									this.profession = e1
+									this.professionDetail = e3
+								}
+							});
+						});
+					}
 			    }
 			  })
 			},
