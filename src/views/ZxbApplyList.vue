@@ -1,5 +1,5 @@
 <template>
-    <div class="zxbReportList">
+    <div class="ZxbApplyList">
         <div style="margin-bottom: 15px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
@@ -10,32 +10,63 @@
             <el-input class="fl-left manageTableInput" v-model="search.xcode" placeholder="请输入信保代码" clearable
                       style="width: 200px;margin-right: 10px;">
             </el-input>
-            <el-input class="fl-left manageTableInput" v-model="search.name" placeholder="请输入中/英文名称" clearable
-                      style="width: 200px;margin-right: 10px;">
-            </el-input>
             <el-button type="primary" icon="el-icon-search" @click="searchData">查询</el-button>
         </div>
         <div class="table-box">
             <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" stripe
-                      v-loading="loading" :default-sort="{prop: 'status', order: 'descending'}">
+                      v-loading="loading">
                 <!--<el-table-column type="selection" width="55">
                 </el-table-column>-->
-                <el-table-column prop="reportbuyerno" label="信保代码">
+                <!--<el-table-column prop="corpSerialNo" label="流水号">
+                </el-table-column>-->
+                <!--<el-table-column prop="clientNo" show-overflow-tooltip label="企业标识">
+                </el-table-column>-->
+                <el-table-column prop="reportbuyerNo" show-overflow-tooltip label="信保代码">
                 </el-table-column>
-                <el-table-column prop="reportcorpchnname" show-overflow-tooltip label="中文名称">
+                <el-table-column prop="reportCorpCountryCode" show-overflow-tooltip label="国别">
                 </el-table-column>
-                <el-table-column prop="reportcorpengname" show-overflow-tooltip label="英文名称">
+                <el-table-column prop="reportCorpChnName" show-overflow-tooltip label="中文名称">
                 </el-table-column>
-                <el-table-column prop="reportName" show-overflow-tooltip label="PDF名称">
+                <el-table-column prop="reportCorpEngName" show-overflow-tooltip label="英文名称">
                 </el-table-column>
-                <el-table-column prop="updatetime" show-overflow-tooltip label="更新时间">
+                <el-table-column prop="creditno" show-overflow-tooltip label="统一社会信用代码">
+                </el-table-column>
+                <el-table-column prop="istranslation" show-overflow-tooltip label="是否导读">
+                    <template slot-scope="scope">
+                        <el-tag type="primary" v-if="scope.row.istranslation==1">是</el-tag>
+                        <el-tag type="info" v-else-if="scope.row.istranslation==0">否</el-tag>
+                    </template>
+                </el-table-column>
+                <!--<el-table-column prop="corpSerialNoOut" show-overflow-tooltip label="报告下载流水单号">
+                </el-table-column>-->
+                <el-table-column prop="approveCode" show-overflow-tooltip label="审批标识">
+                    <template slot-scope="scope">
+                        <el-tag type="primary" v-if="scope.row.approveCode==1" >通过</el-tag>
+                        <el-tag type="danger" v-else-if="scope.row.approveCode==999">不通过</el-tag>
+                        <el-tag type="info" v-else-if="scope.row.approveCode==null">待审核</el-tag>
+                        <el-tag type="warning" v-else>异常</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="approveMsg" show-overflow-tooltip label="审批结果">
+                </el-table-column>
+                <!--<el-table-column prop="clientNoOut" show-overflow-tooltip label="下单企业信保通账号">
+                </el-table-column>-->
+                <!--<el-table-column prop="otherMsg" show-overflow-tooltip label="其他信息">
+                </el-table-column>-->
+                <el-table-column prop="updateName" show-overflow-tooltip label="填报人">
+                </el-table-column>
+                <el-table-column prop="updateTime" :formatter="dateFormat" show-overflow-tooltip label="填报时间">
+                </el-table-column>
+                <el-table-column prop="approveName" show-overflow-tooltip label="审核人">
+                </el-table-column>
+                <el-table-column prop="approveDate" :formatter="dateFormat" show-overflow-tooltip label="审核时间">
                 </el-table-column>
                 <el-table-column align="center" width="250px" label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" @click="viewPdf(scope.row.reportName)" plain>
-                            预览</el-button>
-                        <el-button size="mini" type="primary" @click="downPdf(scope.row.reportName)" plain>
-                            下载</el-button>
+                        <el-button size="mini" type="primary" :disabled="scope.row.approveby" @click="audit(scope.row,1)" plain>
+                            通过</el-button>
+                        <el-button size="mini" type="danger" :disabled="scope.row.approveby"  @click="audit(scope.row,999)" plain>
+                            不通过</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -46,17 +77,12 @@
                 </el-pagination>
             </div>
         </div>
-        <el-dialog title="预览" :visible.sync="pdfDialogVisible" width="70%" :fullscreen="false">
-            <el-progress v-if="pdfProgressVisible" :text-inside="true" :stroke-width="20" :percentage="progressNum"></el-progress>
-            <div v-loading="pdfLoading" style="height: 100%;">
-                <iframe :src="src" frameborder="0" width="100%" :height="iframeHeight"></iframe>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
     import JsonView from "../components/jsonView";
+    import moment from 'moment'
 
     export default {
         name: "zxbReportList",
@@ -90,25 +116,24 @@
         mounted () {
             this.getData();
         },
-        methods:{
-            getData(page){
+        methods: {
+            getData(page) {
                 let param = {
                     pageIndex: page ? page : 1,
                     pageSize: this.page.pageSize,
-                    name: this.search.name,
-                    xcode: this.search.xcode,
+                    zxbCode:this.search.xcode,
+                    operator: this.$Cookies.get('userCode')
                 }
                 this.loading = true;
-                this.$ajax.manage.getPDFListAll(param).then(res => {
+                this.$ajax.manage.searchApplyList(param).then(res => {
                     this.loading = false;
                     if (res.data.code == 0) {
-                        console.log(res.data);
-                        this.tableData = res.data.pdfList;
+                        this.tableData = res.data.applyList;
                         this.page.total = res.data.totalRecords
-                    }else{
+                    } else {
                         this.$message.error(res.data.msg)
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     console.log(error);
                     this.$message.error(error)
                 })
@@ -121,79 +146,34 @@
                 //页码切换
                 this.getData(val)
             },
-            downPdf (pdfName) {
-                //pdf下载
+            audit(row, code) {
                 let param = {
-                    "noticeSerialno": pdfName,
+                    corpSerialNo: row.corpSerialNo,
+                    approve: parseInt(this.$Cookies.get('userId')),
+                    approveCode: code
                 }
-                this.$ajax.manage.getPDF(param).then(res => {
-                    console.log(res)
-                    const content = res.data
-                    const blob = new Blob([content])
-                    const fileName = pdfName
-                    if ('download' in document.createElement('a')) { // 非IE下载
-                        const elink = document.createElement('a')
-                        elink.download = fileName
-                        elink.style.display = 'none'
-                        elink.href = URL.createObjectURL(blob)
-                        console.log(elink.href);
-                        document.body.appendChild(elink)
-                        elink.click()
-                        URL.revokeObjectURL(elink.href) // 释放URL 对象
-                        document.body.removeChild(elink)
-                    } else { // IE10+下载
-                        navigator.msSaveBlob(blob, fileName)
+                this.$ajax.manage.zhongxinbaoApprove(param).then(res => {
+                    if (res.status == 200) {
+                        this.$message.success(res.data.returnMsg);
+                        this.dialogXBVisible = false
                     }
+                    this.getData()
                 })
             },
-            viewPdf (pdfName) {
-                let src = '';
-                let param = {
-                    "noticeSerialno": pdfName
-                }
-                this.pdfDialogVisible = true;
-                this.pdfProgressVisible = true;
-                this.startProgress();
-                this.pdfLoading = true;
-                this.$ajax.manage.getPDF(param).then(res => {
-                    this.pdfLoading = false;
-                    this.pdfProgressVisible=false;
-                    const content = res.data
-                    const blob = new Blob([content], {
-                        type: 'application/pdf;chartset=UTF-8'
-                    })
-                    let fileURL = URL.createObjectURL(blob);
-                    this.src = fileURL
-                });
-            },
-            startProgress () {
-                this.progressNum = 0;
-                this.startTimer = setInterval(() => {
-                    this.progressNum ++
-                    if (this.progressNum > 95) {
-                        clearInterval(this.startTimer)
-                    }
-                }, 100);
-            },
-            endProgress () {
-                clearInterval(this.startTimer)
-                this.endTimer = setInterval(() => {
-                    this.progressNum ++
-                    if (this.progressNum > 99) {
-                        clearInterval(this.endTimer)
-                        this.finishProgress()
-                    }
-                }, 10);
-            },
-            finishProgress () {
-                this.$emit('finishProgress', false)
-            },
+            //时间格式化
+            dateFormat (row,column) {
+                var date = row[column.property];
+                if (date == undefined) {
+                    return ''
+                };
+                return moment(date).format("YYYY-MM-DD HH:mm:ss")
+            }
         }
     }
 </script>
 
 <style scoped>
-    .zxbReportList {
+    .ZxbApplyList {
         width: 90%;
         height: 100%;
         margin: auto;

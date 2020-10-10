@@ -86,6 +86,11 @@ const routes = [
                 path: '/zxbReportList',
                 name: 'zxbReportList',
                 component: ()=> import('../views/zxbReportList')
+            },
+            {
+                path: '/ZxbApplyList',
+                name: 'ZxbApplyList',
+                component: ()=> import('../views/ZxbApplyList')
             }
         ]
     },

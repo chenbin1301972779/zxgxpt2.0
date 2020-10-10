@@ -58,6 +58,16 @@ async function zhongxinbao (param) {
     let zhongxinbao = await ajax.post(`/api/company/zhongxinbao`, param)
     return zhongxinbao
 }
+//申请中信保报告-发起申请
+async function zhongxinbaoApply (param) {
+    let zhongxinbaoApply = await ajax.post(`/api/company/zhongxinbaoApply`, param)
+    return zhongxinbaoApply
+}
+//申请中信保报告-发起申请
+async function zhongxinbaoApprove (param) {
+    let zhongxinbaoApprove = await ajax.post(`/api/company/zhongxinbaoApprove`, param)
+    return zhongxinbaoApprove
+}
 //模糊接口查询
 async function directSearchList (param) {
     let directSearchList = await ajax.post(`/api/company/direct/searchList`, param)
@@ -82,6 +92,11 @@ async function getUserInfo (param) {
 async function getCodeInfo (param) {
     let getCodeInfo = await ajax.post(`/api/company/getCodeInfo`, param)
     return getCodeInfo
+}
+//查询clientNo 只根据当前登录人
+async function getCodeInfoByUserId (param) {
+    let getCodeInfoByUserId = await ajax.post(`/api/company/getCodeInfoByUserId`, param)
+    return getCodeInfoByUserId
 }
 //公司下拉框查询
 async function getNewCompany (param) {
@@ -210,6 +225,11 @@ async function logPath (param) {
     let logPath = await ajax.post(`/api/common/logCreditOper`, param)
     return logPath
 }
+//信保报告申请列表
+async function searchApplyList (param) {
+    let searchApplyList = await ajax.post(`/api/common/searchApplyList`, param)
+    return searchApplyList
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -221,11 +241,14 @@ const manage = {
     getCareList: getCareList,
     careOrNot: careOrNot,
     zhongxinbao: zhongxinbao,
+    zhongxinbaoApply: zhongxinbaoApply,
+    zhongxinbaoApprove:zhongxinbaoApprove,
     directSearchList: directSearchList,
     getCareStatus: getCareStatus,
     getArea: getArea,
     getUserInfo: getUserInfo,
     getCodeInfo: getCodeInfo,
+    getCodeInfoByUserId:getCodeInfoByUserId,
     getNewCompany: getNewCompany,
     getHtml: getHtml,
     getData: getData,
@@ -243,14 +266,15 @@ const manage = {
     getShareInfo: getShareInfo,
     getBusinessInfo: getBusinessInfo,
     getNationCode: getNationCode,
-	verifyPermissions:verifyPermissions,
-    getUserCompany:getUserCompany,
-    getEnablePermission:getEnablePermission,
-    userExists:userExists,
-    updateUserStatus:updateUserStatus,
-	getLatestFinancialDeminingHtml:getLatestFinancialDeminingHtml,
-    getPDFListAll:getPDFListAll,
-    logPath:logPath
+	verifyPermissions: verifyPermissions,
+    getUserCompany: getUserCompany,
+    getEnablePermission: getEnablePermission,
+    userExists: userExists,
+    updateUserStatus: updateUserStatus,
+	getLatestFinancialDeminingHtml: getLatestFinancialDeminingHtml,
+    getPDFListAll: getPDFListAll,
+    logPath: logPath,
+    searchApplyList: searchApplyList
 }
 
 export default manage

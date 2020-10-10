@@ -250,6 +250,7 @@ export default {
       permissionAll:[
         {permissionPointName:"黑名单审批权限",permissionRole:"reviewer",disabled:true},
         {permissionPointName:"黑名单申请权限",permissionRole:"applicant",disabled:true},
+        {permissionPointName:"信保报告审批权限",permissionRole:"zxb_report_reviewer",disabled:true},
         {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
       ]
     }

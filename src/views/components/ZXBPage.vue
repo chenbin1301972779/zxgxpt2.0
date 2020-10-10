@@ -3,14 +3,14 @@
   <div class="zxbPage">
 	  <h4>信保报告</h4>
     <div style="margin:15px 0;">
-      <el-button type="primary" @click="applyReport" size="small">信保报告申请(待上线)</el-button>
+      <el-button type="primary" @click="applyReport" size="small">信保报告申请</el-button>
     </div>
     <div class="main-box">
       <div class="titile">信保基本信息</div>
       <div class="table-wrapper">
         <table border="1">
           <tr>
-            <td class="gbGray">企业（机构）名称</td>
+            <td class="gbGray">企业名称</td>
             <td>{{businessInfo.buyerchnName}}</td>
             <td class="gbGray">报告编号</td>
             <td colspan="3">{{businessInfo.reportNo}}</td>
@@ -117,104 +117,7 @@
       </div>
     </div>
 
-    <el-dialog title="信保报告申请" :visible.sync="dialogVisible" width="1200px">
-      <div class="report-box">
-        <table border="1">
-          <tr>
-            <td colspan="9" style="background:#E3E3E3;font-weight:bold">信保报告申请（已有信保代码）</td>
-          </tr>
-          <tr class="gbGray">
-            <th width="100px">买方代码</th>
-            <th width="200px">待调查企业中国信保企业代码</th>
-            <th width="100px">待调查企业国别</th>
-            <th width="150px">待调查企业中文名称</th>
-            <th width="150px">待调查企业英文名称 </th>
-            <th width="100px">待调查企业地址</th>
-            <th width="220px">待调查企业统一社会信用代码</th>
-            <th width="70px">是否导读</th>
-            <th></th>
-          </tr>
-          <tr>
-            <td>
-              <el-input v-model="haveCreditCode.clientNo"></el-input>
-            </td>
-            <td>
-              <el-input v-model="haveCreditCode.reportbuyerNo"></el-input>
-            </td>
-            <td style="background:#FAFAFA"></td>
-            <td style="background:#FAFAFA"></td>
-            <td style="background:#FAFAFA"></td>
-            <td style="background:#FAFAFA"></td>
-            <td style="background:#FAFAFA"></td>
-            <td>
-              <el-select v-model="haveCreditCode.istranslation">
-                <el-option v-for="(item,index) in istranslation" :value="item.id" :key="item.id" :label="item.name">
-                </el-option>
-              </el-select>
-            </td>
-            <td>
-              <el-button type="primary" size="mini" @click="applyHaveCode">点击申请</el-button>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="report-box">
-        <table border="1">
-          <tr>
-            <td colspan="9" style="background:#E3E3E3;font-weight:bold">信保报告申请（无信保代码）</td>
-          </tr>
-          <tr class="gbGray">
-            <th width="100px">买方代码</th>
-            <th width="200px">待调查企业中国信保企业代码</th>
-            <th width="100px">待调查企业国别</th>
-            <th width="150px">待调查企业中文名称</th>
-            <th width="150px">待调查企业英文名称 </th>
-            <th width="100px">待调查企业地址</th>
-            <th width="220px">待调查企业统一社会信用代码</th>
-            <th width="70px">是否导读</th>
-            <th></th>
-          </tr>
-          <tr>
-            <td>
-              <el-input v-model="haveCreditCode.clientNo"></el-input>
-            </td>
-            <td style="background:#FAFAFA"></td>
-            <td>
-              <!-- <el-input v-model="noCreditCode.reportCorpCountryCode"></el-input> -->
-              <el-select v-model="noCreditCode.reportCorpCountryCode" placeholder='' filterable>
-                <el-option v-for="item in nationTypeOptions" :key="item.nationCode" :label="item.nationName"
-                  :value="item.nationCode">
-                  <span style="float: left">{{ item.nationName }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.nationCode }}</span>
-                </el-option>
-              </el-select>
-            </td>
-            <td>
-              <el-input v-model="noCreditCode.reportCorpChnName"></el-input>
-            </td>
-            <td>
-              <el-input v-model="noCreditCode.reportCorpEngName"></el-input>
-            </td>
-            <td>
-              <el-input v-model="noCreditCode.reportCorpaddress"></el-input>
-            </td>
-            <td>
-              <el-input v-model="noCreditCode.creditno"></el-input>
-            </td>
-            <td>
-              <el-select v-model="noCreditCode.istranslation">
-                <el-option v-for="(item,index) in istranslation" :value="item.id" :key="item.id" :label="item.name">
-                </el-option>
-              </el-select>
-            </td>
-            <td>
-              <el-button type="primary" size="mini" @click="applyNoCode">点击申请</el-button>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </el-dialog>
+    <ZxbReportApply :dialogXBVisible.sync="dialogXBVisible"></ZxbReportApply>
     <!-- <el-dialog title="预览" :visible.sync="dialogPDFVisible" width="80%">
             <div style="height: 500px; overflow: auto;">
                 <pdfView :url="pdfUrl"></pdfView>
@@ -231,9 +134,11 @@
 <script>
 import axios from 'axios';
 import pdfView from '../../components/pdfView';
+import ZxbReportApply from "../../components/zxbReportApply";
 export default {
   components: {
-    pdfView
+    pdfView,
+    ZxbReportApply,
   },
   data () {
     return {
@@ -275,7 +180,8 @@ export default {
       pdfProgressVisible: true,
       progressNum: 0,
       startTimer: '',
-      endTimer: ''
+      endTimer: '',
+      dialogXBVisible: false
     }
   },
   mounted () {
@@ -289,14 +195,6 @@ export default {
 	  }
   },
   methods: {
-    getNationCode () {
-      this.$ajax.manage.getNationCode({}).then(res => {
-        console.log(res);
-        if (res.status == 200) {
-          this.nationTypeOptions = res.data.nationCode
-        }
-      })
-    },
     getShareInfo () {
       //持股信息
       //   let param = {
@@ -388,67 +286,7 @@ export default {
     },
     applyReport () {
       //打开报告申请弹框
-      this.dialogVisible = true;
-      this.getCodeInfo()
-    },
-    applyNoCode () {
-      if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
-        this.$message.warning('请输入买方代码');
-        return;
-      } else if (this.noCreditCode.reportCorpCountryCode === '') {
-        this.$message.warning('请输入待调查企业国别');
-        return;
-      } else if (this.noCreditCode.reportCorpChnName === '' && this.noCreditCode.reportCorpEngName === '') {
-        this.$message.warning('请输入待调查企业中文名称或英文名称');
-        return;
-      } else if (this.noCreditCode.reportCorpaddress === '') {
-        this.$message.warning('请输入待调查企业地址');
-        return;
-      } else if (this.noCreditCode.creditno === '') {
-        this.$message.warning('请输入待调查企业统一社会信用代码');
-        return;
-      }
-      console.log(this.noCreditCode);
-      this.$ajax.manage.zhongxinbao(this.noCreditCode).then(res => {
-        console.log(res);
-        if (res.status == 200) {
-          this.$message.success(res.data.returnMsg);
-          this.dialogVisible = false
-        }
-      })
-    },
-    applyHaveCode () {
-      if (!this.haveCreditCode.clientNo || this.haveCreditCode.clientNo === '') {
-        this.$message.warning('请输入买方代码');
-        return;
-      } else if (!this.haveCreditCode.reportbuyerNo || this.haveCreditCode.reportbuyerNo == '') {
-        this.$message.warning('请输入待调查企业中国信保企业代码');
-        return;
-      }
-      console.log(this.haveCreditCode)
-      this.$ajax.manage.zhongxinbao(this.haveCreditCode).then(res => {
-        console.log(res);
-        if (res.status == 200) {
-          this.$message.success(res.data.returnMsg);
-          this.dialogVisible = false
-        }
-      })
-    },
-    getCodeInfo () {
-      let param = {
-        userId: this.$Cookies.get('userId'),
-        companyId: this.$route.query.companyId
-      }
-      this.$ajax.manage.getCodeInfo(param).then(res => {
-        console.log(res)
-        if (res.data.code == '0') {
-          if (res.data.codeInfo) {
-            this.haveCreditCode.clientNo = res.data.codeInfo.clientNo;
-            this.noCreditCode.clientNo = res.data.codeInfo.clientNo;
-            this.haveCreditCode.reportbuyerNo = res.data.codeInfo.reportbuyerNo
-          }
-        }
-      })
+      this.dialogXBVisible = true;
     },
     startProgress () {
       this.progressNum = 0;
@@ -517,22 +355,5 @@ export default {
     }
   }
 
-  .report-box {
-    table {
-      table-layout: auto;
-
-      th {
-        border-right: 1px solid #e3e3e3;
-        border-bottom: 1px solid #e3e3e3;
-        height: 36px;
-      }
-
-      border: none;
-
-      td {
-        // border: none;
-      }
-    }
-  }
 }
 </style>
