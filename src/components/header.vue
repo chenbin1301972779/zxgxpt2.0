@@ -293,7 +293,7 @@
 					query: {
 						title: encodeURIComponent('客商填报'),
 						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/客商填报.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/Merchants_Input.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
 						)
 					}
 				})
@@ -439,6 +439,7 @@
 			saveUserInfo() {
 				let param = {
 					userId: this.$Cookies.get("userId"),
+					username: this.$Cookies.get("userCode"),
 					name: this.userSettingForm.name,
 					password: this.userSettingForm.password,
 					email: this.userSettingForm.email,

@@ -378,8 +378,8 @@ export default {
           }
           //增加当前操作人
           this.userInfo.operator = this.$Cookies.get('userCode');
-          console.log(this.userInfo);
           this.$ajax.manage.updateUser(this.userInfo).then(res => {
+            this.getData(this.page.currentPage)
             if (res.data.code == 0) {
               this.$message.success(res.data.msg);
               this.editUserDialog = false;
