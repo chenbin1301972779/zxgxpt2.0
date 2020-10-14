@@ -90,7 +90,7 @@
           <el-input v-model="userInfo.name" style="width:300px"></el-input>
         </el-form-item>
         <el-form-item label="密码：" prop="password">
-          <el-input v-model="userInfo.password" style="width:300px" type="password">
+          <el-input v-model="userInfo.password" v-focus="clearpassword" style="width:300px" type="password">
           </el-input>
         </el-form-item>
         <el-form-item label="手机：" prop="mobile">
@@ -131,7 +131,7 @@
 		</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
+        <el-button @click="closeDialog()">取 消</el-button>
         <el-button type="primary" @click="saveUserInfo('userInfo')">保 存</el-button>
       </div>
     </el-dialog>
@@ -222,6 +222,20 @@ export default {
         companyName: '',
         deptName: '',
 		permission:[],
+        permissionRoles: '',
+        operator: this.$Cookies.get('userCode')
+      },
+      userInfoTemp: {
+        userId: '',
+        username: '',
+        name: '',
+        password: '',
+        mobile: '',
+        email: '',
+        companyCode: '',
+        companyName: '',
+        deptName: '',
+        permission:[],
         permissionRoles: '',
         operator: this.$Cookies.get('userCode')
       },
@@ -322,7 +336,8 @@ export default {
       this.isNew = false;
       this.editType = '编辑用户';
       row.newCompanyFlag = 0;
-      this.userInfo = row;
+      //this.userInfo = row;
+      this.userInfo = Object.assign({},row);
       if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
         this.userInfo.permissionRoles = this.userInfo.permissionRoles.split(',');
       }
@@ -393,7 +408,7 @@ export default {
     closeDialog() {
       this.clearUserInfo();
       this.$nextTick(() => {
-        this.$refs.userInfo.resetFields();
+        this.$refs.userInfo.data = this.userInfoTemp;
       });
       this.editUserDialog = false;
     },
@@ -420,6 +435,9 @@ export default {
         let b = n[p];
         return a - b; //升序
       }
+    },
+    clearpassword(){
+      this.userInfo.password = '';
     }
   }
 }

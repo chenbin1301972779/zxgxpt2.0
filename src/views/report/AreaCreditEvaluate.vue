@@ -323,9 +323,9 @@ export default {
               let e2 = this.backData[e1]
               e2.forEach(e3=>{
                 if(e3.indexOf(tycIndustry)>-1){
-                this.professionDetailOptions = e2
-                  this.profession = e1
-                  this.professionDetail = e3
+                  this.professionDetailOptions = e2
+                  this.form.profession = e1
+                  this.form.professionDetail = e3
                 }
               });
             });

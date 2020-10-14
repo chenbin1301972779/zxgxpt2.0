@@ -268,10 +268,15 @@
 			  this.$ajax.manage.getLatestFinancialDeminingHtml(param).then(res => {
 			    console.log(res);
 			    if (res.status == 200) {
-			      this.htmlContent = res.data;
-			      let temp = 'content-disposition'
-			      let data = res.headers[temp];
-			      this.fileName = data.split('=')[1];
+					if(res.data.code&&res.data.code!='0'){
+						this.htmlContent=JSON.stringify(res.data)
+					}else{
+						this.htmlContent = res.data;
+					}
+				  //this.htmlContent = res.data;
+				  let temp = 'content-disposition'
+				  let data = res.headers[temp];
+				  this.fileName = data.split('=')[1];
 			    }
 			  })
 			},

@@ -304,7 +304,9 @@
 					path: '/iframePage',
 					query: {
 						title: encodeURIComponent('访问日志'),
-						url: encodeURIComponent(`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`)
+						url: encodeURIComponent(
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`
+						)
 					}
 				})
 			},
@@ -313,7 +315,9 @@
 					path: '/iframePage',
 					query: {
 						title: encodeURIComponent('组织架构维护'),
-						url: encodeURIComponent(`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/组织架构树填报.frm&userCode=${sessionStorage.getItem('userCode')}`)
+						url: encodeURIComponent(
+							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/组织架构树填报.frm&userCode=${sessionStorage.getItem('userCode')}`
+						)
 					}
 				})
 			},

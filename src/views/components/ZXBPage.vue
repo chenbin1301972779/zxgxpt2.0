@@ -188,7 +188,6 @@ export default {
 	  if(this.$route.query.companyId){
 		  this.getBusinessInfo();
 		  this.getShareInfo();
-		  this.getNationCode();
 		  this.getPDFList();
 	  }else{
 		  //this.dialogVisible=true;
