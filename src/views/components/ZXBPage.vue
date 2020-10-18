@@ -25,7 +25,7 @@
           </tr>
           <tr>
             <td class="gbGray">注册资本</td>
-            <td>人民币{{businessInfo.registerCapital }}</td>
+            <td>{{businessInfo.registerCapital }}</td>
             <td class="gbGray">注册地址</td>
             <td>{{businessInfo.registerAddr}}</td>
             <td class="gbGray">母公司</td>
