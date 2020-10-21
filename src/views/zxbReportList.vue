@@ -95,7 +95,7 @@
                 let param = {
                     pageIndex: page ? page : 1,
                     pageSize: this.page.pageSize,
-                    name: this.search.name,
+                     companyName: this.search.name,
                     xcode: this.search.xcode,
                 }
                 this.loading = true;
@@ -107,6 +107,7 @@
                         this.page.total = res.data.totalRecords
                     }else{
                         this.$message.error(res.data.msg)
+                        console.log(res.data.msg)
                     }
                 }).catch(error=>{
                     console.log(error);
@@ -125,6 +126,7 @@
                 //pdf下载
                 let param = {
                     "noticeSerialno": pdfName,
+                    "isDownload":"1"
                 }
                 this.$ajax.manage.getPDF(param).then(res => {
                     console.log(res)
@@ -149,7 +151,8 @@
             viewPdf (pdfName) {
                 let src = '';
                 let param = {
-                    "noticeSerialno": pdfName
+                    "noticeSerialno": pdfName,
+                    "isDownload":"0"
                 }
                 this.pdfDialogVisible = true;
                 this.pdfProgressVisible = true;

@@ -3,13 +3,27 @@
         <div style="margin-bottom: 15px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>信保报告列表</el-breadcrumb-item>
+                <el-breadcrumb-item>信保报告审核</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="searchbox">
             <el-input class="fl-left manageTableInput" v-model="search.xcode" placeholder="请输入信保代码" clearable
                       style="width: 200px;margin-right: 10px;">
             </el-input>
+            <el-input class="fl-left manageTableInput" v-model="search.companyName" placeholder="请输入中/英文名称" clearable
+                      style="width: 200px;margin-right: 10px;">
+            </el-input>
+<!--           @change="changeApprove(approve)"-->
+          <el-select style="margin: 0 10px" v-model="search.approve" placeholder="请选择审批标识" size="medium">
+            <el-option v-for="item in approves" :key="item" :label="item" :value="item">
+            </el-option>
+          </el-select>
+          <el-input class="fl-left manageTableInput" v-model="search.informant" placeholder="请输入填报人" clearable
+                    style="width: 200px;margin-right: 10px;">
+          </el-input>
+          <el-input class="fl-left manageTableInput" v-model="search.approver" placeholder="请输入审批人" clearable
+                    style="width: 200px;margin-right: 10px;">
+          </el-input>
             <el-button type="primary" icon="el-icon-search" @click="searchData">查询</el-button>
         </div>
         <div class="table-box">
@@ -25,10 +39,13 @@
                 </el-table-column>
                 <el-table-column prop="reportCorpCountryCode" show-overflow-tooltip label="国别">
                 </el-table-column>
-                <el-table-column prop="reportCorpChnName" show-overflow-tooltip label="中文名称">
+                <el-table-column prop="reportCorpChnName,reportCorpEngName" show-overflow-tooltip label="中英文名称">
+                    <template slot-scope="scope">
+                        {{scope.row.reportCorpChnName}}/{{scope.row.reportCorpEngName}}
+                    </template>
                 </el-table-column>
-                <el-table-column prop="reportCorpEngName" show-overflow-tooltip label="英文名称">
-                </el-table-column>
+<!--                <el-table-column prop="reportCorpEngName" show-overflow-tooltip label="英文名称">-->
+<!--                </el-table-column>-->
                 <el-table-column prop="creditno" show-overflow-tooltip label="统一社会信用代码">
                 </el-table-column>
                 <el-table-column prop="istranslation" show-overflow-tooltip label="是否导读">
@@ -93,7 +110,10 @@
             return{
                 search:{
                     xcode:'',
-                    name:''
+                    companyName:'',
+                    approve:'待审核',
+                    informant:'',
+                    approver:''
                 },
                 loading: false,
                 page:{
@@ -110,7 +130,8 @@
                 pdfProgressVisible: true,
                 progressNum: 0,
                 startTimer: '',
-                endTimer: ''
+                endTimer: '',
+                approves:['通过', '不通过', '待审核','异常'],
             }
         },
         mounted () {
@@ -122,6 +143,10 @@
                     pageIndex: page ? page : 1,
                     pageSize: this.page.pageSize,
                     zxbCode:this.search.xcode,
+                    zxbCompanyName:this.search.companyName,
+                    zxbApprove:this.search.approve,
+                    zxbInformant:this.search.informant,
+                    zxbApprover:this.search.approver,
                     operator: this.$Cookies.get('userCode')
                 }
                 this.loading = true;
@@ -167,7 +192,8 @@
                     return ''
                 };
                 return moment(date).format("YYYY-MM-DD HH:mm:ss")
-            }
+            },
+
         }
     }
 </script>

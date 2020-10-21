@@ -13,11 +13,12 @@
         <div><img src="../../public/img/subtitle.png" alt=""></div>
       </div>
       <div class="content">
-        <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 840px;height: 76px;"
+        <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 600px;height:60px;"
           clearable="" @keyup.enter.native="seachContent">
         </el-input>
         <el-button @click="seachContent">查 询
         </el-button>
+        <el-button @click="blarSearch">全网搜索</el-button>
       </div>
     </div>
 
@@ -173,22 +174,22 @@ export default {
     .content {
       /deep/.el-button {
         border-radius: 0;
-        height: 76px;
-        width: 143px;
+        height: 60px;
+        width: 121px;
         background: #409eff;
         color: #fff;
-        border-top-right-radius: 38px;
-        border-bottom-right-radius: 38px;
+        //border-top-right-radius: 38px;
+        //border-bottom-right-radius: 38px;
         border: none;
         font-size: 20px;
         font-weight: bold;
       }
       /deep/.el-input__inner {
-        height: 76px;
+        height: 60px;
         line-height: 76px;
         font-size: 16px;
-        border-top-left-radius: 38px;
-        border-bottom-left-radius: 38px;
+        //border-top-left-radius: 38px;
+        //border-bottom-left-radius: 38px;
         padding: 0 30px;
         font-size: 20px;
         border: 1px solid #00f1fe;
