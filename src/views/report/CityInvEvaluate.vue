@@ -305,7 +305,13 @@ export default {
       this.$ajax.manage.getCityInvRatingHtml(param).then(res => {
         console.log(res);
         if (res.status == 200) {
-          this.htmlContent = res.data;
+          if(res.data.code&&res.data.code!='0'){
+            this.htmlContent=JSON.stringify(res.data)
+          }else{
+            if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+              this.htmlContent =  res.data.toString().replace("{\"code\":\"0\"}","");
+            }
+          }
           let temp = 'content-disposition'
           let data = res.headers[temp];
           this.fileName = data.split('=')[1];

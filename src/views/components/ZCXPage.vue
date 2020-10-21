@@ -17,11 +17,13 @@
         </el-table-column>
         <el-table-column prop="pdfName" label="报告" >
           <template slot-scope="scope">
-            <span class="text" style="color: #409EFF;cursor: pointer;" @click="downloadFile(scope.row)">
+            <span class="text" style="color: #409EFF;cursor: pointer;">
               <i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
               {{scope.row.pdfName}}
             </span>
             <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览
+            </el-button>
+            <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="downloadFile(scope.row)">下载
             </el-button>
           </template>
         </el-table-column>
@@ -101,7 +103,8 @@ export default {
       pdfProgressVisible: true,
       progressNum: 0,
       startTimer: '',
-      endTimer: ''
+      endTimer: '',
+      fxcsData:null
     }
   },
   created () {
@@ -126,8 +129,27 @@ export default {
           this.page.total = res.data.reportList.length
         }
       })
-    },
 
+    },
+    fxcsIsDay(fxcsData,param){
+        // if (new Date().getTime() - this.fxcsData.updateTime < 86400000) {
+        if(new Date(fxcsData.updateTime).toDateString() === new Date().toDateString()){
+          this.checkPdf(this.fxcsData)
+        } else {
+          this.$msgbox.confirm('已有本地报告，是否直接查阅?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.checkPdf(this.fxcsData)
+          }).catch(() => {
+            this.$router.push({
+              path: '/report/riskScreen',
+              query: param
+            })
+          });
+        }
+      },
     getHtml () {
       let param = {
         userId: this.$Cookies.get("userId"),
@@ -154,10 +176,23 @@ export default {
         index: this.$route.query.index,
       }
       if (type == 1) {
-        //风险初筛
-        this.$router.push({
-          path: '/report/riskScreen',
-          query: param
+        let fxFaram = {
+          companyId: this.$route.query.companyId,
+          reportType:"风险初筛"
+        }
+        this.$ajax.manage.getReportList(fxFaram).then(res => {
+          if (res.data.code == '0') {
+            if(res.data.reportList.length > 0){
+              this.fxcsData = res.data.reportList[0];
+              console.log(this.fxcsData)
+              this.fxcsIsDay(this.fxcsData,param)
+            }else{
+              this.$router.push({
+                path: '/report/riskScreen',
+                query: param
+              })
+            }
+          }
         })
       } else if (type == 2) {
         //财务排雷
@@ -187,7 +222,8 @@ export default {
     },
     downloadFile (row) {
       let param = {
-        fileName: row.fileName
+        fileName: row.fileName,
+        isDownload:"1"
       }
       row.fileLoading = true;
       this.$notify({
@@ -221,7 +257,8 @@ export default {
     checkPdf (row) {
       this.src = '';
       let param = {
-        fileName: row.fileName
+        fileName: row.fileName,
+        isDownload:"0"
       }
       this.pdfDialogVisible = true;
       this.pdfProgressVisible = true;

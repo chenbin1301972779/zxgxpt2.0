@@ -261,7 +261,7 @@
 			    companyId: this.$route.query.companyId.toString(),
 			    creditCode: this.$route.query.creditCode,
 			    industry: this.professionDetail,
-				nature:this.companyType,
+				  nature:this.companyType,
 			    userId: this.$Cookies.get("userId"),
 			  }
 			  console.log(param)
@@ -271,9 +271,10 @@
 					if(res.data.code&&res.data.code!='0'){
 						this.htmlContent=JSON.stringify(res.data)
 					}else{
-						this.htmlContent = res.data;
+            if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
+              this.htmlContent =  res.data.toString().replace("{\"code\":\"0\"}","");
+            }
 					}
-				  //this.htmlContent = res.data;
 				  let temp = 'content-disposition'
 				  let data = res.headers[temp];
 				  this.fileName = data.split('=')[1];

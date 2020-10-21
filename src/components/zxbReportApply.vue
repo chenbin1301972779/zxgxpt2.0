@@ -29,8 +29,12 @@
                         <el-input v-model="haveCreditCode.reportbuyerNo"></el-input>
                     </td>
                     <td style="background:#FAFAFA"></td>
-                    <td style="background:#FAFAFA"></td>
-                    <td style="background:#FAFAFA"></td>
+                  <td>
+                    <el-input v-model="haveCreditCode.reportCorpChnName"></el-input>
+                  </td>
+                  <td>
+                    <el-input v-model="haveCreditCode.reportCorpEngName"></el-input>
+                  </td>
                     <td style="background:#FAFAFA"></td>
                     <td style="background:#FAFAFA"></td>
                     <td>
@@ -212,6 +216,9 @@
                 } else if (!this.haveCreditCode.reportbuyerNo || this.haveCreditCode.reportbuyerNo == '') {
                     this.$message.warning('请输入待调查企业中国信保企业代码');
                     return;
+                }else if (this.haveCreditCode.reportCorpChnName === '' && this.haveCreditCode.reportCorpEngName === '') {
+                  this.$message.warning('请输入待调查企业中文名称或英文名称');
+                  return;
                 }
                 this.$ajax.manage.zhongxinbaoApply(this.haveCreditCode).then(res => {
                     if (res.status == 200) {
