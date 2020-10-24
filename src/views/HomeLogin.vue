@@ -16,7 +16,7 @@
         <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 600px;height:60px;"
           clearable="" @keyup.enter.native="seachContent">
         </el-input>
-        <el-button @click="seachContent">查 询
+        <el-button @click="seachContent">站内搜索
         </el-button>
         <el-button @click="blarSearch">全网搜索</el-button>
       </div>
@@ -127,6 +127,21 @@ export default {
         }
       })
     },
+    blarSearch () {
+      //模糊接口查询
+      let param = {
+        keyword: this.searchVal,
+        userId: this.$Cookies.get('userId'),
+        page: 1
+      }
+      this.$ajax.manage.directSearchList(param).then(res => {
+        if (res.status == 200) {
+          this.searchList = res.data.searchList
+          this.sourceType = res.data.sourceType;
+          this.showBox = 2;
+        }
+      })
+    }
   },
 }
 </script>

@@ -1,6 +1,6 @@
 <!-- 用户管理 -->
 <template>
-  <div class="userManage">
+  <div class="userManage ">
     <div style="margin-bottom: 15px;">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/homePage' }">首页</el-breadcrumb-item>
@@ -26,7 +26,8 @@
       <el-button type="success" icon="el-icon-plus" v-on:click="newUser">新增</el-button>
     </div>
     <div class="table-box">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" stripe
+      <el-tree :data="treeData" @node-click="handleNodeClick" style="width: 30%;float: left;top: 18px;z-index: 1;margin-left: -19px;height: "></el-tree>
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 71%;" stripe
         v-loading='loading'>
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -47,8 +48,8 @@
         </el-table-column>
         <el-table-column prop="companyName" show-overflow-tooltip label="所属公司名称">
         </el-table-column>
-        <el-table-column prop="deptName" show-overflow-tooltip label="所属部门名称">
-        </el-table-column>
+<!--        <el-table-column prop="deptName" show-overflow-tooltip label="所属部门名称">-->
+<!--        </el-table-column>-->
         <el-table-column prop="status" label="状态" width="100" sortable>
           <template slot-scope="scope">
             <el-tag type="primary" v-if="scope.row.status==1" disable-transitions>已启用</el-tag>
@@ -77,6 +78,9 @@
         </el-pagination>
       </div>
     </div>
+
+
+
 
     <el-dialog :title="editType" :visible.sync="editUserDialog" width="450px" @close="closeDialog" :rules="rules" :close-on-click-modal='false'>
       <el-form :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
@@ -135,9 +139,10 @@
         <el-button type="primary" @click="saveUserInfo('userInfo')">保 存</el-button>
       </div>
     </el-dialog>
-
   </div>
+
 </template>
+
 <script>
 export default {
   data () {
@@ -266,18 +271,25 @@ export default {
         {permissionPointName:"黑名单申请权限",permissionRole:"applicant",disabled:true},
         {permissionPointName:"信保报告审批权限",permissionRole:"zxb_report_reviewer",disabled:true},
         {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
-      ]
+      ],
+      treeData:[],
+
     }
   },
   created () {
     this.getNewCompany();
+    this.getAllCompanyLevel();
   },
   mounted () {
-    this.getData();
+    let treeTemp = {
+      id: "07501",
+      isLevel: true
+    }
+    this.getData(1,treeTemp);
     this.getEnablePermission();
   },
   methods: {
-    getData(page) {
+    getData(page,node) {
       let param = {
         pageIndex: page ? page : 1,
         pageSize: this.page.pageSize,
@@ -285,7 +297,10 @@ export default {
         name: this.search.userName,
         status: this.search.status,
         operator: this.$Cookies.get('userCode'),
-		isSubAdmin:this.search.isSubAdmin
+	    	isSubAdmin:this.search.isSubAdmin,
+        // companyCode:node.id,
+        companyCode:"07501",
+        isLevel:node.isLevel
       }
       this.loading = true;
       this.$ajax.manage.getUserList(param).then(res => {
@@ -298,11 +313,18 @@ export default {
     },
     searchData() {
       this.page.currentPage = 1;
-      this.getData()
+      let treeTemp = {
+        id: "010",
+        isLevel: true
+      }
+      this.getData(1,treeTemp)
     },
     handleCurrentChange(val) {
       //页码切换
-      this.getData(val)
+      this.getData(val,{
+        id: "07501",
+        isLevel: true
+      })
     },
     updateStatus(row, status) {
       // console.log(status)
@@ -330,6 +352,10 @@ export default {
       this.editType = '新增用户';
       this.userInfo = {newCompanyFlag: 1,status: 1};
       this.editUserDialog = true;
+    },
+    handleNodeClick(node){
+      console.log(node)
+      this.getData(1,node)
     },
     editUser(row) {
       this.clearUserInfo();
@@ -438,13 +464,71 @@ export default {
     },
     clearpassword(){
       this.userInfo.password = '';
+    },
+    getAllCompanyLevel(){
+      let param = {
+        userId: this.$Cookies.get("userId")
+      }
+      this.$ajax.manage.getAllCompanyLevel(param).then(res => {
+        console.log("---------TreeData--------")
+        console.log(res.data)
+        this.getTreeData(res.data.treeData);
+        console.log(this.treeData)
+        console.log("---------TreeData--------")
+      })
+    },
+    getTreeData(treeData){
+        let dataArray = [];
+        let treeTemp = {
+          id: treeData[0].code,
+          label: treeData[0].name,
+          parentId: treeData[0].scode,
+          isLevel: true
+        }
+        dataArray.push(treeTemp);
+        this.getLevelData(treeData,dataArray)
+        this.treeData = dataArray;
+    },
+    getLevelData(treeData,dataArray){
+      for(let i = 0; i < dataArray.length; i++){
+        let dataLevel = dataArray[i];
+        let childrenArray = [];
+        for(let j = 0;j < treeData.length;j++) {
+          let parentId = treeData[j].scode;
+          if (parentId == dataLevel.id) {//判断是否为儿子节点
+            let treeTemp = {
+              id: treeData[j].code,
+              label: treeData[j].name,
+              parentId: treeData[j].scode,
+              isLevel: true
+            }
+            childrenArray.push(treeTemp);
+          }
+        }
+        dataLevel.children = childrenArray;
+        if (childrenArray.length > 0) {//有儿子节点则递归
+          this.getLevelData(treeData, childrenArray)
+        }else{
+          dataLevel.isLevel = false;
+        }
+        if(dataLevel.isLevel){
+          let treeTemp = {
+            id: dataLevel.id,
+            label: "查看本部人员信息",
+            isLevel: false
+          }
+          dataLevel.children.unshift(treeTemp)
+        }
+      }
+
+
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .userManage {
-  width: 90%;
+  width: 95%;
   height: 100%;
   margin: auto;
   background-color: #f8f8f8;

@@ -137,16 +137,19 @@ export default {
           this.checkPdf(this.fxcsData)
         } else {
           this.$msgbox.confirm('已有本地报告，是否直接查阅?', '提示', {
+            distinguishCancelAndClose: true,
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             this.checkPdf(this.fxcsData)
-          }).catch(() => {
-            this.$router.push({
-              path: '/report/riskScreen',
-              query: param
-            })
+          }).catch(action => {
+            if(action === 'cancel'){
+              this.$router.push({
+                path: '/report/riskScreen',
+                query: param
+              })
+            }
           });
         }
       },
@@ -223,6 +226,9 @@ export default {
     downloadFile (row) {
       let param = {
         fileName: row.fileName,
+        reportId:row.reportId,
+        reportType:row.reportType,
+        updateTime:row.updateTime,
         isDownload:"1"
       }
       row.fileLoading = true;
@@ -258,6 +264,9 @@ export default {
       this.src = '';
       let param = {
         fileName: row.fileName,
+        reportId:row.reportId,
+        reportType:row.reportType,
+        updateTime:row.updateTime,
         isDownload:"0"
       }
       this.pdfDialogVisible = true;

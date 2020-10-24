@@ -16,6 +16,7 @@
 							 placeholder="请输入搜索内容"
 			  style="width: 300px;margin-left: 100px;">
 				<el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
+        <el-button slot="append"  @click="blarSearch">全网搜索</el-button>
 			</el-autocomplete>
 		</span>
 		<span class="info" v-if="showUserData">
@@ -478,7 +479,22 @@
 			applyReport() {
 				//打开报告申请弹框
 				this.dialogXBVisible = true;
-			}
+			},
+      blarSearch () {
+        //模糊接口查询
+        let param = {
+          keyword: this.searchVal,
+          userId: this.$Cookies.get('userId'),
+          page: 1
+        }
+        this.$ajax.manage.directSearchList(param).then(res => {
+          if (res.status == 200) {
+            this.searchList = res.data.searchList
+            this.sourceType = res.data.sourceType;
+            this.showBox = 2;
+          }
+        })
+      }
 		}
 	}
 </script>

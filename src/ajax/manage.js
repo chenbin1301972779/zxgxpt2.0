@@ -230,6 +230,11 @@ async function searchApplyList (param) {
     let searchApplyList = await ajax.post(`/api/common/searchApplyList`, param)
     return searchApplyList
 }
+//获取组织架构树信息
+async function getAllCompanyLevel (param) {
+    let getAllCompanyLevel = await ajax.post(`/api/company/getAllCompanyLevel`, param)
+    return getAllCompanyLevel
+}
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -274,7 +279,8 @@ const manage = {
 	getLatestFinancialDeminingHtml: getLatestFinancialDeminingHtml,
     getPDFListAll: getPDFListAll,
     logPath: logPath,
-    searchApplyList: searchApplyList
+    searchApplyList: searchApplyList,
+    getAllCompanyLevel:getAllCompanyLevel,
 }
 
 export default manage

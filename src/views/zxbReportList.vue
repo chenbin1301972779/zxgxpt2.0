@@ -32,9 +32,9 @@
                 </el-table-column>
                 <el-table-column align="center" width="250px" label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" @click="viewPdf(scope.row.reportName)" plain>
+                        <el-button size="mini" type="primary" @click="viewPdf(scope.row)" plain>
                             预览</el-button>
-                        <el-button size="mini" type="primary" @click="downPdf(scope.row.reportName)" plain>
+                        <el-button size="mini" type="primary" @click="downPdf(scope.row)" plain>
                             下载</el-button>
                     </template>
                 </el-table-column>
@@ -122,10 +122,14 @@
                 //页码切换
                 this.getData(val)
             },
-            downPdf (pdfName) {
+            downPdf (row) {
                 //pdf下载
                 let param = {
-                    "noticeSerialno": pdfName,
+                    "noticeSerialno":row.reportName,
+                    "reportbuyerno":row.reportbuyerno,
+                    "reportcorpchnname":row.reportcorpchnname,
+                    "reportcorpengname":row.reportcorpengname,
+                    "updatetime":row.updatetime,
                     "isDownload":"1"
                 }
                 this.$ajax.manage.getPDF(param).then(res => {
@@ -148,11 +152,15 @@
                     }
                 })
             },
-            viewPdf (pdfName) {
+            viewPdf (row) {
                 let src = '';
                 let param = {
-                    "noticeSerialno": pdfName,
-                    "isDownload":"0"
+                  "noticeSerialno":row.reportName,
+                  "reportbuyerno":row.reportbuyerno,
+                  "reportcorpchnname":row.reportcorpchnname,
+                  "reportcorpengname":row.reportcorpengname,
+                  "updatetime":row.updatetime,
+                  "isDownload":"0"
                 }
                 this.pdfDialogVisible = true;
                 this.pdfProgressVisible = true;

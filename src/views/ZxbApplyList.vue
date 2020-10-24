@@ -14,10 +14,14 @@
                       style="width: 200px;margin-right: 10px;">
             </el-input>
 <!--           @change="changeApprove(approve)"-->
-          <el-select style="margin: 0 10px" v-model="search.approve" placeholder="请选择审批标识" size="medium">
-            <el-option v-for="item in approves" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
+            <el-select v-model="search.approve" clearable placeholder="请选择审批标识" size="medium" style="margin: 0 10px">
+              <el-option
+                  v-for="item in approves"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+              </el-option>
+            </el-select>
           <el-input class="fl-left manageTableInput" v-model="search.informant" placeholder="请输入填报人" clearable
                     style="width: 200px;margin-right: 10px;">
           </el-input>
@@ -60,7 +64,7 @@
                     <template slot-scope="scope">
                         <el-tag type="primary" v-if="scope.row.approveCode==1" >通过</el-tag>
                         <el-tag type="danger" v-else-if="scope.row.approveCode==999">不通过</el-tag>
-                        <el-tag type="info" v-else-if="scope.row.approveCode==null">待审核</el-tag>
+                        <el-tag type="info" v-else-if="scope.row.approveCode==2">待审核</el-tag>
                         <el-tag type="warning" v-else>异常</el-tag>
                     </template>
                 </el-table-column>
@@ -111,7 +115,7 @@
                 search:{
                     xcode:'',
                     companyName:'',
-                    approve:'待审核',
+                    approve:'',
                     informant:'',
                     approver:''
                 },
