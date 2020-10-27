@@ -178,6 +178,21 @@ export default {
         callback();
       }
     };
+    var userCompanys = (rule, value, callback) => { //校验公司名称
+      let isFlag = true;
+          for(let i = 0;i < this.newCompany.length;i++){
+            if(value == this.newCompany[i].name){
+              console.log("1111111111111111111111111111111111111111111111111111111111111111")
+              isFlag = false;
+                callback();
+            }
+          }
+      if(isFlag){
+        callback(new Error("请输入正确的公司名称"));
+      }
+
+
+    };
     var userIsZhrs = (rule, value, callback) => { //中韩人寿必须以zhrs开头
       if(value&&this.userInfo.companyName&&this.userInfo.companyName.indexOf("中韩人寿")>=0){
         if(value.indexOf("zhrs")==0){
@@ -252,7 +267,8 @@ export default {
           {  validator: validateMobile, trigger: 'blur' }
         ],
         companyName: [
-          { required: true, message: '请选择公司名称', trigger: 'change' }
+          { required: true, message: '请选择公司名称', trigger: 'change' },
+          { validator: userCompanys, message: '请输入正确的公司名称', trigger: 'change' }
         ],
         username: [
           { required: true, message: '请输入工号', trigger: 'change' },
@@ -273,14 +289,13 @@ export default {
         {permissionPointName:"信保报告审批权限",permissionRole:"zxb_report_reviewer",disabled:true},
         {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
       ],
-      treeData:[],
-
+      treeData:[]
     }
   },
   created () {
+    this.getData(1);
     this.getNewCompany();
     this.getAllCompanyLevel();
-    this.getData(1);
   },
   mounted () {
     this.getEnablePermission();
