@@ -7,12 +7,12 @@
 		      <span class="text">
 		        根据关键字，共搜索到 {{searchList.length>0?searchList.length:0}} 条数据结果，结果来自
 		        {{sourceType}}
-		        <a class="postLink" @click="blarSearch">模糊接口查询</a>
+<!--		        <a class="postLink" @click="blarSearch">模糊接口查询</a>-->
 		      </span>
 		    </div>
 		    <div class="main">
 		      <ul class="proList_li " v-if="searchList.length>0">
-		        <li class="clear" v-for="(item,index) in searchList" :key=" index">
+		        <li class="clear" v-for="(item,index) in searchList" :key="index">
 		          <div class="fl-left proList_content">
 		            <p class="proList_txt" @click="moreNews(item,'0')"
 		              v-html="brightenKeyword(item.companyName,searchVal)">
@@ -45,10 +45,15 @@
 			}
 		},
 		created(){
-			if(this.$route.query.searchVal){
+			if(this.$route.query.searchVal && (!this.$route.query.isBlar)) {
 			  this.searchVal=this.$route.query.searchVal;
 			  this.seachContent()
-			}
+        console.log("本地查询")
+			}else{
+        this.searchVal=this.$route.query.searchVal;
+        this.blarSearch()
+        console.log("全网查询")
+      }
 		},
 		mounted(){
 

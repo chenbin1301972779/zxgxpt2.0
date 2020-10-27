@@ -26,8 +26,8 @@
       <el-button type="success" icon="el-icon-plus" v-on:click="newUser">新增</el-button>
     </div>
     <div class="table-box">
-      <el-tree :data="treeData" @node-click="handleNodeClick" style="width: 30%;float: left;top: 18px;z-index: 1;margin-left: -19px;height: "></el-tree>
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 71%;" stripe
+      <el-tree :data="treeData" @node-click="handleNodeClick" style="width: 30%;float: left;top: 0px;z-index: 1;margin-left: -19px;height: "></el-tree>
+      <el-table ref="multipleTable" :data="tableData"  tooltip-effect="dark" style="width: 71%;" stripe
         v-loading='loading'>
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -246,6 +246,7 @@ export default {
       },
       newCompany: [],
       newCompanyFlag: 0,
+      node:{id:this.$Cookies.get('companyCode'),isLevel:true},
       rules: {
         mobile: [
           {  validator: validateMobile, trigger: 'blur' }
@@ -279,17 +280,14 @@ export default {
   created () {
     this.getNewCompany();
     this.getAllCompanyLevel();
+    this.getData(1);
   },
   mounted () {
-    let treeTemp = {
-      id: "07501",
-      isLevel: true
-    }
-    this.getData(1,treeTemp);
     this.getEnablePermission();
+    this.getData(1);
   },
   methods: {
-    getData(page,node) {
+    getData(page) {
       let param = {
         pageIndex: page ? page : 1,
         pageSize: this.page.pageSize,
@@ -298,33 +296,28 @@ export default {
         status: this.search.status,
         operator: this.$Cookies.get('userCode'),
 	    	isSubAdmin:this.search.isSubAdmin,
-        // companyCode:node.id,
-        companyCode:"07501",
-        isLevel:node.isLevel
+        companyCode:this.node.id,
+        isLevel:this.node.isLevel
       }
       this.loading = true;
       this.$ajax.manage.getUserList(param).then(res => {
         if (res.data.code == 0) {
           this.loading = false;
-          this.tableData = res.data.userList;
+          this.tableData = res.data.userList
+          console.log(res.data.userList)
           this.page.total = res.data.totalRecords
         }
       })
     },
     searchData() {
       this.page.currentPage = 1;
-      let treeTemp = {
-        id: "010",
-        isLevel: true
-      }
-      this.getData(1,treeTemp)
+      this.getData(1)
+      this.getData(1)
     },
     handleCurrentChange(val) {
       //页码切换
-      this.getData(val,{
-        id: "07501",
-        isLevel: true
-      })
+      this.getData(val)
+      this.getData(val)
     },
     updateStatus(row, status) {
       // console.log(status)
@@ -355,7 +348,9 @@ export default {
     },
     handleNodeClick(node){
       console.log(node)
-      this.getData(1,node)
+      this.node = node;
+      this.getData(1)
+      this.getData(1)
     },
     editUser(row) {
       this.clearUserInfo();
@@ -405,7 +400,7 @@ export default {
           //增加当前操作人
           this.userInfo.operator = this.$Cookies.get('userCode');
           this.$ajax.manage.updateUser(this.userInfo).then(res => {
-            this.getData(this.page.currentPage)
+            this.getData(this.page.currentPage,this.node)
             if (res.data.code == 0) {
               this.$message.success(res.data.msg);
               this.editUserDialog = false;
@@ -473,6 +468,8 @@ export default {
         console.log("---------TreeData--------")
         console.log(res.data)
         this.getTreeData(res.data.treeData);
+        this.node = {id:res.data.treeData[0].code,isLevel:true}
+        console.log(this.node)
         console.log(this.treeData)
         console.log("---------TreeData--------")
       })

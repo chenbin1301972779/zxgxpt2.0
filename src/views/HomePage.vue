@@ -33,12 +33,12 @@
         <div style="margin-bottom:10px"><img src="../../public/img/title.png" alt=""></div>
         <div><img src="../../public/img/subtitle.png" alt=""></div>
       </div>
-      <div class="content">
-        <el-input @keyup.enter="seachContent" placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 600px;height: 60px;"
-          clearable="" @keyup.enter.native="seachContent">
-        </el-input>
-        <el-button @click="seachContent">站内搜索</el-button>
-        <el-button @click="blarSearch">全网搜索</el-button>
+      <div class="content" style="position: relative">
+         <el-input @keyup.enter="seachContent" placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 800px;height: 60px;"
+                   clearable="" @keyup.enter.native="seachContent">
+         </el-input>
+         <el-button @click="seachContent" style="position: absolute;position: absolute;right: 444px;background-color: rgb(73, 136, 191); top: 1px;">站内搜索</el-button>
+         <el-button @click="blarSearch" style="position: absolute;right: 318px;top: 1px;">全网搜索</el-button>
       </div>
       <div class="latest-search">
         最近搜索：
@@ -275,6 +275,7 @@ export default {
       this.$Cookies.remove('username');
       this.$Cookies.remove('userCode');
       this.$Cookies.remove('userId');
+      this.$Cookies.remove('companyCode');
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('userCode');
       sessionStorage.removeItem('userId');
@@ -564,7 +565,7 @@ export default {
     .content {
       /deep/.el-button {
         border-radius: 0;
-        height: 60px;
+        height: 58px;
         width: 121px;
         background: #409eff;
         color: #fff;

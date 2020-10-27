@@ -22,10 +22,15 @@
                 </el-table-column>-->
                 <el-table-column prop="reportbuyerno" label="信保代码">
                 </el-table-column>
-                <el-table-column prop="reportcorpchnname" show-overflow-tooltip label="中文名称">
-                </el-table-column>
-                <el-table-column prop="reportcorpengname" show-overflow-tooltip label="英文名称">
-                </el-table-column>
+<!--                <el-table-column prop="reportcorpchnname" show-overflow-tooltip label="中文名称">-->
+<!--                </el-table-column>-->
+<!--                <el-table-column prop="reportcorpengname" show-overflow-tooltip label="英文名称">-->
+<!--                </el-table-column>-->
+              <el-table-column prop="reportcorpchnname,reportcorpengname" show-overflow-tooltip label="中英文名称">
+                <template slot-scope="scope">
+                  {{scope.row.reportcorpchnname}}/{{scope.row.reportcorpengname}}
+                </template>
+              </el-table-column>
                 <el-table-column prop="reportName" show-overflow-tooltip label="PDF名称">
                 </el-table-column>
                 <el-table-column prop="updatetime" show-overflow-tooltip label="更新时间">

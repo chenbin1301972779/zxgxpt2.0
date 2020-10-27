@@ -162,6 +162,9 @@
                     } else {
                         this.$message.error(res.data.msg)
                     }
+                  console.log("-------------------------")
+                    console.log(res.data)
+                  console.log("-------------------------")
                 }).catch(error => {
                     console.log(error);
                     this.$message.error(error)

@@ -16,7 +16,7 @@
 							 placeholder="请输入搜索内容"
 			  style="width: 300px;margin-left: 100px;">
 				<el-button slot="append" icon="el-icon-search" @click="searchData"></el-button>
-        <el-button slot="append"  @click="blarSearch">全网搜索</el-button>
+        <el-button slot="append"  icon="iconfont el-icon-mhcxdiqiu"  @click="searchBlarSearch" ></el-button>
 			</el-autocomplete>
 		</span>
 		<span class="info" v-if="showUserData">
@@ -94,409 +94,413 @@
 <script>
 	import ZxbReportApply from "./zxbReportApply";
 	export default {
-		inject: ['reload'],
-		components:{
-			ZxbReportApply,
-		},
-		data() {
-			return {
-				dialogVisible: false,
-				form: {
-					username: '',
-					password: ''
-				},
-				loginUserName: '',
-				userSettingDialog: false,
-				userSettingForm: {
-					// username: this.$Cookies.get('username'),
-					username: this.$Cookies.get('userCode'),
-					name: '',
-					password: '',
-					email: '',
-					mobile: ''
-				},
-				showUserData: sessionStorage.getItem('username'),
-				blacklistAudit: false,
-				userManage: false,
-				sub_manage: false,
-				zxbreportAudit:false,
-				blacklistApply: false,
-				dialogXBVisible: false,
-				searchVal: '',
-				latestSearchList: [],
-				showLargeBtn:false
-			}
-		},
-		created() {
-			this.showLargeBtn = false;
-			if(this.$route.query.index=='1'){
-				this.showLargeBtn = true;
-			}
-			this.$Bus.$on('showDialog', () => {
-				this.dialogVisible = true;
-			});
-			this.$Bus.$on('showLargeBtn',(data)=>{
-				if(data=='1'){
-					this.showLargeBtn = true;
-				}else{
-					this.showLargeBtn = false;
-				}
-				
-			})
-		},
-		mounted() {
-			if (this.$route.query.username) {
-				this.skipLogin();
-			}
-			if (this.$route.query.searchVal) {
-				this.searchVal = this.$route.query.searchVal;
-			}
-			this.verifyPermissions();
-			this.getLatestSearchList();
-		},
-		methods: {
-			larger(){
-				this.$Bus.$emit('largerWindow')
-			},
-			getNationCode () {
-				this.$ajax.manage.getNationCode({}).then(res => {
-					console.log(res);
-					if (res.status == 200) {
-						this.nationTypeOptions = res.data.nationCode
-					}
-				})
-			},
-			getLatestSearchList() {
-				let param = {
-					userId: this.$Cookies.get('userId')
-				}
-				this.$ajax.manage.latestWords(param).then(res => {
-					console.log(res)
-					if (res.status == 200) {
-						this.latestSearchList = res.data.latestWords.map(row=>{
-							row.value=row.keyWord;
-							return row
-						})
-					}
-				})
-			},
-			querySearch(queryString, cb) {
-				console.log(queryString)
-				var latestSearchList = this.latestSearchList;
-				var results = queryString ? latestSearchList.filter(this.createFilter(queryString)) : latestSearchList;
-				// 调用 callback 返回建议列表的数据
-				cb(results);
-			},
-			createFilter(queryString) {
-			        return (restaurant) => {
-			          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-			        };
-			      },
-			searchData() {
-				if (this.searchVal == '') {
-					this.$message.warning('请输入搜索内容');
-					return;
-				} else {
-					this.$router.push({
-						path: '/searchResult',
-						query: {
-							searchVal: this.searchVal
-						}
-					});
-					this.getLatestSearchList();
-				}
-			},
-			verifyPermissions() {
-				//权限
-				let param = {
-					userId: this.$Cookies.get("userId"),
-					permissionPoint: "user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit"
-				}
-				this.$ajax.manage.verifyPermissions(param).then(res => {
-					console.log(res)
-					if (res.data.code == 0) {
-						this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
-						this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply'];
-						this.userManage = res.data.verifyPermissionResult['user.manage'];
-						this.sub_manage = res.data.verifyPermissionResult['user.sub_manage'];
-						this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
-						if (this.userManage || this.sub_manage) {
-							this.$Cookies.set('userManage', 'true');
-						}
-					}
-				})
-			},
-			handleCommand(command) {
-				console.log(command)
-				if (command == 1) {
-					//黑名单申报
-					this.goHmdsb()
-				} else if (command == 2) {
-					//黑名单审批
-					this.goHmdsp()
-				} else if (command == 3) {
-					//客商初筛
-					this.goKstb()
-				} else if (command == 4) {
-					//信保报告申请
-					this.applyReport()
-				} else if (command == 5) {
-					//用户管理
-					if (this.$Cookies.get('username') != 'admin' && this.$Cookies.get('userManage') != 'true') {
-						this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
-					} else {
-						//55109783
-						this.$router.push({
-							path: '/userManage'
-						})
-					}
-				} else if (command == 6) {
-					this.$router.push({
-						path: '/messageCenter'
-					})
-				} else if (command == 7) {
-					this.$router.push({ path: '/zxbReportList' })
-				} else if (command == 8) {
-					this.goLog()
-				} else if (command == 9) {
-					this.goOrgEdit()
-				} else if (command == 10) {
-					this.$router.push({ path: '/ZxbApplyList' })
-				}
-			},
-			goHmdsb() {
-				this.$router.push({
-					path: '/iframePage',
-					query: {
-						title: encodeURIComponent('黑名单申报'),
-						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-						)
-					}
-				})
-				this.reload()
-			},
-			goHmdsp() {
-				this.$router.push({
-					path: '/iframePage',
-					query: {
-						title: encodeURIComponent('黑名单审批'),
-						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-						)
-					}
-				})
-				this.reload()
-			},
-			goKstb() {
-				this.$router.push({
-					path: '/iframePage',
-					query: {
-						title: encodeURIComponent('客商填报'),
-						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/Merchants_Input.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
-						)
-					}
-				})
-				this.reload()
-			},
-			goLog() {
-				this.$router.push({
-					path: '/iframePage',
-					query: {
-						title: encodeURIComponent('访问日志'),
-						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`
-						)
-					}
-				})
-			},
-			goOrgEdit (){
-				this.$router.push({
-					path: '/iframePage',
-					query: {
-						title: encodeURIComponent('组织架构维护'),
-						url: encodeURIComponent(
-							`${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/组织架构树填报.frm&userCode=${sessionStorage.getItem('userCode')}`
-						)
-					}
-				})
-			},
-			openLoginDialog() {
-				//打开登录弹框
-				this.dialogVisible = true;
-			},
-			login() {
-				//登录
-				if (this.form.username === '') {
-					this.$message.warning('请输入用户名');
-					return;
-				} else if (this.form.password === '') {
-					this.$message.warning('请输入密码');
-					return;
-				}
-				let param = {
-					username: this.form.username,
-					password: this.form.password,
-				}
-				this.$ajax.manage.login(param).then(res => {
-					console.log(res);
-					if (res.data.code === '0') {
-						this.$Cookies.set(this.$getCookieKey(), res.data.token, {
-							expires: 30
-						});
-						this.$Cookies.set('username', res.data.name, {
-							expires: 30
-						});
-						this.$Cookies.set('userCode', res.data.username, {
-							expires: 30
-						});
-						this.$Cookies.set('userId', res.data.userId, {
-							expires: 30
-						});
-						sessionStorage.setItem('username', res.data.name);
-						sessionStorage.setItem('userCode', res.data.username);
-						sessionStorage.setItem('userId', res.data.userId);
-						this.dialogVisible = false;
-						this.loginUserName = res.data.name;
-						//this.reload()
-						this.$router.push({
-							path: '/homePage'
-						});
-						this.reload()
-					} else {
-						this.$message.error(res.data.msg)
-					}
-				})
-			},
-			logOut() {
-				//退出
-				this.$Cookies.remove(this.$getCookieKey());
-				this.$Cookies.remove('username');
-				this.$Cookies.remove('userCode');
-				this.$Cookies.remove('userId');
-				sessionStorage.removeItem('username');
-				sessionStorage.removeItem('userCode');
-				sessionStorage.removeItem('userId');
-				this.$router.push({
-					path: '/'
-				});
-				this.reload()
-				// this.$router.go(0);
-			},
-			skipLogin() {
-				let param = {
-					username: this.$route.query.username,
-					loginType: 'skip',
-				}
-				this.$ajax.manage.login(param).then(res => {
-					console.log(res);
-					if (res.data.code === '0') {
-						this.$Cookies.set(this.$getCookieKey(), res.data.token, {
-							expires: 30
-						});
-						this.$Cookies.set('username', res.data.name, {
-							expires: 30
-						});
-						this.$Cookies.set('userCode', res.data.username, {
-							expires: 30
-						});
-						this.$Cookies.set('userId', res.data.userId, {
-							expires: 30
-						});
-						sessionStorage.setItem('username', res.data.name);
-						sessionStorage.setItem('userCode', res.data.username);
-						sessionStorage.setItem('userId', res.data.userId);
-						this.loginUserName = res.data.name;
-						this.$router.push({
-							path: '/homePage'
-						});
-						this.reload()
-					} else {
-						this.$message.error(res.data.msg)
-					}
-				})
-			},
-			showUserInfo() {
-				//维护用户基本信息弹框
-				this.userSettingDialog = true;
-				this.getUserInfo()
-			},
-			getUserInfo() {
-				//获取用户信息
-				let param = {
-					userId: this.$Cookies.get("userId")
-				};
-				this.$ajax.manage.getUserInfo(param).then(res => {
-					console.log(res);
-					if (res.status == 200) {
-						this.userSettingForm.name = res.data.user.name;
-						this.userSettingForm.password = res.data.user.password;
-						this.userSettingForm.email = res.data.user.email;
-						this.userSettingForm.mobile = res.data.user.mobile;
-					}
-				})
-			},
-			saveUserInfo() {
-				let param = {
-					userId: this.$Cookies.get("userId"),
-					username: this.$Cookies.get("userCode"),
-					name: this.userSettingForm.name,
-					password: this.userSettingForm.password,
-					email: this.userSettingForm.email,
-					mobile: this.userSettingForm.mobile
-				}
-				this.$ajax.manage.updateUser(param).then(res => {
-					console.log(res);
-					if (res.data.code == 0) {
-						this.$message.success(res.data.msg);
-						this.userSettingDialog = false
-					}
-				})
-			},
-			clearUserForm() {
-				this.userSettingForm = {
-					// username: this.$Cookies.get('username'),
-					username: this.$Cookies.get('userCode'),
-					name: '',
-					password: '',
-					email: '',
-					mobile: ''
-				}
-			},
-			goHome() {
-				// 
-				console.log(this.$route);
-				this.$router.push({
-					path: '/homePage'
-				});
-				// if (this.$route.path == '/') {
-				//     this.reload();
-				// } else {
-				//     this.$router.push({ path: '/' });
-				// }
-			},
-			applyReport() {
-				//打开报告申请弹框
-				this.dialogXBVisible = true;
-			},
-      blarSearch () {
-        //模糊接口查询
-        let param = {
-          keyword: this.searchVal,
-          userId: this.$Cookies.get('userId'),
-          page: 1
+    inject: ['reload'],
+    components: {
+      ZxbReportApply,
+    },
+    data() {
+      return {
+        dialogVisible: false,
+        form: {
+          username: '',
+          password: ''
+        },
+        loginUserName: '',
+        userSettingDialog: false,
+        userSettingForm: {
+          // username: this.$Cookies.get('username'),
+          username: this.$Cookies.get('userCode'),
+          name: '',
+          password: '',
+          email: '',
+          mobile: ''
+        },
+        showUserData: sessionStorage.getItem('username'),
+        blacklistAudit: false,
+        userManage: false,
+        sub_manage: false,
+        zxbreportAudit: false,
+        blacklistApply: false,
+        dialogXBVisible: false,
+        searchVal: '',
+        latestSearchList: [],
+        showLargeBtn: false
+      }
+    },
+    created() {
+      this.showLargeBtn = false;
+      if (this.$route.query.index == '1') {
+        this.showLargeBtn = true;
+      }
+      this.$Bus.$on('showDialog', () => {
+        this.dialogVisible = true;
+      });
+      this.$Bus.$on('showLargeBtn', (data) => {
+        if (data == '1') {
+          this.showLargeBtn = true;
+        } else {
+          this.showLargeBtn = false;
         }
-        this.$ajax.manage.directSearchList(param).then(res => {
+
+      })
+    },
+    mounted() {
+      if (this.$route.query.username) {
+        this.skipLogin();
+      }
+      if (this.$route.query.searchVal) {
+        this.searchVal = this.$route.query.searchVal;
+      }
+      this.verifyPermissions();
+      this.getLatestSearchList();
+    },
+    methods: {
+      larger() {
+        this.$Bus.$emit('largerWindow')
+      },
+      getNationCode() {
+        this.$ajax.manage.getNationCode({}).then(res => {
+          console.log(res);
           if (res.status == 200) {
-            this.searchList = res.data.searchList
-            this.sourceType = res.data.sourceType;
-            this.showBox = 2;
+            this.nationTypeOptions = res.data.nationCode
           }
         })
+      },
+      getLatestSearchList() {
+        let param = {
+          userId: this.$Cookies.get('userId')
+        }
+        this.$ajax.manage.latestWords(param).then(res => {
+          console.log(res)
+          if (res.status == 200) {
+            this.latestSearchList = res.data.latestWords.map(row => {
+              row.value = row.keyWord;
+              return row
+            })
+            console.log('主档裤查询')
+            console.log(res.data.latestWords)
+          }
+        })
+      },
+      querySearch(queryString, cb) {
+        console.log(queryString)
+        var latestSearchList = this.latestSearchList;
+        var results = queryString ? latestSearchList.filter(this.createFilter(queryString)) : latestSearchList;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      searchData() {
+        if (this.searchVal == '') {
+          this.$message.warning('请输入搜索内容');
+          return;
+        } else {
+          this.$router.push({
+            path: '/searchResult',
+            query: {
+              searchVal: this.searchVal,
+              isBlar: false
+            }
+          });
+
+          this.getLatestSearchList();
+        }
+      },
+      verifyPermissions() {
+        //权限
+        let param = {
+          userId: this.$Cookies.get("userId"),
+          permissionPoint: "user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit"
+        }
+        this.$ajax.manage.verifyPermissions(param).then(res => {
+          console.log(res)
+          if (res.data.code == 0) {
+            this.blacklistAudit = res.data.verifyPermissionResult['blacklist.audit'];
+            this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply'];
+            this.userManage = res.data.verifyPermissionResult['user.manage'];
+            this.sub_manage = res.data.verifyPermissionResult['user.sub_manage'];
+            this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
+            if (this.userManage || this.sub_manage) {
+              this.$Cookies.set('userManage', 'true');
+            }
+          }
+        })
+      },
+      handleCommand(command) {
+        console.log(command)
+        if (command == 1) {
+          //黑名单申报
+          this.goHmdsb()
+        } else if (command == 2) {
+          //黑名单审批
+          this.goHmdsp()
+        } else if (command == 3) {
+          //客商初筛
+          this.goKstb()
+        } else if (command == 4) {
+          //信保报告申请
+          this.applyReport()
+        } else if (command == 5) {
+          //用户管理
+          if (this.$Cookies.get('username') != 'admin' && this.$Cookies.get('userManage') != 'true') {
+            this.$message.warning('您暂没有查看该功能的权限，请联系管理员')
+          } else {
+            //55109783
+            this.$router.push({
+              path: '/userManage'
+            })
+          }
+        } else if (command == 6) {
+          this.$router.push({
+            path: '/messageCenter'
+          })
+        } else if (command == 7) {
+          this.$router.push({path: '/zxbReportList'})
+        } else if (command == 8) {
+          this.goLog()
+        } else if (command == 9) {
+          this.goOrgEdit()
+        } else if (command == 10) {
+          this.$router.push({path: '/ZxbApplyList'})
+        }
+      },
+      goHmdsb() {
+        this.$router.push({
+          path: '/iframePage',
+          query: {
+            title: encodeURIComponent('黑名单申报'),
+            url: encodeURIComponent(
+                `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+            )
+          }
+        })
+        this.reload()
+      },
+      goHmdsp() {
+        this.$router.push({
+          path: '/iframePage',
+          query: {
+            title: encodeURIComponent('黑名单审批'),
+            url: encodeURIComponent(
+                `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/BlackList_check.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+            )
+          }
+        })
+        this.reload()
+      },
+      goKstb() {
+        this.$router.push({
+          path: '/iframePage',
+          query: {
+            title: encodeURIComponent('客商填报'),
+            url: encodeURIComponent(
+                `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/Merchants_Input.cpt&op=write&userCode=${sessionStorage.getItem('userCode')}`
+            )
+          }
+        })
+        this.reload()
+      },
+      goLog() {
+        this.$router.push({
+          path: '/iframePage',
+          query: {
+            title: encodeURIComponent('访问日志'),
+            url: encodeURIComponent(
+                `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/LOG.frm&userCode=${sessionStorage.getItem('userCode')}`
+            )
+          }
+        })
+      },
+      goOrgEdit() {
+        this.$router.push({
+          path: '/iframePage',
+          query: {
+            title: encodeURIComponent('组织架构维护'),
+            url: encodeURIComponent(
+                `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=/Homepage/组织架构树填报.frm&userCode=${sessionStorage.getItem('userCode')}`
+            )
+          }
+        })
+      },
+      openLoginDialog() {
+        //打开登录弹框
+        this.dialogVisible = true;
+      },
+      login() {
+        //登录
+        if (this.form.username === '') {
+          this.$message.warning('请输入用户名');
+          return;
+        } else if (this.form.password === '') {
+          this.$message.warning('请输入密码');
+          return;
+        }
+        let param = {
+          username: this.form.username,
+          password: this.form.password,
+        }
+        this.$ajax.manage.login(param).then(res => {
+          console.log(res);
+          if (res.data.code === '0') {
+            this.$Cookies.set(this.$getCookieKey(), res.data.token, {
+              expires: 30
+            });
+            this.$Cookies.set('username', res.data.name, {
+              expires: 30
+            });
+            this.$Cookies.set('userCode', res.data.username, {
+              expires: 30
+            });
+            this.$Cookies.set('userId', res.data.userId, {
+              expires: 30
+            });
+            sessionStorage.setItem('username', res.data.name);
+            sessionStorage.setItem('userCode', res.data.username);
+            sessionStorage.setItem('userId', res.data.userId);
+            this.dialogVisible = false;
+            this.loginUserName = res.data.name;
+            //this.reload()
+            this.$router.push({
+              path: '/homePage'
+            });
+            this.reload()
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        })
+      },
+      logOut() {
+        //退出
+        this.$Cookies.remove(this.$getCookieKey());
+        this.$Cookies.remove('username');
+        this.$Cookies.remove('userCode');
+        this.$Cookies.remove('userId');
+        this.$Cookies.remove('companyCode');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('userCode');
+        sessionStorage.removeItem('userId');
+        this.$router.push({
+          path: '/'
+        });
+        this.reload()
+        // this.$router.go(0);
+      },
+      skipLogin() {
+        let param = {
+          username: this.$route.query.username,
+          loginType: 'skip',
+        }
+        this.$ajax.manage.login(param).then(res => {
+          console.log(res);
+          if (res.data.code === '0') {
+            this.$Cookies.set(this.$getCookieKey(), res.data.token, {
+              expires: 30
+            });
+            this.$Cookies.set('username', res.data.name, {
+              expires: 30
+            });
+            this.$Cookies.set('userCode', res.data.username, {
+              expires: 30
+            });
+            this.$Cookies.set('userId', res.data.userId, {
+              expires: 30
+            });
+            sessionStorage.setItem('username', res.data.name);
+            sessionStorage.setItem('userCode', res.data.username);
+            sessionStorage.setItem('userId', res.data.userId);
+            this.loginUserName = res.data.name;
+            this.$router.push({
+              path: '/homePage'
+            });
+            this.reload()
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        })
+      },
+      showUserInfo() {
+        //维护用户基本信息弹框
+        this.userSettingDialog = true;
+        this.getUserInfo()
+      },
+      getUserInfo() {
+        //获取用户信息
+        let param = {
+          userId: this.$Cookies.get("userId")
+        };
+        this.$ajax.manage.getUserInfo(param).then(res => {
+          console.log(res);
+          if (res.status == 200) {
+            this.userSettingForm.name = res.data.user.name;
+            this.userSettingForm.password = res.data.user.password;
+            this.userSettingForm.email = res.data.user.email;
+            this.userSettingForm.mobile = res.data.user.mobile;
+          }
+        })
+      },
+      saveUserInfo() {
+        let param = {
+          userId: this.$Cookies.get("userId"),
+          username: this.$Cookies.get("userCode"),
+          name: this.userSettingForm.name,
+          password: this.userSettingForm.password,
+          email: this.userSettingForm.email,
+          mobile: this.userSettingForm.mobile
+        }
+        this.$ajax.manage.updateUser(param).then(res => {
+          console.log(res);
+          if (res.data.code == 0) {
+            this.$message.success(res.data.msg);
+            this.userSettingDialog = false
+          }
+        })
+      },
+      clearUserForm() {
+        this.userSettingForm = {
+          // username: this.$Cookies.get('username'),
+          username: this.$Cookies.get('userCode'),
+          name: '',
+          password: '',
+          email: '',
+          mobile: ''
+        }
+      },
+      goHome() {
+        //
+        console.log(this.$route);
+        this.$router.push({
+          path: '/homePage'
+        });
+        // if (this.$route.path == '/') {
+        //     this.reload();
+        // } else {
+        //     this.$router.push({ path: '/' });
+        // }
+      },
+      applyReport() {
+        //打开报告申请弹框
+        this.dialogXBVisible = true;
+      },
+      searchBlarSearch() {
+        if (this.searchVal == '') {
+          this.$message('请输入搜索内容');
+          return;
+        } else {
+          this.$router.push({
+            path: '/searchResult',
+            query: {
+              searchVal: this.searchVal,
+              isBlar: true
+            }
+          });
+        }
       }
-		}
-	}
+    }
+  }
 </script>
 <style>
 	.el-dropdown-link {
@@ -536,6 +540,7 @@
 			cursor: pointer;
 		}
 
+
 		.title {
 			font-size: 16px;
 			font-weight: bold;
@@ -571,6 +576,7 @@
 				margin-right: 6px;
 			}
 		}
+
 
 	}
 </style>
