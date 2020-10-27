@@ -12,13 +12,13 @@
         <div style="margin-bottom:10px"><img src="../../public/img/title.png" alt=""></div>
         <div><img src="../../public/img/subtitle.png" alt=""></div>
       </div>
-      <div class="content">
-        <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 600px;height:60px;"
+      <div class="content" style="position: relative">
+        <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 800px;height:60px;"
           clearable="" @keyup.enter.native="seachContent">
         </el-input>
-        <el-button @click="seachContent">站内搜索
+        <el-button @click="seachContent" style="position: absolute;position: absolute;right: 444px;background-color: rgb(73, 136, 191); top: 1px;">站内搜索
         </el-button>
-        <el-button @click="blarSearch">全网搜索</el-button>
+        <el-button @click="blarSearch"  style="position: absolute;right: 322px;top: 1px;">全网搜索</el-button>
       </div>
     </div>
 
@@ -94,6 +94,7 @@ export default {
           this.$Cookies.set('username', res.data.name, { expires: 30 });
           this.$Cookies.set('userCode', res.data.username, { expires: 30 });
           this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+          this.$Cookies.set('companyCode', res.data.companyCode, { expires: 30 })
           sessionStorage.setItem('username', res.data.name);
           sessionStorage.setItem('userCode', res.data.username);
           sessionStorage.setItem('userId', res.data.userId);
@@ -128,19 +129,9 @@ export default {
       })
     },
     blarSearch () {
-      //模糊接口查询
-      let param = {
-        keyword: this.searchVal,
-        userId: this.$Cookies.get('userId'),
-        page: 1
-      }
-      this.$ajax.manage.directSearchList(param).then(res => {
-        if (res.status == 200) {
-          this.searchList = res.data.searchList
-          this.sourceType = res.data.sourceType;
-          this.showBox = 2;
-        }
-      })
+      //未登录=>去登陆
+      this.dialogVisible = true;
+      this.$Bus.$emit('showDialog')
     }
   },
 }
@@ -189,7 +180,7 @@ export default {
     .content {
       /deep/.el-button {
         border-radius: 0;
-        height: 60px;
+        height: 58px;
         width: 121px;
         background: #409eff;
         color: #fff;
