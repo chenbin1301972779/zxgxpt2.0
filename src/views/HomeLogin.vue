@@ -12,13 +12,13 @@
         <div style="margin-bottom:10px"><img src="../../public/img/title.png" alt=""></div>
         <div><img src="../../public/img/subtitle.png" alt=""></div>
       </div>
-      <div class="content" style="position: relative">
+      <div class="content">
         <el-input placeholder="请输入内容" v-model="searchVal" class="search-input" style="width: 800px;height:60px;"
           clearable="" @keyup.enter.native="seachContent">
         </el-input>
-        <el-button @click="seachContent" style="position: absolute;position: absolute;right: 444px;background-color: rgb(73, 136, 191); top: 1px;">站内搜索
+        <el-button @click="seachContent" style="background-color: rgb(73, 136, 191);margin-left: 10px;">站内搜索
         </el-button>
-        <el-button @click="blarSearch"  style="position: absolute;right: 322px;top: 1px;">全网搜索</el-button>
+        <el-button @click="blarSearch">全网搜索</el-button>
       </div>
     </div>
 
