@@ -91,7 +91,13 @@ const routes = [
                 path: '/ZxbApplyList',
                 name: 'ZxbApplyList',
                 component: ()=> import('../views/ZxbApplyList')
+            },
+            {
+                path: '/RoleManage',
+                name: 'RoleManage',
+                component: ()=> import('../views/RoleManage')
             }
+
         ]
     },
 

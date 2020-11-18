@@ -270,6 +270,7 @@
 			    if (res.status == 200) {
 					if(res.data.code&&res.data.code!='0'){
 						this.htmlContent=JSON.stringify(res.data)
+            this.nextDisabled = true;
 					}else{
             if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
               this.htmlContent =  res.data.toString().replace("{\"code\":\"0\"}","");

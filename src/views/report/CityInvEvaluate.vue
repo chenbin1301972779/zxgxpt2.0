@@ -303,10 +303,11 @@ export default {
         userId: this.$Cookies.get("userId")
       }
       this.$ajax.manage.getCityInvRatingHtml(param).then(res => {
-        console.log(res);
+        console.log(param);
         if (res.status == 200) {
           if(res.data.code&&res.data.code!='0'){
             this.htmlContent=JSON.stringify(res.data)
+            this.nextDisabled = true;
           }else{
             if(res.data.toString().lastIndexOf("{\"code\":\"0\"}")){
               this.htmlContent =  res.data.toString().replace("{\"code\":\"0\"}","");
@@ -421,12 +422,12 @@ export default {
 }
 </script>
 <style>
-	.el-step__title{
+	.el-step_title{
 		font-size: 14px;
 		line-height: 30px;
 	}
 </style>
-<style lang="less" scoped="">
+<style lang="less" scoped>
 .risk-screen {
   width: 100%;
   min-width: 1300px;

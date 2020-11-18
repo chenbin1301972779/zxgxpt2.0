@@ -23,7 +23,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <el-input v-model="haveCreditCode.clientNo"></el-input>
+                        <el-input disabled v-model="haveCreditCode.clientNo"></el-input>
                     </td>
                     <td>
                         <el-input v-model="haveCreditCode.reportbuyerNo"></el-input>
@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <el-input v-model="haveCreditCode.clientNo"></el-input>
+                        <el-input disabled v-model="haveCreditCode.clientNo"></el-input>
                     </td>
                     <td style="background:#FAFAFA"></td>
                     <td>
@@ -143,12 +143,15 @@
                 },
                 nationTypeOptions:[],
                 istranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
-                noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }]
+                noIstranslation: [{ name: '否', id: '0' }, { name: '是', id: '1' }],
+                isClientNo:false,
+                isZxbreportAudit:false,
             }
         },
         mounted() {
             this.getNationCode()
             this.getCodeInfo()
+            this.getReviewer()
         },
         methods: {
             QualityDialogClose() {
@@ -167,26 +170,51 @@
                 //打开报告申请弹框
                 this.dialogXBVisible = true;
                 this.getCodeInfo()
+                this.getReviewer()
             },
             getCodeInfo () {
                 let param = {
                     userId: this.$Cookies.get('userId')
                 }
                 this.$ajax.manage.getCodeInfoByUserId(param).then(res => {
+                  console.log(res.data)
                     if (res.data.code == '0') {
+                        this.isClientNo = false;
                         if (res.data.codeInfo) {
                             this.haveCreditCode.clientNo = res.data.codeInfo.clientNo;
                             this.noCreditCode.clientNo = res.data.codeInfo.clientNo;
                             //this.haveCreditCode.reportbuyerNo = res.data.codeInfo.reportbuyerNo
+                           if(res.data.codeInfo.clientNo){
+                             this.isClientNo = true;
+                           }
+
                         }
                     }
                 })
             },
+          getReviewer() {
+            let param = {
+              userName: this.$Cookies.get('username')
+            }
+            this.$ajax.manage.getReviewer(param).then(res => {
+              if (res.data.code == '0') {
+                  this.isZxbreportAudit = res.data.isReviewer;
+                  console.log(res.data.isReviewer)
+              }
+            })
+          },
             applyNoCode () {
-                if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
-                    // this.$message.warning('请输入买方代码');
-                    // return;
-                } else if (this.noCreditCode.reportCorpCountryCode === '') {
+              // if (!this.noCreditCode.clientNo || this.noCreditCode.clientNo === '') {
+              //      this.$message.warning('请输入买方代码');
+              //      return;
+              // } else
+              if((!this.isClientNo && !this.isZxbreportAudit) || !this.isClientNo){
+                this.$message.warning('您所在的二级公司没有开通信保通业务，如需使用该功能请咨询公司管理员。');
+                return;
+              }else if(!this.isZxbreportAudit){
+                this.$message.warning('您所在的二级公司没有设置信保审核专员，如需使用该功能请咨询公司管理员。');
+                return;
+              }else if (this.noCreditCode.reportCorpCountryCode === '') {
                     this.$message.warning('请输入待调查企业国别');
                     return;
                 } else if (this.noCreditCode.reportCorpChnName === '' && this.noCreditCode.reportCorpEngName === '') {
@@ -203,17 +231,26 @@
                     return;
                 }
                 this.$ajax.manage.zhongxinbaoApply(this.noCreditCode).then(res => {
+                  console.log(!this.isClientNo)
+                  console.log(!this.isZxbreportAudit)
                     if (res.status == 200) {
                         this.$message.success(res.data.returnMsg);
-                        this.dialogXBVisible = false
+                        this.dialogXBVisible = false;
                     }
                 })
             },
             applyHaveCode () {
-                if (!this.haveCreditCode.clientNo || this.haveCreditCode.clientNo === '') {
-                    this.$message.warning('请输入买方代码');
-                    return;
-                } else if (!this.haveCreditCode.reportbuyerNo || this.haveCreditCode.reportbuyerNo == '') {
+                // if (!this.haveCreditCode.clientNo || this.haveCreditCode.clientNo === '') {
+                //     // this.$message.warning('请输入买方代码');
+                //     // return;
+                // } else
+              if((!this.isClientNo && !this.isZxbreportAudit) || !this.isClientNo){
+                this.$message.warning('您所在的二级公司没有开通信保通业务，如需使用该功能请咨询公司管理员。');
+                return;
+              }else if(!this.isZxbreportAudit){
+                this.$message.warning('您所在的二级公司没有设置信保审核专员，如需使用该功能请咨询公司管理员。');
+                return;
+              }else  if (!this.haveCreditCode.reportbuyerNo || this.haveCreditCode.reportbuyerNo == '') {
                     this.$message.warning('请输入待调查企业中国信保企业代码');
                     return;
                 }else if (this.haveCreditCode.reportCorpChnName === '' && this.haveCreditCode.reportCorpEngName === '') {
@@ -221,6 +258,8 @@
                   return;
                 }
                 this.$ajax.manage.zhongxinbaoApply(this.haveCreditCode).then(res => {
+                  console.log(!this.isClientNo)
+                  console.log(!this.isZxbreportAudit)
                     if (res.status == 200) {
                         this.$message.success(res.data.returnMsg);
                         this.dialogXBVisible = false

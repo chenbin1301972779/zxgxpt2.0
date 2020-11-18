@@ -5,6 +5,7 @@
       <div class="header-box">
         <img src="../../public/img/logo2.png" alt="" >
         <span style="font-size:16px">
+          <el-button type="primary" round @click="downloadFile" style="margin: 0 10px">用户手册下载</el-button>
           <el-dropdown style="margin-right:20px" @command="handleCommand">
             <el-button type="primary" round>
               常用应用<i class="el-icon-arrow-down el-icon--right"></i>
@@ -12,12 +13,13 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="1" v-if="blacklistApply">黑名单申报</el-dropdown-item>
               <el-dropdown-item command="2" v-if="blacklistAudit">黑名单审批</el-dropdown-item>
-              <el-dropdown-item command="3">客商初筛</el-dropdown-item>
-              <el-dropdown-item command="4">信保报告申请</el-dropdown-item>
-              <el-dropdown-item command="7">信保报告列表</el-dropdown-item>
+              <el-dropdown-item command="3" v-if="merchant">客商初筛</el-dropdown-item>
+              <el-dropdown-item command="4" v-if="zxbReportApply">信保报告申请</el-dropdown-item>
+              <el-dropdown-item command="7" v-if="zxbReportlist">信保报告列表</el-dropdown-item>
               <el-dropdown-item command="10" v-if="zxbreportAudit">信保报告审核</el-dropdown-item>
               <el-dropdown-item command="5" v-if="userManage||sub_manage">用户管理</el-dropdown-item>
-              <el-dropdown-item command="6">消息中心</el-dropdown-item>
+              <el-dropdown-item command="11" v-if="$Cookies.get('username')=='admin'">角色管理</el-dropdown-item>
+              <el-dropdown-item command="6" v-if="newsAll">消息中心</el-dropdown-item>
               <el-dropdown-item command="8" v-if="$Cookies.get('username')=='admin'">访问日志</el-dropdown-item>
               <el-dropdown-item command="9" v-if="$Cookies.get('username')=='admin'">组织架构维护</el-dropdown-item>
             </el-dropdown-menu>
@@ -169,8 +171,12 @@ export default {
       },
 	  blacklistAudit:false,
 	  userManage: false,
+      merchant:false,
       sub_manage: false,
+      newsAll:false,
       zxbreportAudit:false,
+      zxbReportApply:false,
+      zxbReportlist:false,
 	  blacklistApply: false,
       dialogXBVisible: false
     }
@@ -195,7 +201,7 @@ export default {
 		//权限
 		let param = {
 			userId: this.$Cookies.get("userId"),
-			permissionPoint:"user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit"
+			permissionPoint:"user.manage,user.sub_manage,blacklist.audit,blacklist.apply,zxbreport.audit,merchant.screening,news.all,zxbreport.apply,zxbreport.list"
 		}
 		this.$ajax.manage.verifyPermissions(param).then(res=>{
 			console.log(res)
@@ -207,10 +213,15 @@ export default {
 				this.blacklistApply = res.data.verifyPermissionResult['blacklist.apply']
 				this.userManage = res.data.verifyPermissionResult['user.manage']
 				this.sub_manage = res.data.verifyPermissionResult['user.sub_manage']
-                this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
-                if(this.userManage||this.sub_manage){
-                  this.$Cookies.set('userManage','true');
-                }
+        this.zxbreportAudit = res.data.verifyPermissionResult['zxbreport.audit'];
+				this.merchant = res.data.verifyPermissionResult['merchant.screening'];
+        this.newsAll = res.data.verifyPermissionResult['news.all'];
+        this.zxbReportApply = res.data.verifyPermissionResult['zxbreport.apply'];
+        this.zxbReportlist  = res.data.verifyPermissionResult['zxbreport.list'];
+        if(this.userManage||this.sub_manage){
+          this.$Cookies.set('userManage','true');
+        }
+        console.log(res.data)
 			}
 		})
 	},
@@ -352,6 +363,8 @@ export default {
         this.goOrgEdit()
       } else if (command == 10) {
         this.$router.push({ path: '/ZxbApplyList' })
+      }else if(command == 11){
+        this.$router.push({ path: '/RoleManage' })
       }
     },
     getBlackList () {
@@ -517,6 +530,32 @@ export default {
     applyReport () {
       //打开报告申请弹框
       this.dialogXBVisible = true;
+    },
+    downloadFile() {
+      //用户手册下载
+      let param = {
+        userId: parseInt(this.$Cookies.get('userId')),
+        "noticeSerialno":"用户手册.docx",
+      }
+      this.$ajax.manage.getPDF(param).then(res => {
+        const content = res.data
+          const blob = new Blob([content])
+          console.log(res.data)
+          const fileName = '用户手册.docx'
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a')
+            elink.download = '用户手册.docx'
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            console.log(elink.href);
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, '用户手册.docx')
+          }
+      })
     }
   },
 }

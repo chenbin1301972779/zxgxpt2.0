@@ -118,6 +118,7 @@ export default {
 	methods:{
 		getBaseInfo(){
 			let param = {
+			  userId: parseInt(this.$Cookies.get('userId')),
 				companyId:this.$route.query.companyId
 			}
 			this.$ajax.manage.getBaseInfo(param).then(res=>{

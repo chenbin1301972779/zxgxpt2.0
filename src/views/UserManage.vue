@@ -121,13 +121,13 @@
         <el-form-item label="部门：">
           <el-input v-model="userInfo.deptName" style="width:300px"></el-input>
         </el-form-item>
-		<el-form-item label="权限：">
+		<el-form-item label="角色：">
 			 <el-select v-model="userInfo.permissionRoles" multiple placeholder="请选择" style="width:300px">
 			    <el-option
 			      v-for="item in permissionAll"
-			      :key="item.permissionRole"
-			      :label="item.permissionPointName"
-			      :value="item.permissionRole"
+			      :key="item.roleId"
+			      :label="item.roleName"
+			      :value="item.roleName"
                   :disabled="item.disabled"
                   :hidden="item.disabled">
 			    </el-option>
@@ -182,7 +182,6 @@ export default {
       let isFlag = true;
           for(let i = 0;i < this.newCompany.length;i++){
             if(value == this.newCompany[i].name){
-              console.log("1111111111111111111111111111111111111111111111111111111111111111")
               isFlag = false;
                 callback();
             }
@@ -194,15 +193,26 @@ export default {
 
     };
     var userIsZhrs = (rule, value, callback) => { //中韩人寿必须以zhrs开头
-      if(value&&this.userInfo.companyName&&this.userInfo.companyName.indexOf("中韩人寿")>=0){
-        if(value.indexOf("zhrs")==0){
-          callback();
-        }else{
-          callback(new Error("中航人寿人员必须以zhrs开头"));
-        }
-      }else{
-        callback();
+      let param = {
+        code: this.userInfo.companyCode
       }
+      this.$ajax.manage.getCompanyIDVerification(param).then(res => {
+        console.log(res.data)
+        if (res.data.code == 0) {
+          if(value&&this.userInfo.companyName&&this.userInfo.companyName == res.data.CompanyIDVerification.name){
+            if(value.indexOf(res.data.CompanyIDVerification.rule)==0){
+              callback();
+            }else{
+              // callback(new Error("中航人寿人员必须以zhrs开头"));
+              callback(new Error(res.data.CompanyIDVerification.name + '人员必须以' + res.data.CompanyIDVerification.rule + '开头'))
+            }
+          }else{
+            callback();
+          }
+        }else{
+          callback();
+        }
+      })
     };
     return {
       search: {
@@ -241,6 +251,7 @@ export default {
         companyCode: '',
         companyName: '',
         deptName: '',
+        roleName:'',
 		permission:[],
         permissionRoles: '',
         operator: this.$Cookies.get('userCode')
@@ -257,6 +268,7 @@ export default {
         deptName: '',
         permission:[],
         permissionRoles: '',
+        roleName:'',
         operator: this.$Cookies.get('userCode')
       },
       newCompany: [],
@@ -273,7 +285,7 @@ export default {
         username: [
           { required: true, message: '请输入工号', trigger: 'change' },
           { validator: userExists, message: '工号已存在', trigger: 'change' },
-          { validator: userIsZhrs, message: '中韩人寿员工工号必须以zhrs开始', trigger: 'blur' }
+          { validator: userIsZhrs, message: '', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入用户名', trigger: 'change' }
@@ -284,10 +296,10 @@ export default {
       },
 	  permissionList:[],
       permissionAll:[
-        {permissionPointName:"黑名单审批权限",permissionRole:"reviewer",disabled:true},
-        {permissionPointName:"黑名单申请权限",permissionRole:"applicant",disabled:true},
-        {permissionPointName:"信保报告审批权限",permissionRole:"zxb_report_reviewer",disabled:true},
-        {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
+        // {permissionPointName:"黑名单审批权限",permissionRole:"reviewer",disabled:true},
+        // {permissionPointName:"黑名单申请权限",permissionRole:"applicant",disabled:true},
+        // {permissionPointName:"信保报告审批权限",permissionRole:"zxb_report_reviewer",disabled:true},
+        // {permissionPointName:"子管理员用户权限",permissionRole:"sub_admin",disabled:true}
       ],
       treeData:[]
     }
@@ -296,6 +308,7 @@ export default {
     this.getData(1);
     this.getNewCompany();
     this.getAllCompanyLevel();
+    this.getRolePermission();
   },
   mounted () {
     this.getEnablePermission();
@@ -322,6 +335,15 @@ export default {
           console.log(res.data.userList)
           this.page.total = res.data.totalRecords
         }
+      })
+    },
+    getRolePermission(){
+      let param = {
+        userId: this.$Cookies.get('userId')
+      }
+      this.$ajax.manage.getRolePermission(param).then(res => {
+        console.log(res.data);
+        this.permissionAll = res.data.allRole;
       })
     },
     searchData() {
@@ -356,10 +378,13 @@ export default {
       })
     },
     newUser() {
+      this.clearUserInfo();
+      this.getRolePermission();
       this.isNew = true;
       this.editType = '新增用户';
       this.userInfo = {newCompanyFlag: 1,status: 1};
       this.editUserDialog = true;
+      this.getData(1)
     },
     handleNodeClick(node){
       console.log(node)
@@ -372,11 +397,15 @@ export default {
       this.isNew = false;
       this.editType = '编辑用户';
       row.newCompanyFlag = 0;
+      this.getRolePermission();
       //this.userInfo = row;
       this.userInfo = Object.assign({},row);
-      if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
-        this.userInfo.permissionRoles = this.userInfo.permissionRoles.split(',');
-      }
+      console.log(this.userInfo)
+      // if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
+        if(this.userInfo.roleName){
+          this.userInfo.permissionRoles = this.userInfo.roleName.split(',');
+        }
+      // }
       this.editUserDialog = true;
     },
     getNewCompany() {
@@ -419,10 +448,11 @@ export default {
             if (res.data.code == 0) {
               this.$message.success(res.data.msg);
               this.editUserDialog = false;
-              //this.clearUserInfo();
-              //this.$refs.userInfo.resetFields();
+              // this.clearUserInfo();
+              // this.$refs.userInfo.resetFields();
             }
           })
+          this.getData(1)
         } else {
           return false;
         }

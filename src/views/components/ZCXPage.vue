@@ -13,28 +13,43 @@
       <div style="margin: 13px 0;font-weight: bold;">历史报告列表</div>
       <el-table :data="tableData.slice((page.currentPage-1)*page.pageSize,page.currentPage*page.pageSize)"
         style="width: 100%" v-loading="tableLoading" border >
-        <el-table-column prop="reportId" label="单号" width="50px" align="center">
-        </el-table-column>
-        <el-table-column prop="pdfName" label="报告" >
-          <template slot-scope="scope">
-            <span class="text" style="color: #409EFF;cursor: pointer;">
-              <i :class="{'el-icon-loading':scope.row.fileLoading}"></i>
-              {{scope.row.pdfName}}
-            </span>
-            <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览
-            </el-button>
-            <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="downloadFile(scope.row)">下载
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="报告类型" width="150px" show-overflow-tooltip>
+<!--        <el-table-column prop="reportId" label="单号" width="50px" align="center">-->
+<!--        </el-table-column>-->
+        <el-table-column prop="address" label="报告类型" width="150px" show-overflow-tooltip align="center">
           <template slot-scope="scope">
             {{scope.row.reportType}}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="更新时间" width="150px" show-overflow-tooltip>
+        <el-table-column prop='param' label="区域"  show-overflow-tooltip align="center">
+          <template slot-scope="scope">
+            {{scope.row.area}}
+          </template>
+        </el-table-column>
+        <el-table-column prop='param' label="行业"  show-overflow-tooltip align="center">
+          <template slot-scope="scope">
+            {{scope.row.industry}}
+          </template>
+        </el-table-column>
+        <el-table-column prop='param' label="企业类型"  show-overflow-tooltip align="center">
+          <template slot-scope="scope">
+            {{scope.row.companyType}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="address" label="更新时间" width="115px" show-overflow-tooltip align="center">
           <template slot-scope="scope">
             {{$formatDate(scope.row.updateTime)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="pdfName" label="操作"   align="center">
+          <template slot-scope="scope">
+<!--            <span class="text" style="color: #409EFF;cursor: pointer;">-->
+<!--              <i :class="{'el-icon-loading':scope.row.fileLoading}"></i>-->
+<!--              {{scope.row.pdfName}}-->
+<!--            </span>-->
+            <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览
+            </el-button>
+            <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="downloadFile(scope.row)">下载
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -121,6 +136,7 @@ export default {
       //this.$ajax.manage.getLiteRatingList(param).then(res=>{
       this.$ajax.manage.getReportList(param).then(res => {
         this.tableLoading = false;
+        console.log(res.data.reportList)
         if (res.data.code == '0') {
           this.tableData = res.data.reportList.map(row => {
             row.fileLoading = false;

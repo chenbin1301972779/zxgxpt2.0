@@ -7,38 +7,46 @@
 			  <el-breadcrumb-item>消息中心</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="main-content">
-		<div class="content-item leftBox" style="margin-top: 10px;">
+<!--		<div class="main-content">-->
+<!--		<div class="content-item leftBox" style="margin-top: 10px;">-->
 		    <!--<div class="title">
 		        <span class="icon"></span>
 		        <span>预警推送</span>
 		    </div>-->
-		    <div class="main">
-		        <el-tabs v-model="activeAlarmTab" stretch>
-		            <el-tab-pane label="实时预警" name="1">
-		                <div class="tab-content-wrapper">
-							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab1"></iframe>
-		                </div>
-		            </el-tab-pane>
-		            <el-tab-pane label="风险早报" name="2">
-		                <div class="tab-content-wrapper">
-							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab2"></iframe>
-						</div>
-		            </el-tab-pane>
-		            <el-tab-pane label="新闻早报" name="3">
-		                <div class="tab-content-wrapper">
-							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab3"></iframe>
-						</div>
-		            </el-tab-pane>
-		            <el-tab-pane label="平台消息" name="4">
-		                <div class="tab-content-wrapper">
-							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab4"></iframe>
-						</div>
-		            </el-tab-pane>
-		        </el-tabs>
-		    </div>
-		</div>
-	</div>
+<!--		    <div class="main">-->
+<!--		        <el-tabs v-model="activeAlarmTab" stretch>-->
+<!--		            <el-tab-pane label="实时预警" name="1">-->
+<!--		                <div class="tab-content-wrapper">-->
+<!--							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab1"></iframe>-->
+<!--		                </div>-->
+<!--		            </el-tab-pane>-->
+<!--		            <el-tab-pane label="风险早报" name="2">-->
+<!--		                <div class="tab-content-wrapper">-->
+<!--							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab2"></iframe>-->
+<!--						</div>-->
+<!--		            </el-tab-pane>-->
+<!--		            <el-tab-pane label="新闻早报" name="3">-->
+<!--		                <div class="tab-content-wrapper">-->
+<!--							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab3"></iframe>-->
+<!--						</div>-->
+<!--		            </el-tab-pane>-->
+<!--		            <el-tab-pane label="平台消息" name="4">-->
+<!--		                <div class="tab-content-wrapper">-->
+<!--							<iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab4"></iframe>-->
+<!--						</div>-->
+<!--		            </el-tab-pane>-->
+<!--              <el-tab-pane label="测试消息中心" name="5">-->
+<!--                <div class="tab-content-wrapper">-->
+<!--                  <iframe width="100%" :height="curHeight" frameborder="0" marginwidth="0" marginheight="5" :src="urlTab5"></iframe>-->
+<!--                </div>-->
+<!--              </el-tab-pane>-->
+<!--		        </el-tabs>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--	</div>-->
+    <div style="height: calc(100% - 50px);min-height: 800px;">
+      <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
+    </div>
 	</div>
 </template>
 
@@ -82,7 +90,10 @@
 				urlTab1: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/TYC_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
 				urlTab2: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZCX_RISK.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
 				urlTab3: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZCX_NEWS.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
-				urlTab4: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode')
+				urlTab4: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/ZNX_PUSH.cpt&op=write&userCode=`+this.$Cookies.get('userCode'),
+        srcUrl: `${process.env.VUE_APP_FR_URL}/webroot/decision/view/form?viewlet=Homepage/NEWS_ALL.frm&op=write&userCode=`+this.$Cookies.get('userCode'),
+
+
 			}
 		},
 		mounted() {

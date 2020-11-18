@@ -241,6 +241,7 @@ export default {
     downPdf (pdfName) {
       //pdf下载
       let param = {
+        userId: parseInt(this.$Cookies.get('userId')),
         "noticeSerialno": pdfName,
       }
       this.$ajax.manage.getPDF(param).then(res => {
@@ -266,6 +267,7 @@ export default {
     viewPdf (pdfName) {
       let src = '';
       let param = {
+        userId: parseInt(this.$Cookies.get('userId')),
         "noticeSerialno": pdfName
       }
       this.pdfDialogVisible = true;

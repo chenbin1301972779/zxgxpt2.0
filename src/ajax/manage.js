@@ -180,6 +180,11 @@ async function getBusinessInfo (param) {
     let getBusinessInfo = await ajax.post(`/api/company/zhongxinbao/getBusinessInfo`, param)
     return getBusinessInfo
 }
+// 获取摘要窗口所需要的信息
+async function getAllBusinessInfo (param) {
+    let getAllBusinessInfo = await ajax.post(`/api/company/zhongxinbao/getAllBusinessInfo`, param)
+    return getAllBusinessInfo
+}
 //中信保接口
 async function getShareInfo (param) {
     let getShareInfo = await ajax.post(`/api/company/zhongxinbao/getShareInfo`, param)
@@ -235,6 +240,43 @@ async function getAllCompanyLevel (param) {
     let getAllCompanyLevel = await ajax.post(`/api/company/getAllCompanyLevel`, param)
     return getAllCompanyLevel
 }
+
+async function getCompanyIDVerification (param) {
+    let getCompanyIDVerification = await ajax.post(`/api/company/getCompanyIDVerification`, param)
+    return getCompanyIDVerification
+}
+
+async function getAllRole (param) {
+    let getAllRole = await ajax.post(`/api/user/getAllRole`, param)
+    return getAllRole
+}
+
+async function saveOrEditRole (param) {
+    let saveOrEditRole = await ajax.post(`/api/user/saveOrEditRole`, param)
+    return saveOrEditRole
+}
+
+async function getRolePermission (param) {
+    let getRolePermission = await ajax.post(`/api/user/getRolePermission`, param)
+    return getRolePermission
+}
+async function roleNameExists (param) {
+    let roleNameExists = await ajax.post(`/api/user/roleNameExists`, param)
+    return roleNameExists
+}
+
+// async function getUserManual (param) {
+//     let getUserManual = await ajax.post(`/api/company/getUserManual`, param)
+//     return getUserManual
+// }
+
+async function getReviewer (param) {
+    let getReviewer = await ajax.post(`/api/user/getReviewer`, param)
+    return getReviewer
+}
+
+
+
 const manage = {
     login: login,
     latestWords: latestWords,
@@ -270,6 +312,7 @@ const manage = {
     getRegionInfo: getRegionInfo,
     getShareInfo: getShareInfo,
     getBusinessInfo: getBusinessInfo,
+    getAllBusinessInfo:getAllBusinessInfo,
     getNationCode: getNationCode,
 	verifyPermissions: verifyPermissions,
     getUserCompany: getUserCompany,
@@ -281,6 +324,13 @@ const manage = {
     logPath: logPath,
     searchApplyList: searchApplyList,
     getAllCompanyLevel:getAllCompanyLevel,
+    getCompanyIDVerification:getCompanyIDVerification,
+    getAllRole:getAllRole,
+    saveOrEditRole:saveOrEditRole,
+    getRolePermission:getRolePermission,
+    roleNameExists:roleNameExists,
+    // getUserManual:getUserManual,
+    getReviewer:getReviewer,
 }
 
 export default manage
