@@ -96,6 +96,26 @@ const routes = [
                 path: '/RoleManage',
                 name: 'RoleManage',
                 component: ()=> import('../views/RoleManage')
+            },
+            {
+                path: '/InitialScreeningOfMerchants',
+                name: 'InitialScreeningOfMerchants',
+                component: ()=> import('../views/InitialScreeningOfMerchants')
+            },
+            {
+                path: '/ResultsView',
+                name: 'ResultsView',
+                component: ()=> import('../views/ResultsView')
+            },
+            {
+                path: '/BlackListDeclaration',
+                name: 'BlackListDeclaration',
+                component: ()=> import('../views/BlackListDeclaration')
+            },
+            {
+                path: '/BlacklistApproval',
+                name: 'BlacklistApproval',
+                component: ()=> import('../views/BlacklistApproval')
             }
 
         ]

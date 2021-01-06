@@ -13,6 +13,7 @@ function getCookie () {
             token = ''
         }
     }
+
     return token
 }
 

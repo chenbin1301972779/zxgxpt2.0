@@ -5,11 +5,12 @@
             <div class="left-box">
                 <div>
                     <div class="titile" style="margin-bottom: 25px;">
-						企业基本信息
-						<span style="float:right">
-							<slot></slot>
-						</span>
-					</div>
+                      企业基本信息
+                      <span style="float:right">
+                        <slot></slot>
+                      </span>
+                      <span v-if="isBlack" style="color:white;background-color: #c1c1c1;padding: 3px;">黑名单</span>
+					          </div>
                     <div class="table-wrapper">
                         <table border="1">
                             <tr>
@@ -108,26 +109,45 @@ export default {
         return {
             basicInfo: {},
             main: 'userMap',
+            isBlack:false  // 判断当前企业是不是在黑名单列表中
         }
     },
     created () {
-	   if(this.$route.query.companyId){
+	   if(this.$route.query.companyId || this.$route.query.companyName){
 		   this.getBaseInfo()
 	   }
+	   this.getIsBlack()
     },
 	methods:{
 		getBaseInfo(){
 			let param = {
 			  userId: parseInt(this.$Cookies.get('userId')),
-				companyId:this.$route.query.companyId
+				companyId:this.$route.query.companyId,
+        companyName:this.$route.query.companyName
 			}
 			this.$ajax.manage.getBaseInfo(param).then(res=>{
 				if(res.status==200){
 					this.basicInfo = res.data.baseInfo
-                    sessionStorage.setItem('tycIndustry', res.data.baseInfo.industry)
+          sessionStorage.setItem('tycIndustry', res.data.baseInfo.industry)
 				}
 			})
-		}
+		},
+    /**
+     *  判断当前企业是不是在黑名单列表中
+     */
+    getIsBlack(){
+      let param = {
+        "userCode": sessionStorage.getItem('userCode'),
+        "code": this.$route.query.creditCode,
+        "pid":this.$route.query.pid,
+      }
+      this.$ajax.manage.getIsBlack(param).then(res => {
+        if (res.data.code == 0) {
+            this.isBlack = res.data.isBlack
+        }
+      })
+
+    }
 	}
 }
 </script>

@@ -276,7 +276,8 @@ export default {
     created () {
         this.getCareStatus();
         this.getArea();
-		this.$Bus.$on('largerWindow',()=>{
+      console.log(this.$route.query)
+		  this.$Bus.$on('largerWindow',()=>{
 			this.isFullscreen=true
 		})
     },
@@ -497,7 +498,8 @@ export default {
             //this.tycUrl = `http://std.tianyancha.com/cloud-std-security/aut/login.json?username=1111&authId=2701&sign=4d53b6d11889e8eb3cd5c77cce7358d0&redirectUrl=/company/${tycid}/background`
             this.tycUrl = `https://pro.tianyancha.com/cloud-std-security/aut/login.json?username=${username}&authId=lf2b4yqy4lsfgp1x&sign=${sign}&redirectUrl=/company/${tycid}/background`
             //this.tycUrl = `https://std.test.s.tianyancha.cn/cloud-std-security/aut/login.json?username=${username}&authId=lf2b4yqy4lsfgp1x&sign=${sign}&redirectUrl=/company/${tycid}/background`
-            /**
+
+          /**
             this.$ajax.manage.getData(this.$route.query.companyName).then(res=>{
                 let tycid = res.data.result.items[0].id
                 alert(tycid);

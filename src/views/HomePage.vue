@@ -6,6 +6,22 @@
         <img src="../../public/img/logo2.png" alt="" >
         <span style="font-size:16px">
           <el-button type="primary" round @click="downloadFile" style="margin: 0 10px">用户手册下载</el-button>
+           <el-dropdown style="margin-right:20px" @command="TycHandleCommand">
+            <el-button type="primary" round>
+              高级应用<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="1">幕后关系</el-dropdown-item>
+              <el-dropdown-item command="2">关联关系</el-dropdown-item>
+              <el-dropdown-item command="3">报告下载</el-dropdown-item>
+              <el-dropdown-item command="4">天眼地图</el-dropdown-item>
+              <el-dropdown-item command="5">资本市场公告</el-dropdown-item>
+              <el-dropdown-item command="6">资本市场法规</el-dropdown-item>
+               <el-dropdown-item command="7">资本成分穿透</el-dropdown-item>
+              <el-dropdown-item command="8">企业画像</el-dropdown-item>
+              <el-dropdown-item command="9">数据导出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-dropdown style="margin-right:20px" @command="handleCommand">
             <el-button type="primary" round>
               常用应用<i class="el-icon-arrow-down el-icon--right"></i>
@@ -96,6 +112,7 @@
             <ul class="proList_li " v-if="searchList.length>0">
               <li class="clear" v-for="(item,index) in searchList" :key=" index">
                 <div class="fl-left proList_content">
+                  <span v-if="item.isBlack" style="color:white;background-color: #c1c1c1;padding: 3px;float: right">黑名单</span>
                   <p class="proList_txt" @click="moreNews(item,'0')"
                     v-html="brightenKeyword(item.companyName,searchVal)">
                   </p>
@@ -178,15 +195,17 @@ export default {
       zxbReportApply:false,
       zxbReportlist:false,
 	  blacklistApply: false,
-      dialogXBVisible: false
+      dialogXBVisible: false,
     }
   },
   created(){
-	  console.log(this.$route.query)
 	  if(this.$route.query.searchVal){
 		  this.searchVal=this.$route.query.searchVal;
 		  this.seachContent()
 	  }
+    if(this.$route.query.tokenIsOut){
+      this.message("您的帐号在另一地点登录，您已被迫下线");
+    }
   },
   mounted () {
     if (this.$Cookies.get(this.$getCookieKey())) {
@@ -286,6 +305,15 @@ export default {
         }
       })
     },
+    goToTycPage(title,uri){
+      this.$router.push({
+        path: '/iframePage',
+        query: {
+          title: encodeURIComponent(title),
+          url: encodeURIComponent(this.tycUrl+uri)
+        }
+      })
+    },
     logOut () {
       //退出
       this.$Cookies.remove(this.$getCookieKey());
@@ -331,17 +359,56 @@ export default {
       this.userSettingDialog = true;
       this.getUserInfo()
     },
+    TycHandleCommand(command){
+        //TODO 组装天眼查URL
+        let username = "zjb_"+this.$Cookies.get('userCode');
+        let sign = this.$md5(username+"44bce5ef-873e-4689-b515-a1ef9775aa82");
+        this.tycUrl = `https://pro.tianyancha.com/cloud-std-security/aut/login.json?username=${username}&authId=lf2b4yqy4lsfgp1x&sign=${sign}&redirectUrl=`
+
+        if(command == 1){
+          //幕后关系
+            this.goToTycPage("幕后关系","/found");
+        }else if(command == 2){
+          //关联关系
+          this.goToTycPage("关联关系","/shortpath");
+        }else if(command == 3){
+          //报告下载
+          this.goToTycPage("报告下载","/tools/download-report");
+        }else if(command == 4){
+          //天眼地图
+          this.goToTycPage("天眼地图","/map");
+        }else if(command == 5){
+          //资本市场公告
+          this.goToTycPage("资本市场公告","/announcement");
+        }else if(command == 6){
+          //资本市场法规
+          this.goToTycPage("资本市场法规","/regulations");
+        }else if(command == 7){
+          //资本成分穿透
+          this.goToTycPage("资本成分穿透","/tools/capital");
+        }else if(command == 8){
+          //企业画像
+          this.goToTycPage("企业画像","/tools/portrait");
+        }else if(command == 9){
+          //数据导出
+          this.goToTycPage("数据导出","/tools/export-company-list");
+        }
+
+    },
     handleCommand (command) {
       console.log(command)
       if (command == 1) {
         //黑名单申报
-        this.goHmdsb()
+       // this.goHmdsb()
+        this.$router.push({ path: '/BlackListDeclaration' })
       } else if (command == 2) {
         //黑名单审批
-        this.goHmdsp()
+        // this.goHmdsp()
+        this.$router.push({ path: '/BlacklistApproval' })
       } else if (command == 3) {
         //客商初筛
-        this.goKstb()
+       // this.goKstb()
+        this.$router.push({ path: '/InitialScreeningOfMerchants' })
       } else if (command == 4) {
         //信保报告申请
         this.applyReport()
@@ -372,7 +439,6 @@ export default {
         "userCode": sessionStorage.getItem('userCode')
       }
       this.$ajax.manage.getBlackList(param).then(res => {
-        console.log(res);
         if (res.data.code == 0) {
           this.blackListData = res.data.blackList
         }
@@ -395,6 +461,7 @@ export default {
           if (res.status == 200) {
             //console.log(res.data);
             this.searchList = res.data.searchList
+            this.getIsBlack(this.blackListData,this.searchList)
             this.sourceType = res.data.sourceType;
             this.showBox = 2;
             this.getLatestSearchList()
@@ -500,6 +567,7 @@ export default {
       this.$ajax.manage.directSearchList(param).then(res => {
         if (res.status == 200) {
           this.searchList = res.data.searchList
+          this.getIsBlack(this.blackListData,this.searchList);
           this.sourceType = res.data.sourceType;
           this.showBox = 2;
         }
@@ -556,6 +624,17 @@ export default {
             navigator.msSaveBlob(blob, '用户手册.docx')
           }
       })
+    },
+    getIsBlack(blackList,searchList){
+      for(let i = 0; i < searchList.length; i++){
+        searchList[i].isBlack = false;
+        for(let j = 0; j < blackList.length; j++){
+          if(blackList[j].code == searchList[i].creditCode){
+            searchList[i].isBlack = true;
+          }
+        }
+      }
+      console.log(searchList)
     }
   },
 }

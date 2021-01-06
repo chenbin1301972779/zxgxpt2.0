@@ -5,7 +5,7 @@
             <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
         </el-breadcrumb>
 		<div style="height: calc(100% - 50px);min-height: 800px;">
-			 <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
+			 <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="yes" marginwidth="0" marginheight="5"></iframe>
 		</div>
        
     </div>

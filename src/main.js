@@ -5,6 +5,8 @@ import router from './router'
 import store from './store'
 import iconFont from './assets/css/iconfont.css'
 
+
+
 Vue.config.productionTip = false
 
 import less from 'less'
@@ -28,6 +30,7 @@ Vue.prototype.$Cookies = Cookies
 Vue.prototype.$formatDate = formatDate
 const sysTitle = '资信共享门户系统'
 Vue.prototype.$sysTitle = sysTitle
+
 
 //事件总线
 import Bus from '@/assets/bus.js'
@@ -67,7 +70,17 @@ const getPageName = (page) => {
         return "搜索"
     }else if(page.path.indexOf("zxbReportList")>=0){
         return "信保报告列表"
-    }else if(page.path.indexOf("iframePage")>=0){
+    }else if(page.path.indexOf("InitialScreeningOfMerchants")>=0){
+        return "客商初筛";
+    }else if(page.path.indexOf("RoleManage")>=0){
+        return "角色管理";
+    }else if(page.path.indexOf("ResultsView")>=0){
+        return "结果查看";
+    }else if(page.path.indexOf("BlackListDeclaration")>=0){
+        return "黑名单申报";
+    }else if(page.path.indexOf("BlacklistApproval")>=0){
+        return "黑名单审批";
+    } else if(page.path.indexOf("iframePage")>=0){
         //let queryStr = decodeURIComponent(page.query.title)
         let queryStr = decodeURIComponent(JSON.stringify(page.query))
         if(queryStr&&queryStr.indexOf("黑名单申报")>0){

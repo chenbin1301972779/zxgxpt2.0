@@ -64,6 +64,11 @@ export default {
     //   sessionStorage.removeItem('userId');
     //   this.go(0)
     // }
+    console.log(this.$route.query.tokenIsOut)
+    if(this.$route.query.tokenIsOut){
+      this.$message.error("您的帐号在另一地点登录，您已被迫下线");
+      this.$route.query.tokenIsOut = false;
+    }
     if (this.$route.query.username) {
       this.skipLogin();
     }
@@ -95,6 +100,7 @@ export default {
           this.$Cookies.set('userCode', res.data.username, { expires: 30 });
           this.$Cookies.set('userId', res.data.userId, { expires: 30 });
           this.$Cookies.set('companyCode', res.data.companyCode, { expires: 30 })
+          this.$Cookies.set('companyName', res.data.companyName, { expires: 30 })
           sessionStorage.setItem('username', res.data.name);
           sessionStorage.setItem('userCode', res.data.username);
           sessionStorage.setItem('userId', res.data.userId);
@@ -118,6 +124,8 @@ export default {
           this.$Cookies.set('username', res.data.name, { expires: 30 });
           this.$Cookies.set('userCode', res.data.username, { expires: 30 });
           this.$Cookies.set('userId', res.data.userId, { expires: 30 });
+          this.$Cookies.set('companyCode', res.data.companyCode, { expires: 30 })
+          this.$Cookies.set('companyName', res.data.companyName, { expires: 30 })
           sessionStorage.setItem('username', res.data.name);
           sessionStorage.setItem('userCode', res.data.username);
           sessionStorage.setItem('userId', res.data.userId);

@@ -1,7 +1,7 @@
 /**
  * 本模块主要用于监控管理
  */
-import { ajax, redirectAjax, fileAjax, newAjax } from './ajax.js'
+import { ajax, redirectAjax, fileAjax,upLoadFile ,newAjax } from './ajax.js'
 
 //登录
 async function login (param) {
@@ -275,7 +275,67 @@ async function getReviewer (param) {
     return getReviewer
 }
 
+async function saveInitialScreeningOfMerchants (param) {
+    let saveInitialScreeningOfMerchants = await ajax.post(`/api/common/saveInitialScreeningOfMerchants`, param)
+    return saveInitialScreeningOfMerchants
+}
 
+async function getSearchFillInInfo (param) {
+    let getSearchFillInInfo = await ajax.post(`/api/common/getSearchFillInInfo`, param)
+    return getSearchFillInInfo
+}
+
+async function getMerchantsViewResults (param) {
+    let getMerchantsViewResults = await ajax.post(`/api/common/getMerchantsViewResults`, param)
+    return getMerchantsViewResults
+}
+// 判断当前企业在不在黑名单列表中
+async function getIsBlack (param) {
+    let getIsBlack = await ajax.post(`/api/common/getIsBlack`, param)
+    return getIsBlack
+}
+// 查询黑名单申请结果列表
+async function getAllBlackListResultList (param) {
+    let getAllBlackListResultList = await ajax.post(`/api/common/getAllBlackListResultList`, param)
+    return getAllBlackListResultList
+}
+
+// 查询黑名单审批列表
+async  function getBlacklistApprovalList(param){
+    let getBlacklistApprovalList = await ajax.post(`/api/common/getBlacklistApprovalList`, param)
+    return getBlacklistApprovalList
+}
+
+//文件下载
+async function downloadDocument (param) {
+    let downloadDocument = await fileAjax.post(`/api/common/downloadDocument`, param)
+    return downloadDocument
+}
+
+//黑名单申请页面获取所有公司名称
+async function getCompayNameAndCreditCode (param) {
+    let getCompayNameAndCreditCode = await ajax.post(`/api/company/getCompayNameAndCreditCode`, param)
+    return getCompayNameAndCreditCode
+}
+
+// 文件上传
+async function uploadFile (param) {
+    let uploadFile = await upLoadFile.post(`/api/common/uploadFile`, param)
+    return uploadFile
+}
+
+async function deleteFile (param) {
+    let deleteFile = await ajax.post(`/api/common/deleteFile`, param)
+    return deleteFile
+}
+
+
+
+// 黑名单申请、编辑、续期、取消续期
+async function saveOrEdit (param) {
+    let saveOrEdit = await ajax.post(`/api/common/saveOrEdit`, param)
+    return saveOrEdit
+}
 
 const manage = {
     login: login,
@@ -331,6 +391,17 @@ const manage = {
     roleNameExists:roleNameExists,
     // getUserManual:getUserManual,
     getReviewer:getReviewer,
+    saveInitialScreeningOfMerchants:saveInitialScreeningOfMerchants,
+    getSearchFillInInfo:getSearchFillInInfo,
+    getMerchantsViewResults:getMerchantsViewResults,
+    getIsBlack: getIsBlack,
+    getAllBlackListResultList:getAllBlackListResultList,
+    downloadDocument:downloadDocument,
+    getCompayNameAndCreditCode:getCompayNameAndCreditCode,
+    uploadFile:uploadFile,
+    deleteFile:deleteFile,
+    saveOrEdit:saveOrEdit,
+    getBlacklistApprovalList:getBlacklistApprovalList,
 }
 
 export default manage

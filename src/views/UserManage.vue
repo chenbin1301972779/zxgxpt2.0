@@ -26,7 +26,7 @@
       <el-button type="success" icon="el-icon-plus" v-on:click="newUser">新增</el-button>
     </div>
     <div class="table-box">
-      <el-tree :data="treeData" @node-click="handleNodeClick" style="width: 30%;float: left;top: 0px;z-index: 1;margin-left: -19px;height: "></el-tree>
+      <el-tree :data="treeData" @node-click="handleNodeClick" style="width: 30%;float: left;top: 0px;z-index: 1;margin-left: -19px;"></el-tree>
       <el-table ref="multipleTable" :data="tableData"  tooltip-effect="dark" style="width: 71%;" stripe
         v-loading='loading'>
         <el-table-column type="selection" width="55">
@@ -401,11 +401,16 @@ export default {
       //this.userInfo = row;
       this.userInfo = Object.assign({},row);
       console.log(this.userInfo)
-      // if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
+       // if (this.userInfo.permissionRoles && !(this.userInfo.permissionRoles instanceof Array)) {
+     // this.userInfo.roleName != "zxb_report_apply,zxb_report_list,merchant,news_all,applicant"
         if(this.userInfo.roleName){
           this.userInfo.permissionRoles = this.userInfo.roleName.split(',');
+          console.log( this.userInfo.permissionRoles)
+        }else{
+          this.userInfo.permissionRoles = null;
         }
-      // }
+       // }
+
       this.editUserDialog = true;
     },
     getNewCompany() {

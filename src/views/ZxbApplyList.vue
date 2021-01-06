@@ -28,7 +28,7 @@
           <el-input class="fl-left manageTableInput" v-model="search.approver" placeholder="请输入审批人" clearable
                     style="width: 200px;margin-right: 10px;">
           </el-input>
-            <el-button type="primary" icon="el-icon-search" @click="searchData">查询</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="searchData(1)">查询</el-button>
         </div>
         <div class="table-box">
             <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" stripe

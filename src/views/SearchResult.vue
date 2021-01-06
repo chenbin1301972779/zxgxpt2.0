@@ -14,7 +14,8 @@
 		      <ul class="proList_li " v-if="searchList.length>0">
 		        <li class="clear" v-for="(item,index) in searchList" :key="index">
 		          <div class="fl-left proList_content">
-		            <p class="proList_txt" @click="moreNews(item,'0')"
+                <span v-if="item.isBlack" style="color:white;background-color: #c1c1c1;padding: 3px;float: right">黑名单</span>
+                <p class="proList_txt" @click="moreNews(item,'0')"
 		              v-html="brightenKeyword(item.companyName,searchVal)">
 		            </p>
 		            <p>社会统一信用代码：{{item.creditCode}}</p>
@@ -40,11 +41,13 @@
 		data(){
 			return{
 				searchList: [],
+        blackListData:[],
 				sourceType:'',
 				searchVal:""
 			}
 		},
 		created(){
+      this.getBlackList()
 			if(this.$route.query.searchVal && (!this.$route.query.isBlar)) {
 			  this.searchVal=this.$route.query.searchVal;
 			  this.seachContent()
@@ -75,6 +78,7 @@
 			      if (res.status == 200) {
 			        //console.log(res.data);
 			        this.searchList = res.data.searchList
+              this.getIsBlack(this.blackListData,this.searchList)
 			        this.sourceType = res.data.sourceType;
 			      }
 			    })
@@ -89,6 +93,7 @@
 			  this.$ajax.manage.directSearchList(param).then(res => {
 			    if (res.status == 200) {
 			      this.searchList = res.data.searchList
+            this.getIsBlack(this.blackListData,this.searchList)
 			      this.sourceType = res.data.sourceType;
 			      this.showBox = 2;
 			    }
@@ -136,6 +141,27 @@
 			    }
 			  })
 			},
+      getIsBlack(blackList,searchList){
+        for(let i = 0; i < searchList.length; i++){
+          searchList[i].isBlack = false;
+          for(let j = 0; j < blackList.length; j++){
+            if(blackList[j].code == searchList[i].creditCode){
+              searchList[i].isBlack = true;
+            }
+          }
+        }
+        console.log(searchList)
+      },
+      getBlackList () {
+        let param = {
+          "userCode": sessionStorage.getItem('userCode')
+        }
+        this.$ajax.manage.getBlackList(param).then(res => {
+          if (res.data.code == 0) {
+            this.blackListData = res.data.blackList
+          }
+        })
+      }
 		}
 	}
 </script>

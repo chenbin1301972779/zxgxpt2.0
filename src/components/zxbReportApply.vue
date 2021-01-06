@@ -194,7 +194,7 @@
             },
           getReviewer() {
             let param = {
-              userName: this.$Cookies.get('username')
+              userName: this.$Cookies.get('userCode')
             }
             this.$ajax.manage.getReviewer(param).then(res => {
               if (res.data.code == '0') {

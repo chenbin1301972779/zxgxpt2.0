@@ -40,7 +40,7 @@
             {{$formatDate(scope.row.updateTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="pdfName" label="操作"   align="center">
+        <el-table-column prop="pdfName" label="操作"  width="160px"  align="center">
           <template slot-scope="scope">
 <!--            <span class="text" style="color: #409EFF;cursor: pointer;">-->
 <!--              <i :class="{'el-icon-loading':scope.row.fileLoading}"></i>-->
@@ -49,6 +49,8 @@
             <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览
             </el-button>
             <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="downloadFile(scope.row)">下载
+            </el-button>
+            <el-button type="primary" size="mini" plain style="width: 123px;margin-top: 10px;" @click="seeMore(scope.row)">查看历史报告
             </el-button>
           </template>
         </el-table-column>
@@ -71,6 +73,58 @@
 <!--        <embed :src="src" width="100%" height="600px"></embed>-->
       </div>
     </el-dialog>
+    <el-dialog
+        title="提示"
+        :visible.sync="moreDialogVisible"
+        width="80%"
+        @close="moreCloseDialog">
+      <div style="padding: 0 30px; min-height: 500px;" >
+          <div style="margin: 13px 0;font-weight: bold;">历史报告列表</div>
+          <el-table :data="tableTypeData.slice((page.currentPage-1)*page.pageSize,page.currentPage*page.pageSize)"
+                    style="width: 100%" v-loading="tableLoading" border >
+            <!--        <el-table-column prop="reportId" label="单号" width="50px" align="center">-->
+            <!--        </el-table-column>-->
+            <el-table-column prop="address" label="报告类型" width="150px" show-overflow-tooltip align="center">
+              <template slot-scope="scope">
+                {{scope.row.reportType}}
+              </template>
+            </el-table-column>
+            <el-table-column prop='param' label="区域"  show-overflow-tooltip align="center">
+              <template slot-scope="scope">
+                {{scope.row.area}}
+              </template>
+            </el-table-column>
+            <el-table-column prop='param' label="行业"  show-overflow-tooltip align="center">
+              <template slot-scope="scope">
+                {{scope.row.industry}}
+              </template>
+            </el-table-column>
+            <el-table-column prop='param' label="企业类型"  show-overflow-tooltip align="center">
+              <template slot-scope="scope">
+                {{scope.row.companyType}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="address" label="更新时间"  show-overflow-tooltip align="center">
+              <template slot-scope="scope">
+                {{$formatDate(scope.row.updateTime)}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="pdfName" label="操作"   align="center">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="checkPdf(scope.row)">预览
+                </el-button>
+                <el-button type="primary" size="mini" plain style="margin-left: 10px;" @click="downloadFile(scope.row)">下载
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+      </div>
+  <div style="text-align: center;margin-top: 10px;">
+    <el-pagination background layout="prev, pager, next,total,jumper" :total="typePage.total"
+                   :current-page.sync="typePage.currentPage" :pageSize="typePage.pageSize" @current-change="handleCurrentChange">
+    </el-pagination>
+  </div>
+  </el-dialog>
   </div>
 </template>
 <script>
@@ -84,6 +138,7 @@ export default {
     return {
       data: '',
       dialogVisible: false,
+      moreDialogVisible:false,
       creditCode: this.$route.query.creditCode,
       buildDate: this.$route.query.buildDate,
       credit: '1',
@@ -104,7 +159,13 @@ export default {
       fileName: '',
       loading: false,
       tableData: [],
+      tableTypeData:[],
       page: {
+        currentPage: 1,
+        total: 0,
+        pageSize: 8
+      },
+      typePage: {
         currentPage: 1,
         total: 0,
         pageSize: 8
@@ -146,6 +207,31 @@ export default {
         }
       })
 
+    },
+    getReportTypeList(reportType){
+      let param = {
+        companyId: this.$route.query.companyId,
+        reportType:reportType
+      }
+      this.tableLoading = true;
+      this.$ajax.manage.getReportList(param).then(res => {
+        this.tableLoading = false;
+        console.log(res.data.reportList)
+        if (res.data.code == '0') {
+          this.tableTypeData = res.data.reportList.map(row => {
+            row.fileLoading = false;
+            return row
+          });
+          this.typePage.total = res.data.reportList.length
+        }
+      })
+    },
+    seeMore(row){
+      this.moreDialogVisible = true;
+      this.getReportTypeList(row.reportType)
+    },
+    moreCloseDialog() {
+      this.moreDialogVisible = false;
     },
     fxcsIsDay(fxcsData,param){
         // if (new Date().getTime() - this.fxcsData.updateTime < 86400000) {
