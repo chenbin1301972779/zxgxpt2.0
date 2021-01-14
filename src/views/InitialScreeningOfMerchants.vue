@@ -12,7 +12,8 @@
       <el-button type="primary" @click="saveInfo('initialScreeningOfMerchantsForm')" >提交</el-button>
       <el-upload
           class="upload-demo"
-          action=""
+          ref="uploadExcel"
+          action="#"
           :on-change="handleChange"
           :on-exceed="handleExceed"
           :on-remove="handleRemove"
@@ -159,7 +160,7 @@ export default {
   data(){
     return{
       SerialNumber:'',
-      limitUpload:9999, // 限制只能上传1个文件
+      limitUpload:1, // 限制只能上传1个文件
       fileTemp:null,
       nationTypes:['国内','国外'],
       companyTypes:['客商','成员单位'],
@@ -318,7 +319,7 @@ export default {
       })
     },
     handleChange(file, fileList){
-      this.fileTemp = null;
+      this.$refs.uploadExcel.clearFiles();
       this.fileTemp = file.raw
       if(this.fileTemp){
         if(this.fileTemp.name.endsWith(".xlsx")){

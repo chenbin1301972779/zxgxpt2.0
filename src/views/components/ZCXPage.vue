@@ -286,9 +286,11 @@ export default {
           reportType:"风险初筛"
         }
         this.$ajax.manage.getReportList(fxFaram).then(res => {
+
           if (res.data.code == '0') {
             if(res.data.reportList.length > 0){
               this.fxcsData = res.data.reportList[0];
+              console.log(res.data);
               console.log(this.fxcsData)
               this.fxcsIsDay(this.fxcsData,param)
             }else{

@@ -317,13 +317,18 @@ async function getCompayNameAndCreditCode (param) {
     let getCompayNameAndCreditCode = await ajax.post(`/api/company/getCompayNameAndCreditCode`, param)
     return getCompayNameAndCreditCode
 }
+// 黑名单申请时候判断是否已经申请
+async function getCompanyStatus (param) {
+    let getCompanyStatus = await ajax.post(`/api/company/getCompanyStatus`, param)
+    return getCompanyStatus
+}
 
 // 文件上传
 async function uploadFile (param) {
     let uploadFile = await upLoadFile.post(`/api/common/uploadFile`, param)
     return uploadFile
 }
-
+// 文件删除
 async function deleteFile (param) {
     let deleteFile = await ajax.post(`/api/common/deleteFile`, param)
     return deleteFile
@@ -335,6 +340,43 @@ async function deleteFile (param) {
 async function saveOrEdit (param) {
     let saveOrEdit = await ajax.post(`/api/common/saveOrEdit`, param)
     return saveOrEdit
+}
+
+//  消息中心  获取企业名称列表
+async function getCompayNameList (param) {
+    let getCompayNameList = await ajax.post(`/api/company/getCompayNameList`, param)
+    return getCompayNameList
+}
+//  消息中心  获取事件类型列表
+async function getEventTypeList (param) {
+    let getEventTypeList = await ajax.post(`/api/common/getEventTypeList`, param)
+    return getEventTypeList
+}
+// 消息中心 获取列表数据
+async function getRealTimeWarning (param) {
+    let getRealTimeWarning = await ajax.post(`/api/common/getRealTimeWarning`, param)
+    return getRealTimeWarning
+}
+// 消息中心 风险早报 and 新闻早报 获取企业名称列表
+async function getZCXCompayNameList (param) {
+    let getZCXCompayNameList = await ajax.post(`/api/company/getZCXCompayNameList`, param)
+    return getZCXCompayNameList
+}
+
+// 消息中心 平台消息
+async function getPlatformNews (param) {
+    let getPlatformNews = await ajax.post(`/api/common/getPlatformNews`, param)
+    return getPlatformNews
+}
+// 消息中心 风险早报
+async function getRiskMorningPost (param) {
+    let getRiskMorningPost = await ajax.post(`/api/common/getRiskMorningPost`, param)
+    return getRiskMorningPost
+}
+// 消息中心  新闻早报
+async function getMorningNews (param) {
+    let getMorningNews = await ajax.post(`/api/common/getMorningNews`, param)
+    return getMorningNews
 }
 
 const manage = {
@@ -402,6 +444,14 @@ const manage = {
     deleteFile:deleteFile,
     saveOrEdit:saveOrEdit,
     getBlacklistApprovalList:getBlacklistApprovalList,
+    getCompayNameList:getCompayNameList,
+    getEventTypeList:getEventTypeList,
+    getRealTimeWarning:getRealTimeWarning,
+    getZCXCompayNameList:getZCXCompayNameList,
+    getPlatformNews:getPlatformNews,
+    getRiskMorningPost:getRiskMorningPost,
+    getMorningNews:getMorningNews,
+    getCompanyStatus:getCompanyStatus,
 }
 
 export default manage

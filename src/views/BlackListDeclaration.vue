@@ -238,6 +238,13 @@
 
 export default {
     data(){
+      var statusExists = (rule, value, callback) => { //校验公司名称
+        if (value == "未申请") {
+          callback();
+      }else{
+          callback(new Error("已申请"));
+        }
+      };
       return{
         headers:'',
         status:[],
@@ -290,6 +297,9 @@ export default {
           }],
           entName: [
             { required: true, message: '请选择公司名称', trigger: 'change' }
+          ],
+          status:[
+            { validator: statusExists, message: '', trigger: 'change' }
           ],
           type : [
             { required: true, message: '请选择企业类型', trigger: 'change' }
@@ -512,6 +522,37 @@ export default {
     handleSelect(item) {
       console.log(item);
       this.blackInfo.creditCode = item.id;
+      let param = {
+        companyName:this.blackInfo.entName,
+        creditCode:this.blackInfo.creditCode,
+        updateBy:this.$Cookies.get('userCode')
+      }
+      this.$ajax.manage.getCompanyStatus(param).then(res => {
+          if(res.data.code === 0){
+            switch(res.data.status){
+              case "1":
+                this.blackInfo.status = '未审核';
+                break
+              case "2":
+                this.blackInfo.status = '已审核';
+                break
+              case "3":
+                this.blackInfo.status = '被驳回';
+                break
+              case "4":
+                this.blackInfo.status = '已撤销';
+                break
+              case "5":
+                this.blackInfo.status = '已过期';
+                break
+              case "6":
+                this.blackInfo.status = '取消过期';
+                break
+              default:
+                this.blackInfo.status = '未申请';
+            }
+          }
+      })
       console.log(this.blackInfo);
     },
     saveBlackInfo(formName){
@@ -522,7 +563,6 @@ export default {
             this.closeDialog();
             this.closeRenewalCancellationDialog();
             this.$message.success(res.data.msg);
-
             this.searchData(1);// 更新数据
             console.log(res.data)
           })

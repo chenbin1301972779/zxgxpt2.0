@@ -45,15 +45,43 @@
 <!--		</div>-->
 <!--	</div>-->
     <div style="height: calc(100% - 50px);min-height: 800px;">
-      <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>
+<!--      <iframe :src="srcUrl" width="100%" height="100%" frameborder="0" scrolling="no" marginwidth="0" marginheight="5"></iframe>-->
+      <template>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="实时预警" name="first">
+            <real-time-warning></real-time-warning>
+          </el-tab-pane>
+          <el-tab-pane label="风险早报" name="second">
+            <risk-morning-post></risk-morning-post>
+          </el-tab-pane>
+          <el-tab-pane label="新闻早报" name="third">
+            <morning-news></morning-news>
+          </el-tab-pane>
+          <el-tab-pane label="平台消息" name="fourth">
+            <platform-news></platform-news>
+          </el-tab-pane>
+        </el-tabs>
+      </template>
     </div>
 	</div>
 </template>
 
 <script>
+import RealTimeWarning  from './components/RealTimeWarning'
+import RiskMorningPost  from './components/RiskMorningPost'
+import MorningNews  from './components/MorningNews'
+import PlatformNews  from './components/PlatformNews'
 	export default{
-		data(){
+    components:{
+      RealTimeWarning,
+      RiskMorningPost,
+      MorningNews,
+      PlatformNews
+    },
+
+    data(){
 			return{
+        activeName: 'second',
 				activeAlarmTab: "1",
 				qichachaData: [
 				    {
@@ -110,6 +138,9 @@
 			        }
 			    })
 			},
+      handleClick(tab, event) {
+        console.log(tab, event);
+      }
 		}
 	}
 </script>
@@ -117,7 +148,6 @@
 <style lang="less" scoped>
 	.message-center{
 		width: 90%;
-		height: 100%;
 		margin: auto;
 		background-color: #f8f8f8;
 		box-sizing: border-box;

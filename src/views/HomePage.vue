@@ -399,8 +399,8 @@ export default {
       console.log(command)
       if (command == 1) {
         //黑名单申报
-       // this.goHmdsb()
-        this.$router.push({ path: '/BlackListDeclaration' })
+        // this.goHmdsb()
+         this.$router.push({ path: '/BlackListDeclaration' })
       } else if (command == 2) {
         //黑名单审批
         // this.goHmdsp()
